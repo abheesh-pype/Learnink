@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import { SiteConfig } from '@/lib/models';
-import dbConnect from '@/lib/mongodb';
+import dbConnect from '@/lib/db';
 
 export default async function robots(): Promise<MetadataRoute.Robots> {
     try {

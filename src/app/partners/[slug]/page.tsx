@@ -5,7 +5,7 @@ import { ArrowLeft, ExternalLink, GraduationCap, CheckCircle2 } from "lucide-rea
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/db";
 
 interface Props {
     params: Promise<{ slug: string }>;

@@ -3,7 +3,7 @@ import About from "@/components/About";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { PageSEO, SiteConfig } from "@/lib/models";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/db";
 
 export async function generateMetadata(): Promise<Metadata> {
     try {

@@ -6,6 +6,8 @@
     --color-primary: #5B4B9E;
     --color-primary-dark: #4A3D82;
     --color-secondary: #4A90E2;
+    /* Logo background blue — used only for the active navbar link */
+    --color-brand-blue: #41348F;
 
     --animate-float: float 6s ease-in-out infinite;
     --animate-blob: blob 7s infinite;

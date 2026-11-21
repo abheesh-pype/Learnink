@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { IntegrationConfig } from "@/lib/models";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 

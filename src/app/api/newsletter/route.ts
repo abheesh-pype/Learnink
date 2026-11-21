@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/db";
 import { Subscriber } from "@/lib/models";
 
 export async function POST(req: NextRequest) {
@@ -21,8 +21,7 @@ export async function POST(req: NextRequest) {
         if (existing) {
             if (existing.status === 'unsubscribed') {
                 // Reactivate subscription
-                existing.status = 'active';
-                await existing.save();
+                await Subscriber.findByIdAndUpdate(existing._id, { status: 'active' });
                 return NextResponse.json({ message: "Welcome back! You've been resubscribed." });
             }
             return NextResponse.json(

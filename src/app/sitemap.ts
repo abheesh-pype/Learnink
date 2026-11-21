@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 import { Program } from '@/lib/models';
-import dbConnect from '@/lib/mongodb';
+import dbConnect from '@/lib/db';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://learnink.edu.in';

@@ -1,144 +1,304 @@
-import { Schema, model, models } from 'mongoose';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/**
+ * PostgreSQL (Neon) data models.
+ *
+ * Each model maps to a table in db/schema.sql. The API mirrors the subset of
+ * Mongoose the app already used (find / findOne / findById / create /
+ * findByIdAndUpdate / findOneAndUpdate / findByIdAndDelete, with chained
+ * .sort() / .select() / .populate() / .lean()), and rows come back with `_id`
+ * plus camelCase fields, so pages, API routes and the admin UI work unchanged.
+ */
+import { query } from './db';
 
-// --- Partner Model ---
-const PartnerSchema = new Schema({
-    name: { type: String, required: true },
-    slug: { type: String, unique: true },
-    logo: { type: String, required: true }, // Image URL
-    description: { type: String },
-    programs: [{ type: Schema.Types.ObjectId, ref: 'Program' }],
-    enrollLink: { type: String },
-    order: { type: Number, default: 0 },
-}, { timestamps: true });
+type FieldType = 'text' | 'int' | 'bool' | 'text[]' | 'uuid[]' | 'json';
+type Doc = any;
+type Filter = Record<string, unknown>;
+type SortSpec = Record<string, 1 | -1 | 'asc' | 'desc'>;
 
-export const Partner = models.Partner || model('Partner', PartnerSchema);
+interface FindOptions {
+    sort?: SortSpec;
+    select?: string[];
+    limit?: number;
+    populate?: string[];
+}
 
-// --- Program Model ---
-const ProgramSchema = new Schema({
-    title: { type: String, required: true },
-    description: { type: String, required: true },
-    category: {
-        type: String,
-        required: true,
-        enum: [
-            'Degree Breaking',
-            'Fast Track',
-            'Credit Transfer',
-            'Online Degree',
-            'Secondary (10th)',
-            'Senior Secondary (12th)',
-            'Diploma',
-            'Attestation'
-        ]
-    },
-    icon: { type: String }, // Lucide icon name or image
-    content: { type: String }, // Detailed rich text
-    slug: { type: String, unique: true },
-    // SEO Fields
-    metaTitle: { type: String },
-    metaDescription: { type: String },
-    keywords: { type: [String], default: [] },
-}, { timestamps: true });
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const SYSTEM_FIELDS = ['_id', 'createdAt', 'updatedAt'];
 
-export const Program = models.Program || model('Program', ProgramSchema);
+const toColumn = (field: string) =>
+    field === '_id' ? 'id' : field.replace(/[A-Z]/g, (c) => '_' + c.toLowerCase());
 
-// --- Site Config Model (Global SEO) ---
-const SiteConfigSchema = new Schema({
-    key: { type: String, default: 'global-seo', unique: true }, // Singleton pattern
-    title: { type: String, default: 'Learnink Education' },
-    description: { type: String, default: 'Linking Learning, Skills & Careers' },
-    keywords: { type: [String], default: [] },
-    favicon: { type: String },
-    ogImage: { type: String },
-    robotsTxt: { type: String, default: "User-agent: *\nAllow: /" },
-    googleAnalyticsId: { type: String },
-    socialLinks: {
-        facebook: { type: String },
-        twitter: { type: String },
-        instagram: { type: String },
-        linkedin: { type: String },
-        youtube: { type: String }
-    },
-    googleVerification: { type: String },
-    twitterHandle: { type: String },
-    images: {
-        logo: { type: String },
-        heroBg: { type: String },
-        aboutImage: { type: String }
-    },
-}, { timestamps: true });
+class Query<T> implements PromiseLike<T> {
+    private opts: FindOptions = {};
 
-export const SiteConfig = models.SiteConfig || model('SiteConfig', SiteConfigSchema);
+    constructor(
+        private model: Model,
+        private run: (opts: FindOptions) => Promise<Doc[]>,
+        private single: boolean,
+    ) { }
 
-// --- Enquiry Model ---
-const EnquirySchema = new Schema({
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    phone: { type: String, required: true },
-    interest: { type: String },
-    message: { type: String },
-    status: { type: String, default: 'new', enum: ['new', 'contacted', 'resolved'] },
-}, { timestamps: true });
+    sort(spec: SortSpec) { this.opts.sort = spec; return this; }
+    select(fields: string) { this.opts.select = fields.split(/\s+/).filter(Boolean); return this; }
+    limit(n: number) { this.opts.limit = n; return this; }
+    populate(field: string) { this.opts.populate = [...(this.opts.populate ?? []), field]; return this; }
+    /** Rows are already plain objects; kept for Mongoose-style call sites. */
+    lean() { return this; }
 
-export const Enquiry = models.Enquiry || model('Enquiry', EnquirySchema);
+    async exec(): Promise<T> {
+        let rows = await this.run(this.opts);
+        for (const field of this.opts.populate ?? []) {
+            rows = await this.model.populateField(rows, field);
+        }
+        return (this.single ? rows[0] ?? null : rows) as T;
+    }
 
-// --- Subscriber Model (Newsletter) ---
-const SubscriberSchema = new Schema({
-    email: { type: String, required: true, unique: true },
-    status: { type: String, default: 'active', enum: ['active', 'unsubscribed'] },
-}, { timestamps: true });
+    then<R1 = T, R2 = never>(
+        onFulfilled?: ((value: T) => R1 | PromiseLike<R1>) | null,
+        onRejected?: ((reason: unknown) => R2 | PromiseLike<R2>) | null,
+    ): PromiseLike<R1 | R2> {
+        return this.exec().then(onFulfilled, onRejected);
+    }
+}
 
-export const Subscriber = models.Subscriber || model('Subscriber', SubscriberSchema);
+class Model {
+    private readonly allFields: string[];
 
-// --- Page SEO Model (Per-Page SEO Settings) ---
-const PageSEOSchema = new Schema({
-    pageKey: { type: String, required: true, unique: true }, // e.g., 'about', 'contact', 'partners', 'programs'
-    title: { type: String },
-    description: { type: String },
-    keywords: { type: [String], default: [] },
-    ogImage: { type: String },
-    enabled: { type: Boolean, default: true },
-}, { timestamps: true });
+    constructor(
+        readonly table: string,
+        private readonly fields: Record<string, FieldType>,
+        private readonly refs: Record<string, () => Model> = {},
+    ) {
+        this.allFields = [...SYSTEM_FIELDS, ...Object.keys(fields)];
+    }
 
-export const PageSEO = models.PageSEO || model('PageSEO', PageSEOSchema);
+    // --- SQL helpers -------------------------------------------------------
 
-// --- Gallery Model ---
-const GalleryPhotoSchema = new Schema({
-    imageUrl: { type: String, required: true },
-    caption: { type: String },
-    order: { type: Number, default: 0 },
-}, { timestamps: true });
+    private column(field: string) {
+        if (!this.allFields.includes(field)) {
+            throw new Error(`Unknown field "${field}" on ${this.table}`);
+        }
+        return `"${toColumn(field)}"`;
+    }
 
-export const GalleryPhoto = models.GalleryPhoto || model('GalleryPhoto', GalleryPhotoSchema);
+    private selectList(fields: string[] = this.allFields) {
+        return fields.map((f) => `${this.column(f)} AS "${f}"`).join(', ');
+    }
 
-// --- Testimonial Model ---
-const TestimonialSchema = new Schema({
-    name: { type: String, required: true },
-    content: { type: String, required: true },
-    role: { type: String },
-    imageUrl: { type: String },
-    rating: { type: Number, default: 5 },
-    order: { type: Number, default: 0 },
-}, { timestamps: true });
+    private where(filter: Filter, params: unknown[]) {
+        const clauses: string[] = [];
+        for (const [field, value] of Object.entries(filter)) {
+            if (value === undefined) continue;
+            if (field === '_id' && !(typeof value === 'string' && UUID_RE.test(value))) {
+                return 'WHERE FALSE'; // not a valid id, so nothing can match
+            }
+            if (value === null) {
+                clauses.push(`${this.column(field)} IS NULL`);
+            } else {
+                params.push(value);
+                clauses.push(`${this.column(field)} = $${params.length}`);
+            }
+        }
+        return clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
+    }
 
-export const Testimonial = models.Testimonial || model('Testimonial', TestimonialSchema);
+    /** Known, writable fields from `data`, converted for Postgres. Unknown keys are ignored. */
+    private writable(data: Record<string, unknown>) {
+        const out: [string, unknown][] = [];
+        for (const [field, raw] of Object.entries(data ?? {})) {
+            const type = this.fields[field];
+            if (!type || raw === undefined) continue;
+            let value = raw;
+            if (type === 'json') value = raw === null ? {} : JSON.stringify(raw);
+            if (type === 'int' && (raw === '' || raw === null)) continue;
+            if ((type === 'text[]' || type === 'uuid[]') && raw === null) value = [];
+            out.push([field, value]);
+        }
+        return out;
+    }
 
-// --- Integration Config Model (Private Admin Settings) ---
-const IntegrationConfigSchema = new Schema({
-    key: { type: String, default: 'crm-integration', unique: true },
-    crmWebhookUrl: { type: String },
-    crmAuthToken: { type: String },
-    enabled: { type: Boolean, default: false },
-}, { timestamps: true });
+    private selectRows(filter: Filter, opts: FindOptions = {}) {
+        const params: unknown[] = [];
+        const fields = opts.select ? ['_id', ...opts.select.filter((f) => f !== '_id')] : undefined;
+        let text = `SELECT ${this.selectList(fields)} FROM ${this.table} ${this.where(filter, params)}`;
+        if (opts.sort && Object.keys(opts.sort).length) {
+            const order = Object.entries(opts.sort).map(([f, dir]) =>
+                `${this.column(f)} ${dir === -1 || dir === 'desc' ? 'DESC' : 'ASC'}`);
+            text += ` ORDER BY ${order.join(', ')}`;
+        }
+        if (opts.limit) text += ` LIMIT ${Math.floor(opts.limit)}`;
+        return query(text, params);
+    }
 
+    private async insert(data: Record<string, unknown>): Promise<Doc> {
+        const entries = this.writable(data);
+        const cols = entries.map(([f]) => this.column(f));
+        const text = entries.length
+            ? `INSERT INTO ${this.table} (${cols.join(', ')}) VALUES (${entries.map((_, i) => `$${i + 1}`).join(', ')})`
+            : `INSERT INTO ${this.table} DEFAULT VALUES`;
+        const rows = await query(`${text} RETURNING ${this.selectList()}`, entries.map(([, v]) => v));
+        return rows[0];
+    }
 
-// --- User Model (Admin Auth) ---
-const UserSchema = new Schema({
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: { type: String, default: 'admin', enum: ['admin', 'editor'] },
-}, { timestamps: true });
+    private update(filter: Filter, data: Record<string, unknown>) {
+        const entries = this.writable(data);
+        const params: unknown[] = entries.map(([, v]) => v);
+        const sets = [...entries.map(([f], i) => `${this.column(f)} = $${i + 1}`), `"updated_at" = now()`];
+        return query(
+            `UPDATE ${this.table} SET ${sets.join(', ')} ${this.where(filter, params)} RETURNING ${this.selectList()}`,
+            params,
+        );
+    }
 
-export const User = models.User || model('User', UserSchema);
+    async populateField(rows: Doc[], field: string): Promise<Doc[]> {
+        const ref = this.refs[field]?.();
+        if (!ref) throw new Error(`Cannot populate "${field}" on ${this.table}`);
+        const ids = [...new Set(rows.flatMap((r) => r[field] ?? []))];
+        const found: Doc[] = ids.length
+            ? await query(`SELECT ${ref.selectList()} FROM ${ref.table} WHERE id = ANY($1::uuid[])`, [ids])
+            : [];
+        const byId = new Map(found.map((d) => [d._id, d]));
+        return rows.map((r) => ({
+            ...r,
+            [field]: (r[field] ?? []).map((id: string) => byId.get(id)).filter(Boolean),
+        }));
+    }
 
-export const IntegrationConfig = models.IntegrationConfig || model('IntegrationConfig', IntegrationConfigSchema);
+    // --- Public API --------------------------------------------------------
+
+    find(filter: Filter = {}) {
+        return new Query<Doc[]>(this, (opts) => this.selectRows(filter, opts), false);
+    }
+
+    findOne(filter: Filter = {}) {
+        return new Query<Doc | null>(this, (opts) => this.selectRows(filter, { ...opts, limit: 1 }), true);
+    }
+
+    findById(id: string) {
+        return this.findOne({ _id: id });
+    }
+
+    create(data: Record<string, unknown> = {}): Promise<Doc> {
+        return this.insert(data);
+    }
+
+    // Accepts Mongoose-style options ({ new: true }); the updated row is always returned.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    findByIdAndUpdate(id: string, data: Record<string, unknown>, _opts?: { new?: boolean }) {
+        return new Query<Doc | null>(this, () => this.update({ _id: id }, data), true);
+    }
+
+    findOneAndUpdate(filter: Filter, data: Record<string, unknown>, opts: { new?: boolean; upsert?: boolean } = {}) {
+        return new Query<Doc | null>(this, async () => {
+            const rows = await this.update(filter, data);
+            if (rows.length || !opts.upsert) return rows;
+            return [await this.insert({ ...filter, ...data })];
+        }, true);
+    }
+
+    findByIdAndDelete(id: string) {
+        return new Query<Doc | null>(this, () => {
+            const params: unknown[] = [];
+            return query(`DELETE FROM ${this.table} ${this.where({ _id: id }, params)} RETURNING ${this.selectList()}`, params);
+        }, true);
+    }
+
+    async countDocuments(filter: Filter = {}): Promise<number> {
+        const params: unknown[] = [];
+        const rows = await query(`SELECT count(*)::int AS n FROM ${this.table} ${this.where(filter, params)}`, params);
+        return rows[0].n;
+    }
+}
+
+// --- Models (see db/schema.sql) ---------------------------------------------
+
+export const Program = new Model('programs', {
+    title: 'text',
+    description: 'text',
+    category: 'text', // 'Degree Breaking' | 'Fast Track' | 'Credit Transfer' | 'Online Degree' | 'Secondary (10th)' | 'Senior Secondary (12th)' | 'Diploma' | 'Attestation'
+    icon: 'text', // Lucide icon name or image
+    content: 'text', // Detailed rich text
+    slug: 'text',
+    metaTitle: 'text',
+    metaDescription: 'text',
+    keywords: 'text[]',
+});
+
+export const Partner = new Model('partners', {
+    name: 'text',
+    slug: 'text',
+    logo: 'text', // Image URL
+    description: 'text',
+    programs: 'uuid[]', // Program ids
+    enrollLink: 'text',
+    order: 'int',
+}, { programs: () => Program });
+
+// Global SEO singleton (key = 'global-seo')
+export const SiteConfig = new Model('site_configs', {
+    key: 'text',
+    title: 'text',
+    description: 'text',
+    keywords: 'text[]',
+    favicon: 'text',
+    ogImage: 'text',
+    robotsTxt: 'text',
+    googleAnalyticsId: 'text',
+    socialLinks: 'json', // { facebook, twitter, instagram, linkedin, youtube }
+    googleVerification: 'text',
+    twitterHandle: 'text',
+    images: 'json', // { logo, heroBg, aboutImage }
+});
+
+export const Enquiry = new Model('enquiries', {
+    name: 'text',
+    email: 'text',
+    phone: 'text',
+    interest: 'text',
+    message: 'text',
+    status: 'text', // 'new' | 'contacted' | 'resolved'
+});
+
+export const Subscriber = new Model('subscribers', {
+    email: 'text',
+    status: 'text', // 'active' | 'unsubscribed'
+});
+
+// Per-page SEO settings; pageKey e.g. 'about', 'contact', 'partners', 'programs'
+export const PageSEO = new Model('page_seos', {
+    pageKey: 'text',
+    title: 'text',
+    description: 'text',
+    keywords: 'text[]',
+    ogImage: 'text',
+    enabled: 'bool',
+});
+
+export const GalleryPhoto = new Model('gallery_photos', {
+    imageUrl: 'text',
+    caption: 'text',
+    order: 'int',
+});
+
+export const Testimonial = new Model('testimonials', {
+    name: 'text',
+    content: 'text',
+    role: 'text',
+    imageUrl: 'text',
+    rating: 'int',
+    order: 'int',
+});
+
+// Private admin CRM settings singleton (key = 'crm-integration')
+export const IntegrationConfig = new Model('integration_configs', {
+    key: 'text',
+    crmWebhookUrl: 'text',
+    crmAuthToken: 'text',
+    enabled: 'bool',
+});
+
+// Admin auth users
+export const User = new Model('users', {
+    username: 'text',
+    password: 'text',
+    role: 'text', // 'admin' | 'editor'
+});

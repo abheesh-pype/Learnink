@@ -7,7 +7,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CourseSchema } from "@/components/JsonLd";
 
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/db";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://learnink.edu.in";
 

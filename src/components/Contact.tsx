@@ -2,15 +2,36 @@
 
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send, Loader2, Clock, MessageCircle, Users, BookOpen } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+interface ProgramOption {
+    _id: string;
+    title: string;
+    createdAt: string;
+}
 
 export default function Contact() {
+    const [programs, setPrograms] = useState<ProgramOption[]>([]);
+    const [programsLoading, setProgramsLoading] = useState(true);
+
+    // Program options come from the programs created in Admin → Programs.
+    useEffect(() => {
+        fetch("/api/programs")
+            .then((res) => (res.ok ? res.json() : []))
+            .then((data: ProgramOption[]) => {
+                // Oldest first, so newly added programs appear at the end of the list.
+                setPrograms([...data].sort((a, b) => a.createdAt.localeCompare(b.createdAt)));
+            })
+            .catch(() => setPrograms([]))
+            .finally(() => setProgramsLoading(false));
+    }, []);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         phone: "",
-        interest: "Select a program",
+        interest: "",
         message: ""
     });
 
@@ -31,7 +52,7 @@ export default function Contact() {
                     name: "",
                     email: "",
                     phone: "",
-                    interest: "Select a program",
+                    interest: "",
                     message: ""
                 });
             } else {
@@ -279,16 +300,22 @@ export default function Contact() {
                                             name="interest"
                                             value={formData.interest}
                                             onChange={handleChange}
-                                            className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all appearance-none cursor-pointer text-[#1a202c] font-medium text-sm"
+                                            required
+                                            disabled={programsLoading || programs.length === 0}
+                                            className="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-white transition-all appearance-none cursor-pointer text-[#1a202c] font-medium text-sm disabled:cursor-not-allowed disabled:opacity-60"
                                         >
-                                            <option className="text-slate-500">Select a program</option>
-                                            <option>Degree Breaking Study</option>
-                                            <option>Fast Track Program</option>
-                                            <option>Credit Transfer</option>
-                                            <option>Online Degree</option>
-                                            <option>Secondary (10th)</option>
-                                            <option>Senior Secondary (12th)</option>
-                                            <option>Diploma</option>
+                                            <option value="" disabled className="text-slate-500">
+                                                {programsLoading
+                                                    ? "Loading programs..."
+                                                    : programs.length
+                                                        ? "Select a program"
+                                                        : "No programs available"}
+                                            </option>
+                                            {programs.map((program) => (
+                                                <option key={program._id} value={program.title}>
+                                                    {program.title}
+                                                </option>
+                                            ))}
                                         </select>
                                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
                                             <svg width="10" height="10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>

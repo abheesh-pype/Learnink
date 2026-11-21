@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,9 +17,11 @@ const NavLinks = [
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const pathname = usePathname();
 
-
-
+    // "/" only matches the home page; other links also stay active on their sub-pages (e.g. /programs/some-slug).
+    const isActive = (href: string) =>
+        href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -46,15 +49,24 @@ export default function Navbar() {
 
                     {/* Desktop Links */}
                     <div className="hidden md:flex items-center gap-10">
-                        {NavLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                className="text-sm font-bold text-slate-600 hover:text-primary transition-all relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:w-0 after:h-0.5 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
+                        {NavLinks.map((link) => {
+                            const active = isActive(link.href);
+                            return (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    aria-current={active ? "page" : undefined}
+                                    className={cn(
+                                        "text-sm font-bold transition-all relative after:content-[''] after:absolute after:-bottom-2 after:left-0 after:h-0.5 after:transition-all after:duration-300",
+                                        active
+                                            ? "text-brand-blue after:w-full after:bg-brand-blue"
+                                            : "text-slate-600 hover:text-slate-900 after:w-0 after:bg-slate-900 hover:after:w-full"
+                                    )}
+                                >
+                                    {link.name}
+                                </Link>
+                            );
+                        })}
                     </div>
 
                     <div className="hidden md:flex items-center gap-4">
@@ -87,16 +99,30 @@ export default function Navbar() {
             {isOpen && (
                 <div className="absolute top-24 left-4 right-4 bg-white/90 backdrop-blur-2xl border border-white/50 shadow-2xl rounded-[2rem] md:hidden animate-[fadeIn_0.5s_ease-out_forwards] overflow-hidden">
                     <div className="flex flex-col p-8 gap-6 text-center">
-                        {NavLinks.map((link) => (
-                            <Link
-                                key={link.name}
-                                href={link.href}
-                                className="text-xl font-bold text-slate-700 hover:text-primary py-4 border-b border-slate-100 last:border-0"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                {link.name}
-                            </Link>
-                        ))}
+                        {NavLinks.map((link) => {
+                            const active = isActive(link.href);
+                            return (
+                                <Link
+                                    key={link.name}
+                                    href={link.href}
+                                    aria-current={active ? "page" : undefined}
+                                    className={cn(
+                                        "text-xl font-bold py-4 border-b border-slate-100 last:border-0",
+                                        active ? "text-brand-blue" : "text-slate-700 hover:text-slate-900"
+                                    )}
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <span
+                                        className={cn(
+                                            "pb-1 border-b-2",
+                                            active ? "border-brand-blue" : "border-transparent"
+                                        )}
+                                    >
+                                        {link.name}
+                                    </span>
+                                </Link>
+                            );
+                        })}
                         <Link
                             href="/admin/login"
                             className="text-lg font-bold text-slate-400 hover:text-slate-700 py-2"

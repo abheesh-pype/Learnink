@@ -12,7 +12,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 import { SiteConfig } from "@/lib/models";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/db";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://learnink.edu.in";
 

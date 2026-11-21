@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PageSEO } from "@/lib/models";
-import dbConnect from "@/lib/mongodb";
+import dbConnect from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
