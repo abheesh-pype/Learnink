@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import { GalleryPhoto } from "@/lib/models";
 import { getServerSession } from "next-auth";
+import { isUploadedImagePath, normalizeImageUrl } from "@/lib/imageUrl";
 
 export async function GET() {
     try {
@@ -20,7 +21,18 @@ export async function POST(req: Request) {
     try {
         await dbConnect();
         const body = await req.json();
-        const photo = await GalleryPhoto.create(body);
+
+        // Either a file uploaded via /api/upload, or an http(s) image link (Drive links are converted).
+        const raw = typeof body.imageUrl === "string" ? body.imageUrl.trim() : "";
+        const imageUrl = isUploadedImagePath(raw) ? raw : normalizeImageUrl(raw);
+        if (!imageUrl) {
+            return NextResponse.json(
+                { error: "Upload an image or paste a valid image link (https://…)." },
+                { status: 400 }
+            );
+        }
+
+        const photo = await GalleryPhoto.create({ ...body, imageUrl });
         return NextResponse.json(photo);
     } catch {
         return NextResponse.json({ error: "Failed to create photo" }, { status: 500 });

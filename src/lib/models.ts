@@ -296,6 +296,25 @@ export const IntegrationConfig = new Model('integration_configs', {
     enabled: 'bool',
 });
 
+// Contact page details singleton (key = 'contact'), edited in Admin → Contact
+export const ContactSettings = new Model('contact_settings', {
+    key: 'text',
+    phone: 'text',
+    phoneHours: 'text',
+    email: 'text',
+    emailNote: 'text',
+    visitLocation: 'text',
+    visitNote: 'text',
+    mapUrl: 'text',
+    hqName: 'text',
+    hqAddress: 'text',
+    hqHours: 'text',
+    admissionsTitle: 'text',
+    admissionsText: 'text',
+    studentsCount: 'text',
+    universitiesCount: 'text',
+});
+
 // Admin auth users
 export const User = new Model('users', {
     username: 'text',

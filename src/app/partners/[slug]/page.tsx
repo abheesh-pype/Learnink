@@ -29,6 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
         title: `${partner.name} | Learnink University Partner`,
         description: partner.description || `Learn about ${partner.name} and the programs they offer through Learnink Education.`,
+        alternates: { canonical: `/partners/${slug}` },
     };
 }
 

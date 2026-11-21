@@ -1,10 +1,12 @@
 import { Metadata } from "next";
+import { withPageUrl } from "@/lib/site";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { PageSEO, SiteConfig } from "@/lib/models";
 import dbConnect from "@/lib/db";
+import { getContactInfo } from "@/lib/contactSettings";
 
-export async function generateMetadata(): Promise<Metadata> {
+async function buildMetadata(): Promise<Metadata> {
     try {
         await dbConnect();
         const pageSeo = await PageSEO.findOne({ pageKey: 'terms' }).lean();
@@ -31,7 +33,8 @@ export async function generateMetadata(): Promise<Metadata> {
     }
 }
 
-export default function TermsPage() {
+export default async function TermsPage() {
+    const { email } = await getContactInfo(); // edited in Admin → Contact
     return (
         <main className="min-h-screen pt-25 flex flex-col bg-slate-50">
             <Navbar />
@@ -93,8 +96,8 @@ export default function TermsPage() {
                         <h2 className="text-2xl font-bold text-[#1a202c] mb-4">Contact</h2>
                         <p>
                             For any questions regarding these terms, please contact us at{" "}
-                            <a href="mailto:learninkclt@gmail.com" className="text-primary hover:underline">
-                                learninkclt@gmail.com
+                            <a href={`mailto:${email}`} className="text-primary hover:underline">
+                                {email}
                             </a>
                         </p>
                     </section>
@@ -103,4 +106,9 @@ export default function TermsPage() {
             <Footer />
         </main>
     );
+}
+
+// Each page gets its own canonical URL instead of inheriting the homepage's.
+export async function generateMetadata(): Promise<Metadata> {
+    return withPageUrl(await buildMetadata(), "/terms");
 }

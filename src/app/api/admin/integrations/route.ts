@@ -18,7 +18,6 @@ export async function GET() {
 
         if (!config) {
             config = await IntegrationConfig.create({});
-            config = config.toObject();
         }
 
         return NextResponse.json(config);

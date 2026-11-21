@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS site_configs (
     keywords            text[] NOT NULL DEFAULT '{}',
     favicon             text,
     og_image            text,
-    robots_txt          text DEFAULT E'User-agent: *\nAllow: /',
+    robots_txt          text DEFAULT E'User-agent: *\nAllow: /\nDisallow: /admin/\nDisallow: /api/',
     google_analytics_id text,
     social_links        jsonb NOT NULL DEFAULT '{}',
     google_verification text,
@@ -119,4 +119,27 @@ CREATE TABLE IF NOT EXISTS users (
     role       text NOT NULL DEFAULT 'admin' CHECK (role IN ('admin', 'editor')),
     created_at timestamptz NOT NULL DEFAULT now(),
     updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+-- Contact details shown on the Contact page (singleton row, key = 'contact').
+-- Edited in Admin → Contact. Missing values fall back to the defaults in src/lib/contact.ts.
+CREATE TABLE IF NOT EXISTS contact_settings (
+    id                 uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    key                text NOT NULL UNIQUE DEFAULT 'contact',
+    phone              text,
+    phone_hours        text,
+    email              text,
+    email_note         text,
+    visit_location     text,
+    visit_note         text,
+    map_url            text,
+    hq_name            text,
+    hq_address         text,
+    hq_hours           text,
+    admissions_title   text,
+    admissions_text    text,
+    students_count     text,
+    universities_count text,
+    created_at         timestamptz NOT NULL DEFAULT now(),
+    updated_at         timestamptz NOT NULL DEFAULT now()
 );

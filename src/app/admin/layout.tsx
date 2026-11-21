@@ -16,7 +16,8 @@ import {
     Image as ImageIcon,
     Star,
     Loader2,
-    Settings
+    Settings,
+    Phone
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
@@ -52,6 +53,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { name: "Photo Gallery", href: "/admin/gallery", icon: ImageIcon },
         { name: "Testimonials", href: "/admin/testimonials", icon: Star },
         { name: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
+        { name: "Contact", href: "/admin/contact", icon: Phone },
         { name: "SEO Settings", href: "/admin/seo", icon: Globe },
         { name: "Integrations", href: "/admin/settings", icon: Settings },
     ];

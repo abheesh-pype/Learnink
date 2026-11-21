@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import { Testimonial } from "@/lib/models";
 import { getServerSession } from "next-auth";
+import { isUploadedImagePath, normalizeImageUrl } from "@/lib/imageUrl";
 
 export async function GET() {
     try {
@@ -20,7 +21,18 @@ export async function POST(req: Request) {
     try {
         await dbConnect();
         const body = await req.json();
-        const testimonial = await Testimonial.create(body);
+
+        // Profile image is optional: an uploaded file (/uploads/...) or an http(s) link (Drive links are converted).
+        const raw = typeof body.imageUrl === "string" ? body.imageUrl.trim() : "";
+        let imageUrl: string | null = null;
+        if (raw) {
+            imageUrl = isUploadedImagePath(raw) ? raw : normalizeImageUrl(raw);
+            if (!imageUrl) {
+                return NextResponse.json({ error: "The profile image link isn't valid." }, { status: 400 });
+            }
+        }
+
+        const testimonial = await Testimonial.create({ ...body, imageUrl });
         return NextResponse.json(testimonial);
     } catch {
         return NextResponse.json({ error: "Failed to create testimonial" }, { status: 500 });

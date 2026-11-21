@@ -1,11 +1,13 @@
 import { Metadata } from "next";
+import { withPageUrl } from "@/lib/site";
 import Contact from "@/components/Contact";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { PageSEO, SiteConfig } from "@/lib/models";
 import dbConnect from "@/lib/db";
+import { getContactInfo } from "@/lib/contactSettings";
 
-export async function generateMetadata(): Promise<Metadata> {
+async function buildMetadata(): Promise<Metadata> {
     try {
         await dbConnect();
         const pageSeo = await PageSEO.findOne({ pageKey: 'contact' }).lean();
@@ -34,14 +36,22 @@ export async function generateMetadata(): Promise<Metadata> {
     }
 }
 
-export default function ContactPage() {
+export default async function ContactPage() {
+    // Phone, email, address etc. are edited in Admin → Contact.
+    const info = await getContactInfo();
+
     return (
         <main className="min-h-screen pt-25 flex flex-col bg-slate-50">
             <Navbar />
             <div className="flex-1 w-full">
-                <Contact />
+                <Contact info={info} />
             </div>
             <Footer />
         </main>
     );
+}
+
+// Each page gets its own canonical URL instead of inheriting the homepage's.
+export async function generateMetadata(): Promise<Metadata> {
+    return withPageUrl(await buildMetadata(), "/contact");
 }

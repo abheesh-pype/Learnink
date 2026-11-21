@@ -2,44 +2,16 @@
 
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, Loader2, ArrowRight } from "lucide-react";
-import { useState, useEffect } from "react";
-
-interface SocialLinks {
-    facebook?: string;
-    twitter?: string;
-    instagram?: string;
-    linkedin?: string;
-    youtube?: string;
-}
-
-interface SiteConfigData {
-    socialLinks?: SocialLinks;
-    images?: {
-        logo?: string;
-    };
-}
+import { useState } from "react";
+import { useSiteConfig } from "@/components/SiteConfigProvider";
+import { DEFAULT_LOGO } from "@/lib/site";
 
 export default function Footer() {
     const [email, setEmail] = useState("");
     const [subscribing, setSubscribing] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-    const [socialLinks, setSocialLinks] = useState<SocialLinks>({});
-
-
-    useEffect(() => {
-        const fetchSocialLinks = async () => {
-            try {
-                const res = await fetch("/api/admin/seo");
-                if (res.ok) {
-                    const data: SiteConfigData = await res.json();
-                    setSocialLinks(data.socialLinks || {});
-                }
-            } catch {
-                console.error("Failed to load social links");
-            }
-        };
-        fetchSocialLinks();
-    }, []);
+    // Logo and social links come from Admin → SEO Settings (loaded once in the root layout).
+    const { logo, socialLinks } = useSiteConfig();
 
     const handleNewsletterSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -87,7 +59,15 @@ export default function Footer() {
                     <div className="space-y-6">
                         <Link href="/" className="flex items-center gap-3 group">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src="/logo.png" alt="Learnink" className="h-10 w-auto object-contain" />
+                            <img
+                                src={logo}
+                                alt="Learnink"
+                                referrerPolicy="no-referrer"
+                                onError={(e) => {
+                                    if (!e.currentTarget.src.endsWith(DEFAULT_LOGO)) e.currentTarget.src = DEFAULT_LOGO;
+                                }}
+                                className="h-10 w-auto object-contain"
+                            />
                         </Link>
                         <p className="text-sm leading-relaxed max-w-xs font-medium text-slate-400">
                             Linking learning, skills, and careers in a single platform. We&apos;re committed to breaking barriers in education.

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSiteConfig } from "@/components/SiteConfigProvider";
+import { DEFAULT_LOGO } from "@/lib/site";
 
 const NavLinks = [
     { name: "Home", href: "/" },
@@ -18,6 +20,7 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
+    const { logo } = useSiteConfig(); // Admin → SEO Settings → Site Logo (falls back to /logo.png)
 
     // "/" only matches the home page; other links also stay active on their sub-pages (e.g. /programs/some-slug).
     const isActive = (href: string) =>
@@ -44,7 +47,15 @@ export default function Navbar() {
                 <div className="flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-4 group">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src="/logo.png" alt="Learnink" className="h-12 w-auto object-contain" />
+                        <img
+                            src={logo}
+                            alt="Learnink"
+                            referrerPolicy="no-referrer"
+                            onError={(e) => {
+                                if (!e.currentTarget.src.endsWith(DEFAULT_LOGO)) e.currentTarget.src = DEFAULT_LOGO;
+                            }}
+                            className="h-12 w-auto object-contain"
+                        />
                     </Link>
 
                     {/* Desktop Links */}

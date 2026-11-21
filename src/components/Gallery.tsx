@@ -78,6 +78,7 @@ export default function Gallery() {
                             <img
                                 src={photo.imageUrl}
                                 alt={photo.caption || "Gallery Photo"}
+                                referrerPolicy="no-referrer"
                                 className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
                             />
                             {photo.caption && (

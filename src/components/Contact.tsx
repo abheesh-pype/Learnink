@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send, Loader2, Clock, MessageCircle, Users, BookOpen } from "lucide-react";
 import { useEffect, useState } from "react";
+import { DEFAULT_CONTACT, telHref, type ContactInfo } from "@/lib/contact";
 
 interface ProgramOption {
     _id: string;
@@ -10,7 +11,7 @@ interface ProgramOption {
     createdAt: string;
 }
 
-export default function Contact() {
+export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: ContactInfo }) {
     const [programs, setPrograms] = useState<ProgramOption[]>([]);
     const [programsLoading, setProgramsLoading] = useState(true);
 
@@ -73,25 +74,27 @@ export default function Contact() {
         {
             icon: Phone,
             title: "Call Us",
-            subtitle: "Mon-Sat, 9am-6pm",
-            value: "+91 98765 43210",
-            href: "tel:+919876543210",
+            subtitle: contact.phoneHours,
+            value: contact.phone,
+            href: telHref(contact.phone),
             color: "from-primary to-primary-dark"
         },
         {
             icon: Mail,
             title: "Email Us",
-            subtitle: "24/7 Support",
-            value: "learninkclt@gmail.com",
-            href: "mailto:learninkclt@gmail.com",
+            subtitle: contact.emailNote,
+            value: contact.email,
+            href: `mailto:${contact.email}`,
             color: "from-secondary to-blue-600"
         },
         {
             icon: MapPin,
             title: "Visit Us",
-            subtitle: "Head Office",
-            value: "Calicut, Kerala",
-            href: "#",
+            subtitle: contact.visitNote,
+            value: contact.visitLocation,
+            // Opens the map link if one is set, otherwise a Google Maps search for the address.
+            href: contact.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${contact.hqName}, ${contact.hqAddress.replace(/\n/g, ", ")}`)}`,
+            external: true,
             color: "from-tertiary to-teal-600"
         }
     ];
@@ -135,6 +138,7 @@ export default function Contact() {
                         <a
                             key={index}
                             href={info.href}
+                            {...("external" in info && info.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                             className="group p-6 lg:p-8 bg-white rounded-[2rem] border border-slate-100 hover:border-transparent hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-300 relative overflow-hidden flex flex-col items-start text-left h-full"
                         >
                             <div className={`absolute inset-0 bg-gradient-to-br ${info.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
@@ -176,14 +180,15 @@ export default function Contact() {
                                 </div>
                                 <h3 className="text-lg font-bold">Headquarters</h3>
                             </div>
-                            <p className="text-white/70 leading-relaxed text-sm">
-                                Learnink Education Hub<br />
-                                Calicut, Kerala - 673001
+                            <p className="text-white/70 leading-relaxed text-sm whitespace-pre-line">
+                                {contact.hqName}
+                                {"\n"}
+                                {contact.hqAddress}
                             </p>
                         </div>
                         <div className="flex items-center gap-2 text-xs lg:text-sm text-white/60 pt-6 border-t border-white/10 mt-auto">
                             <Clock size={16} />
-                            <span>Mon - Sat: 9am - 6pm</span>
+                            <span>{contact.hqHours}</span>
                         </div>
                     </div>
 
@@ -195,9 +200,9 @@ export default function Contact() {
                                 <h3 className="text-lg font-bold">Admissions</h3>
                                 <span className="px-2.5 py-1 bg-white/20 rounded-full text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">Live</span>
                             </div>
-                            <h4 className="text-2xl font-black mb-2">Batch 2026</h4>
+                            <h4 className="text-2xl font-black mb-2">{contact.admissionsTitle}</h4>
                             <p className="text-white/80 text-sm">
-                                Applications open for all degree programs.
+                                {contact.admissionsText}
                             </p>
                         </div>
                         <div className="mt-auto pt-6">
@@ -215,7 +220,7 @@ export default function Contact() {
                     <div className="grid grid-rows-2 gap-4 lg:gap-6 min-h-[260px]">
                         <div className="bg-white p-6 rounded-[2rem] border border-slate-100 flex items-center justify-between shadow-sm hover:shadow-lg transition-all group h-full relative overflow-hidden">
                             <div className="relative z-10">
-                                <p className="text-3xl font-black text-primary mb-1 group-hover:scale-105 transition-transform origin-left">10K+</p>
+                                <p className="text-3xl font-black text-primary mb-1 group-hover:scale-105 transition-transform origin-left">{contact.studentsCount}</p>
                                 <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Happy Students</p>
                             </div>
                             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors relative z-10">
@@ -224,7 +229,7 @@ export default function Contact() {
                         </div>
                         <div className="bg-white p-6 rounded-[2rem] border border-slate-100 flex items-center justify-between shadow-sm hover:shadow-lg transition-all group h-full relative overflow-hidden">
                             <div className="relative z-10">
-                                <p className="text-3xl font-black text-secondary mb-1 group-hover:scale-105 transition-transform origin-left">50+</p>
+                                <p className="text-3xl font-black text-secondary mb-1 group-hover:scale-105 transition-transform origin-left">{contact.universitiesCount}</p>
                                 <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Universities</p>
                             </div>
                             <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center text-secondary group-hover:bg-secondary group-hover:text-white transition-colors relative z-10">

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Quote, Star } from "lucide-react";
+import TestimonialAvatar from "@/components/TestimonialAvatar";
 
 interface Testimonial {
     _id: string;
@@ -86,14 +87,7 @@ export default function Testimonials() {
                             </p>
 
                             <div className="flex items-center gap-4">
-                                {item.imageUrl ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img src={item.imageUrl} alt={item.name} className="w-14 h-14 rounded-2xl object-cover shadow-md" />
-                                ) : (
-                                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white font-bold text-xl uppercase">
-                                        {item.name.charAt(0)}
-                                    </div>
-                                )}
+                                <TestimonialAvatar name={item.name} imageUrl={item.imageUrl} />
                                 <div>
                                     <h4 className="font-black text-slate-900 leading-tight">{item.name}</h4>
                                     {item.role && <p className="text-sm text-slate-400 font-bold uppercase tracking-wider">{item.role}</p>}

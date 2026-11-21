@@ -8,8 +8,7 @@ import Footer from "@/components/Footer";
 import { CourseSchema } from "@/components/JsonLd";
 
 import dbConnect from "@/lib/db";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://learnink.edu.in";
+import { SITE_URL as siteUrl } from "@/lib/site";
 
 interface Props {
     params: Promise<{ slug: string }>;

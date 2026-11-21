@@ -1,11 +1,12 @@
 import { Metadata } from "next";
+import { withPageUrl } from "@/lib/site";
 import About from "@/components/About";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { PageSEO, SiteConfig } from "@/lib/models";
 import dbConnect from "@/lib/db";
 
-export async function generateMetadata(): Promise<Metadata> {
+async function buildMetadata(): Promise<Metadata> {
     try {
         await dbConnect();
         const pageSeo = await PageSEO.findOne({ pageKey: 'about' }).lean();
@@ -44,4 +45,9 @@ export default function AboutPage() {
             <Footer />
         </main>
     );
+}
+
+// Each page gets its own canonical URL instead of inheriting the homepage's.
+export async function generateMetadata(): Promise<Metadata> {
+    return withPageUrl(await buildMetadata(), "/about");
 }

@@ -12,13 +12,12 @@ export async function GET() {
 
         // Create default if not exists
         if (!config) {
-            const newConfig = await SiteConfig.create({
+            config = await SiteConfig.create({
                 key: 'global-seo',
                 title: 'Learnink Education',
                 description: 'Linking Learning, Skills & Careers',
                 keywords: ['education', 'learnink'],
             });
-            config = newConfig.toObject();
         }
 
         return NextResponse.json(JSON.parse(JSON.stringify(config)));

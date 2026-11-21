@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Loader2 } from "lucide-react";
-import NextImage from "next/image";
+import ImagePicker, { EMPTY_IMAGE, resolvePickedImage, type PickedImage } from "@/components/admin/ImagePicker";
 
 interface Photo {
     _id: string;
@@ -17,7 +17,9 @@ export default function AdminGallery() {
     const [submitting, setSubmitting] = useState(false);
 
     // Form State
-    const [imageUrl, setImageUrl] = useState("");
+    const [image, setImage] = useState<PickedImage>(EMPTY_IMAGE);
+    const [pickerKey, setPickerKey] = useState(0); // bump to reset the image picker
+    const [error, setError] = useState("");
     const [caption, setCaption] = useState("");
     const [order, setOrder] = useState("0");
 
@@ -41,23 +43,31 @@ export default function AdminGallery() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!image.ready) {
+            setError("Please upload an image or paste a link that loads in the preview.");
+            return;
+        }
         setSubmitting(true);
+        setError("");
 
         try {
+            const imageUrl = await resolvePickedImage(image);
             const res = await fetch("/api/admin/gallery", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ imageUrl, caption, order: parseInt(order) }),
+                body: JSON.stringify({ imageUrl, caption, order: parseInt(order) || 0 }),
             });
+            const saved = await res.json();
+            if (!res.ok) throw new Error(saved.error || "Failed to add photo.");
 
-            if (res.ok) {
-                setImageUrl("");
-                setCaption("");
-                setOrder((prev) => (parseInt(prev) + 1).toString());
-                fetchPhotos();
-            }
-        } catch (error) {
-            console.error("Failed to add photo", error);
+            setPickerKey((k) => k + 1);
+            setImage(EMPTY_IMAGE);
+            setCaption("");
+            setOrder((prev) => ((parseInt(prev) || 0) + 1).toString());
+            fetchPhotos();
+        } catch (err) {
+            console.error("Failed to add photo", err);
+            setError(err instanceof Error ? err.message : "Failed to add photo.");
         } finally {
             setSubmitting(false);
         }
@@ -92,15 +102,8 @@ export default function AdminGallery() {
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Image URL</label>
-                                <input
-                                    type="url"
-                                    value={imageUrl}
-                                    onChange={(e) => setImageUrl(e.target.value)}
-                                    className="w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-slate-900 font-bold"
-                                    placeholder="https://..."
-                                    required
-                                />
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Image</label>
+                                <ImagePicker key={pickerKey} onChange={setImage} />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Caption</label>
@@ -121,9 +124,10 @@ export default function AdminGallery() {
                                     className="w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-slate-900 font-bold"
                                 />
                             </div>
+                            {error && <p className="text-sm font-bold text-rose-600 pl-1">{error}</p>}
                             <button
                                 type="submit"
-                                disabled={submitting}
+                                disabled={submitting || !image.ready}
                                 className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-900/20 disabled:opacity-50 flex items-center justify-center gap-2"
                             >
                                 {submitting ? <Loader2 className="animate-spin" /> : "Add to Gallery"}
@@ -140,12 +144,13 @@ export default function AdminGallery() {
                             {photos.map((photo) => (
                                 <div key={photo._id} className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden group shadow-sm hover:shadow-xl transition-all relative">
                                     <div className="relative w-full h-48">
-                                        <NextImage
+                                        {/* Plain <img>: images can come from any host (uploads, Google, Drive). */}
+                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                        <img
                                             src={photo.imageUrl}
                                             alt={photo.caption || "Gallery Image"}
-                                            fill
-                                            className="object-cover"
-                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            referrerPolicy="no-referrer"
+                                            className="absolute inset-0 w-full h-full object-cover"
                                         />
                                     </div>
                                     <div className="p-4 flex items-center justify-between">

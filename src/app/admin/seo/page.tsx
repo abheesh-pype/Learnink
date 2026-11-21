@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { DEFAULT_ROBOTS_TXT } from "@/lib/site";
 import { Save, Globe, Loader2, Search, Twitter, FileText, ChevronDown, ChevronUp, Image as ImageIcon, Upload } from "lucide-react";
 
 interface PageSEO {
@@ -35,7 +36,7 @@ export default function SEOSettings() {
         keywords: "",
         favicon: "",
         ogImage: "",
-        robotsTxt: "User-agent: *\nAllow: /",
+        robotsTxt: DEFAULT_ROBOTS_TXT,
         googleAnalyticsId: "",
         googleVerification: "",
         twitterHandle: "",
@@ -71,7 +72,7 @@ export default function SEOSettings() {
                 keywords: data.keywords?.join(", ") || "",
                 favicon: data.favicon || "",
                 ogImage: data.ogImage || "",
-                robotsTxt: data.robotsTxt || "User-agent: *\nAllow: /",
+                robotsTxt: data.robotsTxt || DEFAULT_ROBOTS_TXT,
                 googleAnalyticsId: data.googleAnalyticsId || "",
                 googleVerification: data.googleVerification || "",
                 twitterHandle: data.twitterHandle || "",
@@ -601,6 +602,9 @@ export default function SEOSettings() {
                                 className="w-full p-4 rounded-xl bg-[#1e293b] text-green-400 font-mono text-sm border border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all min-h-[200px]"
                                 placeholder="User-agent: *..."
                             />
+                            <p className="text-xs text-slate-500 pl-1">
+                                Served exactly as written at <code>/robots.txt</code>. A <code>Sitemap:</code> line is added automatically if you don&apos;t include one.
+                            </p>
                         </div>
                     </div>
 

@@ -1,9 +1,10 @@
 import { MetadataRoute } from 'next';
 import { Program } from '@/lib/models';
 import dbConnect from '@/lib/db';
+import { SITE_URL } from '@/lib/site';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://learnink.edu.in';
+    const baseUrl = SITE_URL;
 
     // Static routes with differentiated priorities
     const staticRoutes = [

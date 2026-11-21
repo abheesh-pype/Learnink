@@ -1,5 +1,6 @@
 
 import { Metadata } from "next";
+import { withPageUrl } from "@/lib/site";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Programs from "@/components/Programs";
@@ -12,7 +13,7 @@ import { ArrowRight } from "lucide-react";
 import { PageSEO, SiteConfig } from "@/lib/models";
 import dbConnect from "@/lib/db";
 
-export async function generateMetadata(): Promise<Metadata> {
+async function buildMetadata(): Promise<Metadata> {
   try {
     await dbConnect();
     const pageSeo = await PageSEO.findOne({ pageKey: 'home' }).lean();
@@ -79,4 +80,9 @@ export default function Home() {
       <Footer />
     </main>
   );
+}
+
+// Each page gets its own canonical URL instead of inheriting the homepage's.
+export async function generateMetadata(): Promise<Metadata> {
+    return withPageUrl(await buildMetadata(), "/");
 }

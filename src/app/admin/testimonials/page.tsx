@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Loader2, Star } from "lucide-react";
+import ImagePicker, { EMPTY_IMAGE, resolvePickedImage, type PickedImage } from "@/components/admin/ImagePicker";
+import TestimonialAvatar from "@/components/TestimonialAvatar";
 
 interface Testimonial {
     _id: string;
@@ -22,7 +24,9 @@ export default function AdminTestimonials() {
     const [name, setName] = useState("");
     const [content, setContent] = useState("");
     const [role, setRole] = useState("");
-    const [imageUrl, setImageUrl] = useState("");
+    const [image, setImage] = useState<PickedImage>(EMPTY_IMAGE);
+    const [pickerKey, setPickerKey] = useState(0); // bump to reset the image picker
+    const [error, setError] = useState("");
     const [rating, setRating] = useState(5);
     const [order, setOrder] = useState("0");
 
@@ -46,25 +50,34 @@ export default function AdminTestimonials() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        // The profile image is optional, but if one was picked it must be usable.
+        if (!image.empty && !image.ready) {
+            setError("The profile image link didn't load. Fix or clear it before publishing.");
+            return;
+        }
         setSubmitting(true);
+        setError("");
 
         try {
+            const imageUrl = await resolvePickedImage(image);
             const res = await fetch("/api/admin/testimonials", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, content, role, imageUrl, rating, order: parseInt(order) }),
+                body: JSON.stringify({ name, content, role, imageUrl, rating, order: parseInt(order) || 0 }),
             });
+            const saved = await res.json();
+            if (!res.ok) throw new Error(saved.error || "Failed to add testimonial.");
 
-            if (res.ok) {
-                setName("");
-                setContent("");
-                setRole("");
-                setImageUrl("");
-                setOrder((prev) => (parseInt(prev) + 1).toString());
-                fetchTestimonials();
-            }
-        } catch (error) {
-            console.error("Failed to add testimonial", error);
+            setName("");
+            setContent("");
+            setRole("");
+            setPickerKey((k) => k + 1);
+            setImage(EMPTY_IMAGE);
+            setOrder((prev) => ((parseInt(prev) || 0) + 1).toString());
+            fetchTestimonials();
+        } catch (err) {
+            console.error("Failed to add testimonial", err);
+            setError(err instanceof Error ? err.message : "Failed to add testimonial.");
         } finally {
             setSubmitting(false);
         }
@@ -107,6 +120,12 @@ export default function AdminTestimonials() {
                                 <input type="text" value={role} onChange={(e) => setRole(e.target.value)} className="w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:border-primary focus:outline-none transition-all font-bold" placeholder="e.g. MBA Student" />
                             </div>
                             <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">
+                                    Profile Image <span className="normal-case tracking-normal font-medium text-slate-400">(optional)</span>
+                                </label>
+                                <ImagePicker key={pickerKey} onChange={setImage} variant="avatar" />
+                            </div>
+                            <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Rating (1-5)</label>
                                 <input type="number" min="1" max="5" value={rating} onChange={(e) => setRating(parseInt(e.target.value))} className="w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:border-primary focus:outline-none transition-all font-bold" />
                             </div>
@@ -114,7 +133,8 @@ export default function AdminTestimonials() {
                                 <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Content</label>
                                 <textarea value={content} onChange={(e) => setContent(e.target.value)} className="w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:border-primary focus:outline-none transition-all font-medium h-32" required />
                             </div>
-                            <button type="submit" disabled={submitting} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg active:scale-95 disabled:opacity-50">
+                            {error && <p className="text-sm font-bold text-rose-600 pl-1">{error}</p>}
+                            <button type="submit" disabled={submitting || (!image.empty && !image.ready)} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg active:scale-95 disabled:opacity-50">
                                 {submitting ? <Loader2 className="animate-spin" /> : "Publish Testimonial"}
                             </button>
                         </form>
@@ -128,6 +148,7 @@ export default function AdminTestimonials() {
                         <div className="space-y-4">
                             {testimonials.map((item) => (
                                 <div key={item._id} className="bg-white p-6 rounded-3xl border border-slate-200 flex items-start gap-6 group hover:border-primary/50 transition-all">
+                                    <TestimonialAvatar name={item.name} imageUrl={item.imageUrl} />
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-2">
                                             <h4 className="font-black text-slate-800">{item.name}</h4>

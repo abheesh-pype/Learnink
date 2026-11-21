@@ -14,7 +14,9 @@ const plusJakarta = Plus_Jakarta_Sans({
 import { SiteConfig } from "@/lib/models";
 import dbConnect from "@/lib/db";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://learnink.edu.in";
+import { SITE_URL as siteUrl, DEFAULT_FAVICON, DEFAULT_LOGO } from "@/lib/site";
+import SiteConfigProvider from "@/components/SiteConfigProvider";
+import { getContactInfo } from "@/lib/contactSettings";
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -36,15 +38,12 @@ export async function generateMetadata(): Promise<Metadata> {
         },
         description: config.description,
         keywords: config.keywords,
-        icons: config.favicon ? { icon: config.favicon } : undefined,
+        // One favicon only: the admin's, or the default. (Canonical URLs are set per page.)
+        icons: { icon: config.favicon || DEFAULT_FAVICON },
         metadataBase: new URL(siteUrl),
-        alternates: {
-          canonical: siteUrl,
-        },
         openGraph: {
           title: config.title,
           description: config.description,
-          url: siteUrl,
           siteName: config.title || "Learnink Education",
           images: config.ogImage ? [{ url: config.ogImage, width: 1200, height: 630 }] : undefined,
           locale: 'en_IN',
@@ -84,6 +83,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: "%s | Learnink Education",
     },
     description: "Learnink Education Pvt Ltd is an all-in-one education platform offering degree programs, fast track courses, and more.",
+    icons: { icon: DEFAULT_FAVICON },
     metadataBase: new URL(siteUrl),
   };
 }
@@ -102,7 +102,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const config = await getSiteConfig();
+  const [config, contact] = await Promise.all([getSiteConfig(), getContactInfo()]);
 
   const socialLinks: string[] = [];
   if (config?.socialLinks?.facebook) socialLinks.push(config.socialLinks.facebook);
@@ -120,6 +120,7 @@ export default async function RootLayout({
           url={siteUrl}
           logo={config?.ogImage}
           sameAs={socialLinks}
+          contact={contact}
         />
         <WebSiteSchema
           name={config?.title || "Learnink Education"}
@@ -131,7 +132,14 @@ export default async function RootLayout({
       >
         <Providers>
           {config?.googleAnalyticsId && <GoogleAnalytics gaId={config.googleAnalyticsId} />}
-          {children}
+          <SiteConfigProvider
+            value={{
+              logo: config?.images?.logo || DEFAULT_LOGO,
+              socialLinks: config?.socialLinks || {},
+            }}
+          >
+            {children}
+          </SiteConfigProvider>
         </Providers>
       </body>
     </html>

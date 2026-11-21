@@ -4,9 +4,11 @@ interface OrganizationSchemaProps {
     url: string;
     logo?: string;
     sameAs?: string[];
+    /** From Admin → Contact. */
+    contact: { phone: string; email: string; hqName: string; hqAddress: string };
 }
 
-export function OrganizationSchema({ name, description, url, logo, sameAs }: OrganizationSchemaProps) {
+export function OrganizationSchema({ name, description, url, logo, sameAs, contact }: OrganizationSchemaProps) {
     const schema = {
         "@context": "https://schema.org",
         "@type": "EducationalOrganization",
@@ -17,17 +19,14 @@ export function OrganizationSchema({ name, description, url, logo, sameAs }: Org
         ...(sameAs && sameAs.length > 0 && { "sameAs": sameAs }),
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "Learnink Education Hub",
-            "addressLocality": "Calicut",
-            "addressRegion": "Kerala",
-            "postalCode": "673001",
+            "streetAddress": [contact.hqName, ...contact.hqAddress.split(/\r?\n/)].map((s) => s.trim()).filter(Boolean).join(", "),
             "addressCountry": "IN"
         },
         "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+91-98765-43210",
+            "telephone": contact.phone,
             "contactType": "customer service",
-            "email": "learninkclt@gmail.com",
+            "email": contact.email,
             "availableLanguage": ["English", "Hindi"]
         }
     };
