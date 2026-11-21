@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, ScrollText, Rocket, RotateCcw, Laptop2, BookText, Award, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 interface Program {
     _id: string;
@@ -50,72 +51,75 @@ export default function Programs({ limit }: ProgramsProps) {
     }, [limit]);
 
     return (
-        <section id="programs" className="section-padding relative overflow-hidden bg-slate-50">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
-            <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <section id="programs" className="section bg-primary-50">
+            <div className="container-page">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="text-center max-w-3xl mx-auto mb-20"
+                    transition={{ duration: 0.6 }}
                 >
-                    <h2 className="text-primary font-bold tracking-wider uppercase text-sm mb-4">Our Programs</h2>
-                    <h3 className="text-4xl lg:text-5xl font-black text-[#1a202c] mb-6">
-                        Designed for Your <span className="text-primary">Success</span>
-                    </h3>
-                    <p className="text-lg text-slate-600 leading-relaxed">
-                        Choose from our wide range of flexible educational programs tailored to meet your career goals and academic needs.
-                    </p>
+                    <SectionHeader
+                        eyebrow="Our Programs"
+                        title={<>Designed for Your <span className="text-primary">Success</span></>}
+                        lead="Choose from our wide range of flexible educational programs tailored to meet your career goals and academic needs."
+                    />
                 </motion.div>
 
-                {loading ? (
-                    <div className="flex justify-center p-20">
-                        <Loader2 className="animate-spin text-primary w-10 h-10" />
-                    </div>
-                ) : programs.length === 0 ? (
-                    <div className="text-center py-20 px-10 border-2 border-dashed border-slate-200 rounded-[3rem] bg-white/50 backdrop-blur-sm">
-                        <h4 className="text-xl font-bold text-slate-300">Course Catalog Pending</h4>
-                        <p className="text-slate-400 mt-2">New programs are being finalized. Check back soon!</p>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {programs.map((program, index) => {
-                            const Icon = getIcon(program.category);
-                            return (
-                                <motion.div
-                                    key={program._id}
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: index * 0.1, duration: 0.5 }}
-                                    whileHover={{ y: -10 }}
-                                    className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500 flex flex-col items-start min-h-[320px] group relative overflow-hidden"
-                                >
-                                    {/* Decorative gradient accent */}
-                                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/5 to-transparent rounded-full blur-2xl pointer-events-none group-hover:bg-primary/10 transition-colors" />
-
-                                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-primary shadow-lg shadow-primary/10 bg-white border border-primary/10 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:border-primary/20">
-                                        <Icon size={30} strokeWidth={1.5} />
-                                    </div>
-                                    <h4 className="text-2xl font-bold text-slate-800 mb-3 group-hover:text-primary transition-colors duration-300 relative z-10">
-                                        {program.title}
-                                    </h4>
-                                    <p className="text-slate-500 font-medium leading-relaxed mb-8 flex-1 line-clamp-3 relative z-10">
-                                        {program.description}
-                                    </p>
-                                    <Link
-                                        href={`/programs/${program.slug}`}
-                                        className="inline-flex items-center gap-2 text-primary font-bold text-sm bg-primary/5 px-5 py-2.5 rounded-full hover:bg-primary hover:text-white transition-all duration-300 group-hover:pl-6"
+                <div className="mt-12 lg:mt-16">
+                    {loading ? (
+                        <div className="flex justify-center p-20">
+                            <Loader2 className="animate-spin text-primary w-10 h-10" />
+                        </div>
+                    ) : programs.length === 0 ? (
+                        <div className="card px-8 py-16 text-center">
+                            <h3 className="text-lg font-semibold text-ink">Course Catalog Pending</h3>
+                            <p className="mt-2 text-slate-500">New programs are being finalized. Check back soon!</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                            {programs.map((program, index) => {
+                                const Icon = getIcon(program.category);
+                                return (
+                                    <motion.article
+                                        key={program._id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: index * 0.08, duration: 0.5 }}
+                                        className="card card-hover group flex flex-col p-6 sm:p-7"
                                     >
-                                        Learn More <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                                    </Link>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                )}
+                                        <div className="flex items-start justify-between gap-4">
+                                            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white">
+                                                <Icon size={24} strokeWidth={1.75} />
+                                            </span>
+                                            {program.category && (
+                                                <span className="rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary">
+                                                    {program.category}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <h3 className="mt-5 text-xl font-bold text-ink transition-colors group-hover:text-primary">
+                                            {program.title}
+                                        </h3>
+                                        <p className="mt-3 flex-1 text-[15px] leading-relaxed text-slate-600 line-clamp-3">
+                                            {program.description}
+                                        </p>
+                                        <div className="mt-6 border-t border-slate-100 pt-5">
+                                            <Link
+                                                href={`/programs/${program.slug}`}
+                                                className="inline-flex items-center gap-2 text-sm font-semibold text-primary"
+                                            >
+                                                Learn More <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                                            </Link>
+                                        </div>
+                                    </motion.article>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
             </div>
-        </section >
+        </section>
     );
 }

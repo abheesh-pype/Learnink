@@ -1,11 +1,27 @@
 @import "tailwindcss";
 
+/*
+ * Learnink design system
+ * Colours come from the logo: indigo (#41348F) + white, with tints/shades of the same indigo.
+ */
 @theme {
     --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
 
-    --color-primary: #5B4B9E;
-    --color-primary-dark: #4A3D82;
-    --color-secondary: #4A90E2;
+    /* Brand indigo (logo) */
+    --color-primary: #41348F;
+    --color-primary-dark: #2F2570;
+    --color-primary-darker: #1E1748;
+    --color-primary-light: #6A5DB8;
+    --color-primary-50: #F5F3FB;
+    --color-primary-100: #ECE9F7;
+    --color-primary-200: #D8D2EF;
+
+    /* Secondary stays in the same indigo family so the palette matches the logo */
+    --color-secondary: #6A5DB8;
+
+    /* Heading ink */
+    --color-ink: #17132F;
+
     /* Logo background blue — used only for the active navbar link */
     --color-brand-blue: #41348F;
 
@@ -58,19 +74,72 @@
     }
 }
 
-/* Custom Utilities */
+/* ---------- Layout ---------- */
+
+/* Standard page container */
+.container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+/* Vertical rhythm for page sections */
+.section {
+    @apply py-16 sm:py-20 lg:py-24;
+}
+
+/* ---------- Section headings ---------- */
+
+.eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary;
+}
+
+.section-title {
+    @apply mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl;
+}
+
+.section-lead {
+    @apply mt-4 text-base leading-relaxed text-slate-600 sm:text-lg;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn-primary,
+.btn-outline,
+.btn-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50;
+}
+
+.btn-primary {
+    @apply bg-primary text-white shadow-sm hover:bg-primary-dark;
+}
+
+.btn-outline {
+    @apply border border-primary-200 bg-white text-primary hover:border-primary hover:bg-primary-50;
+}
+
+.btn-light {
+    @apply bg-white text-primary shadow-sm hover:bg-primary-50;
+}
+
+/* ---------- Cards ---------- */
+
+.card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+}
+
+.card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-lg hover:shadow-primary/5;
+}
+
+/* ---------- Legacy helpers (still used in a few places) ---------- */
+
 .glass-panel {
     @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl;
 }
 
 .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary via-pink-500 to-secondary;
-}
-
-.btn-primary {
-    @apply px-6 py-3 rounded-full bg-gradient-to-r from-primary to-primary-dark text-white font-bold shadow-lg shadow-primary/30 hover:shadow-primary/50 hover:-translate-y-0.5 transition-all duration-300;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-light;
 }
 
 .section-padding {
-    @apply py-24 px-6 lg:py-32 lg:px-12;
+    @apply py-16 px-4 sm:px-6 lg:py-24 lg:px-8;
 }

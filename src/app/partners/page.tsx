@@ -36,7 +36,7 @@ async function buildMetadata(): Promise<Metadata> {
 
 export default function PartnersPage() {
     return (
-        <main className="min-h-screen pt-32 flex flex-col bg-slate-50">
+        <main className="min-h-screen pt-20 flex flex-col bg-white">
             <Navbar />
             <div className="flex-1 w-full">
                 <Partners fullWidth={true} />

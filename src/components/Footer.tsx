@@ -48,16 +48,14 @@ export default function Footer() {
         { icon: Youtube, key: 'youtube', href: socialLinks.youtube },
     ].filter(s => s.href);
 
-    return (
-        <footer className="mt-auto bg-[#0f172a] text-slate-300 py-24 px-6 relative z-10 overflow-hidden">
-            <div className="absolute inset-0 bg-[url('/background-grid.svg')] opacity-5 pointer-events-none"></div>
-            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-            <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+    const linkClass = "text-white/70 transition-colors hover:text-white";
 
-            <div className="max-w-7xl mx-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-                    <div className="space-y-6">
-                        <Link href="/" className="flex items-center gap-3 group">
+    return (
+        <footer className="mt-auto bg-primary-darker text-white/70">
+            <div className="container-page py-16 lg:py-20">
+                <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12">
+                    <div className="space-y-5 lg:col-span-4">
+                        <Link href="/" className="inline-flex">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={logo}
@@ -66,21 +64,21 @@ export default function Footer() {
                                 onError={(e) => {
                                     if (!e.currentTarget.src.endsWith(DEFAULT_LOGO)) e.currentTarget.src = DEFAULT_LOGO;
                                 }}
-                                className="h-10 w-auto object-contain"
+                                className="h-11 w-auto rounded-md object-contain"
                             />
                         </Link>
-                        <p className="text-sm leading-relaxed max-w-xs font-medium text-slate-400">
+                        <p className="max-w-xs text-sm leading-relaxed">
                             Linking learning, skills, and careers in a single platform. We&apos;re committed to breaking barriers in education.
                         </p>
                         {socialIcons.length > 0 && (
-                            <div className="flex gap-4 pt-2">
+                            <div className="flex gap-3 pt-1">
                                 {socialIcons.map((social) => (
                                     <a
                                         key={social.key}
                                         href={social.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white transition-all hover:-translate-y-1"
+                                        className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-white hover:text-primary"
                                         aria-label={`Follow us on ${social.key}`}
                                     >
                                         <social.icon size={18} />
@@ -90,63 +88,66 @@ export default function Footer() {
                         )}
                     </div>
 
-                    <div>
-                        <h4 className="text-white font-bold mb-6 text-lg">Quick Links</h4>
-                        <ul className="space-y-3 text-sm font-medium">
-                            <li><Link href="/about" className="hover:text-primary transition-colors flex items-center gap-2 hover:gap-3"><span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span> About Us</Link></li>
-                            <li><Link href="/programs" className="hover:text-primary transition-colors flex items-center gap-2 hover:gap-3"><span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span> Programs</Link></li>
-                            <li><Link href="/partners" className="hover:text-primary transition-colors flex items-center gap-2 hover:gap-3"><span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span> Universities</Link></li>
-                            <li><Link href="/contact" className="hover:text-primary transition-colors flex items-center gap-2 hover:gap-3"><span className="w-1.5 h-1.5 rounded-full bg-primary/50"></span> Contact</Link></li>
+                    <div className="lg:col-span-2">
+                        <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Quick Links</h3>
+                        <ul className="mt-5 space-y-3 text-sm">
+                            <li><Link href="/about" className={linkClass}>About Us</Link></li>
+                            <li><Link href="/programs" className={linkClass}>Programs</Link></li>
+                            <li><Link href="/partners" className={linkClass}>Universities</Link></li>
+                            <li><Link href="/contact" className={linkClass}>Contact</Link></li>
                         </ul>
                     </div>
 
-                    <div>
-                        <h4 className="text-white font-bold mb-6 text-lg">Programs</h4>
-                        <ul className="space-y-3 text-sm font-medium">
-                            <li><Link href="/programs" className="hover:text-primary transition-colors">Fast Track Degree</Link></li>
-                            <li><Link href="/programs" className="hover:text-primary transition-colors">Credit Transfer</Link></li>
-                            <li><Link href="/programs" className="hover:text-primary transition-colors">Online Degree</Link></li>
-                            <li><Link href="/programs" className="hover:text-primary transition-colors">Secondary (10th)</Link></li>
+                    <div className="lg:col-span-2">
+                        <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Programs</h3>
+                        <ul className="mt-5 space-y-3 text-sm">
+                            <li><Link href="/programs" className={linkClass}>Fast Track Degree</Link></li>
+                            <li><Link href="/programs" className={linkClass}>Credit Transfer</Link></li>
+                            <li><Link href="/programs" className={linkClass}>Online Degree</Link></li>
+                            <li><Link href="/programs" className={linkClass}>Secondary (10th)</Link></li>
                         </ul>
                     </div>
 
-                    <div>
-                        <h4 className="text-white font-bold mb-6 text-lg">Newsletter</h4>
-                        <p className="text-sm mb-4 font-medium text-slate-400">Subscribe to get latest updates entirely free.</p>
-                        <form onSubmit={handleNewsletterSubmit}>
-                            <div className="flex gap-2 p-1.5 bg-white/5 rounded-xl border border-white/10 focus-within:border-primary/50 transition-colors">
+                    <div className="sm:col-span-2 lg:col-span-4">
+                        <h3 className="text-sm font-semibold uppercase tracking-wider text-white">Newsletter</h3>
+                        <p className="mt-5 text-sm">Subscribe to get latest updates entirely free.</p>
+                        <form onSubmit={handleNewsletterSubmit} className="mt-4">
+                            <div className="flex gap-2 rounded-lg border border-white/15 bg-white/5 p-1.5 transition-colors focus-within:border-white/40">
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Email Address"
                                     required
-                                    className="bg-transparent border-none focus:ring-0 text-white text-sm px-4 flex-1 outline-none placeholder:text-white/30"
+                                    aria-label="Email address"
+                                    className="min-w-0 flex-1 bg-transparent px-3 text-sm text-white outline-none placeholder:text-white/40"
                                 />
                                 <button
                                     type="submit"
                                     disabled={subscribing}
-                                    className="bg-primary text-white p-3 rounded-xl font-bold hover:bg-primary-dark transition-colors shadow-lg shadow-primary/20 disabled:opacity-50 flex items-center justify-center aspect-square"
+                                    className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary-100 disabled:opacity-50"
                                 >
-                                    {subscribing ? <Loader2 size={18} className="animate-spin" /> : <ArrowRight size={18} />}
+                                    {subscribing ? <Loader2 size={16} className="animate-spin" /> : <>Subscribe <ArrowRight size={16} /></>}
                                 </button>
                             </div>
                         </form>
                         {message && (
-                            <p className={`text-xs mt-3 font-medium ${message.type === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                            <p className={`mt-3 text-xs font-medium ${message.type === 'success' ? 'text-green-300' : 'text-red-300'}`}>
                                 {message.text}
                             </p>
                         )}
                     </div>
                 </div>
+            </div>
 
-                <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <p className="text-sm font-medium text-slate-500">
-                        © {new Date().getFullYear()} Learnink Education Pvt Ltd. <span className="hidden md:inline mx-2">•</span> All rights reserved.
+            <div className="border-t border-white/10">
+                <div className="container-page flex flex-col items-center justify-between gap-4 py-6 text-sm md:flex-row">
+                    <p className="text-white/60">
+                        © {new Date().getFullYear()} Learnink Education Pvt Ltd. <span className="mx-2 hidden md:inline">•</span> All rights reserved.
                     </p>
-                    <div className="flex gap-8 text-sm font-medium text-slate-400">
-                        <Link href="/privacy" className="hover:text-white transition-colors hover:underline decoration-primary decoration-2 underline-offset-4">Privacy Policy</Link>
-                        <Link href="/terms" className="hover:text-white transition-colors hover:underline decoration-primary decoration-2 underline-offset-4">Terms of Service</Link>
+                    <div className="flex gap-6">
+                        <Link href="/privacy" className="text-white/60 transition-colors hover:text-white">Privacy Policy</Link>
+                        <Link href="/terms" className="text-white/60 transition-colors hover:text-white">Terms of Service</Link>
                     </div>
                 </div>
             </div>

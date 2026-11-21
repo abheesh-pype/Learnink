@@ -36,18 +36,22 @@ async function buildMetadata(): Promise<Metadata> {
 export default async function PrivacyPage() {
     const { email } = await getContactInfo(); // edited in Admin → Contact
     return (
-        <main className="min-h-screen pt-25 flex flex-col bg-slate-50">
+        <main className="min-h-screen pt-20 flex flex-col bg-white">
             <Navbar />
-            <div className="flex-1 w-full max-w-4xl mx-auto px-6 py-16">
-                <h1 className="text-4xl font-black text-[#1a202c] mb-8">Privacy Policy</h1>
+            <header className="bg-primary-darker">
+                <div className="container-page py-12 lg:py-16">
+                    <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Privacy Policy</h1>
+                </div>
+            </header>
+            <div className="flex-1 w-full bg-primary-50 px-4 py-12 sm:px-6 lg:py-16">
 
-                <div className="prose prose-lg text-slate-600 max-w-none">
+                <div className="card prose prose-lg mx-auto max-w-4xl px-6 py-10 text-slate-600 sm:px-10">
                     <p className="text-lg font-medium mb-6">
                         Last updated: {new Date().toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' })}
                     </p>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-bold text-[#1a202c] mb-4">Information We Collect</h2>
+                        <h2 className="text-xl font-bold text-ink mb-3">Information We Collect</h2>
                         <p>
                             We collect information you provide directly to us, such as when you create an account,
                             submit an enquiry, subscribe to our newsletter, or contact us for support.
@@ -60,7 +64,7 @@ export default async function PrivacyPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-bold text-[#1a202c] mb-4">How We Use Your Information</h2>
+                        <h2 className="text-xl font-bold text-ink mb-3">How We Use Your Information</h2>
                         <p>We use the information we collect to:</p>
                         <ul className="list-disc pl-6 mt-4 space-y-2">
                             <li>Process your enquiries and applications</li>
@@ -71,7 +75,7 @@ export default async function PrivacyPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-bold text-[#1a202c] mb-4">Data Protection</h2>
+                        <h2 className="text-xl font-bold text-ink mb-3">Data Protection</h2>
                         <p>
                             We implement appropriate security measures to protect your personal information
                             against unauthorized access, alteration, disclosure, or destruction.
@@ -79,7 +83,7 @@ export default async function PrivacyPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-bold text-[#1a202c] mb-4">Contact Us</h2>
+                        <h2 className="text-xl font-bold text-ink mb-3">Contact Us</h2>
                         <p>
                             If you have any questions about this Privacy Policy, please contact us at{" "}
                             <a href={`mailto:${email}`} className="text-primary hover:underline">

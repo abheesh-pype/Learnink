@@ -61,50 +61,53 @@ export default async function ProgramPage({ params }: Props) {
                 url={`${siteUrl}/programs/${slug}`}
                 category={program.category}
             />
-            <main className="min-h-screen pt-25 pb-20 flex flex-col bg-slate-50">
+            <main className="min-h-screen pt-20 flex flex-col bg-white">
                 <Navbar />
-                <div className="flex-1 px-6">
-                    <div className="max-w-4xl mx-auto animate-[fadeIn_0.8s_ease-out_forwards]">
-                        <Link href="/programs" className="inline-flex items-center gap-2 text-primary/80 hover:text-primary mb-8 font-medium transition-colors">
-                            <ArrowLeft size={20} /> Back to Programs
-                        </Link>
 
-                        <article className="bg-white/70 backdrop-blur-md border border-slate-200 shadow-xl p-10 rounded-[3rem]">
-                            <span className="inline-block px-4 py-1.5 rounded-full bg-primary/10 text-primary font-bold text-sm tracking-widest uppercase mb-6">
+                {/* Page banner */}
+                <header className="bg-primary-darker">
+                    <div className="container-page py-12 lg:py-16">
+                        <Link href="/programs" className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition-colors hover:text-white">
+                            <ArrowLeft size={18} /> Back to Programs
+                        </Link>
+                        {program.category && (
+                            <span className="mt-6 block w-fit rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary-200">
                                 {program.category}
                             </span>
+                        )}
+                        <h1 className="mt-4 max-w-4xl text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                            {program.title}
+                        </h1>
+                    </div>
+                </header>
 
-                            <h1 className="text-4xl md:text-5xl font-black text-[#1a202c] mb-6 leading-tight">
-                                {program.title}
-                            </h1>
-
-                            <div className="prose prose-lg text-slate-600 max-w-none">
-                                <p className="text-xl leading-relaxed mb-8 font-medium">
+                <div className="flex-1 bg-primary-50">
+                    <div className="container-page grid grid-cols-1 gap-8 py-12 lg:grid-cols-12 lg:py-16">
+                        <article className="card p-6 sm:p-10 lg:col-span-8">
+                            <div className="prose prose-lg max-w-none text-slate-600">
+                                <p className="mb-8 text-lg font-medium leading-relaxed text-slate-700">
                                     {program.description}
                                 </p>
 
                                 {program.content ? (
                                     <div dangerouslySetInnerHTML={{ __html: program.content }} />
                                 ) : (
-                                    <div className="p-8 bg-slate-50 rounded-2xl border border-slate-100 text-center text-slate-400 italic">
+                                    <div className="rounded-xl border border-dashed border-primary-200 bg-primary-50 p-8 text-center text-slate-500">
                                         Detailed content coming soon.
                                     </div>
                                 )}
                             </div>
+                        </article>
 
-                            <div className="mt-12 pt-12 border-t border-slate-100 flex flex-col md:flex-row gap-6 items-center justify-between">
-                                <div>
-                                    <p className="font-bold text-[#1a202c] text-lg">Interested in this program?</p>
-                                    <p className="text-slate-500">Get in touch with our counselors today.</p>
-                                </div>
-                                <Link
-                                    href="/contact"
-                                    className="bg-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-primary-dark transition-all shadow-lg hover:-translate-y-1"
-                                >
+                        <aside className="lg:col-span-4">
+                            <div className="sticky top-28 rounded-2xl bg-primary p-6 text-white sm:p-8">
+                                <p className="text-lg font-semibold">Interested in this program?</p>
+                                <p className="mt-2 text-sm text-white/80">Get in touch with our counselors today.</p>
+                                <Link href="/contact" className="btn-light mt-6 w-full">
                                     Enquire Now
                                 </Link>
                             </div>
-                        </article>
+                        </aside>
                     </div>
                 </div>
                 <Footer />

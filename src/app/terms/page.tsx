@@ -36,18 +36,22 @@ async function buildMetadata(): Promise<Metadata> {
 export default async function TermsPage() {
     const { email } = await getContactInfo(); // edited in Admin → Contact
     return (
-        <main className="min-h-screen pt-25 flex flex-col bg-slate-50">
+        <main className="min-h-screen pt-20 flex flex-col bg-white">
             <Navbar />
-            <div className="flex-1 w-full max-w-4xl mx-auto px-6 py-16">
-                <h1 className="text-4xl font-black text-[#1a202c] mb-8">Terms of Service</h1>
+            <header className="bg-primary-darker">
+                <div className="container-page py-12 lg:py-16">
+                    <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Terms of Service</h1>
+                </div>
+            </header>
+            <div className="flex-1 w-full bg-primary-50 px-4 py-12 sm:px-6 lg:py-16">
 
-                <div className="prose prose-lg text-slate-600 max-w-none">
+                <div className="card prose prose-lg mx-auto max-w-4xl px-6 py-10 text-slate-600 sm:px-10">
                     <p className="text-lg font-medium mb-6">
                         Last updated: {new Date().toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' })}
                     </p>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-bold text-[#1a202c] mb-4">Acceptance of Terms</h2>
+                        <h2 className="text-xl font-bold text-ink mb-3">Acceptance of Terms</h2>
                         <p>
                             By accessing and using this website, you accept and agree to be bound by the terms
                             and provisions of this agreement. If you do not agree to abide by these terms,
@@ -56,7 +60,7 @@ export default async function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-bold text-[#1a202c] mb-4">Services</h2>
+                        <h2 className="text-xl font-bold text-ink mb-3">Services</h2>
                         <p>
                             Learnink Education Pvt Ltd provides educational consulting services, including
                             but not limited to degree programs, fast track courses, credit transfers, and
@@ -66,7 +70,7 @@ export default async function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-bold text-[#1a202c] mb-4">User Responsibilities</h2>
+                        <h2 className="text-xl font-bold text-ink mb-3">User Responsibilities</h2>
                         <ul className="list-disc pl-6 mt-4 space-y-2">
                             <li>Provide accurate and complete information when submitting enquiries</li>
                             <li>Maintain the confidentiality of your account information</li>
@@ -76,7 +80,7 @@ export default async function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-bold text-[#1a202c] mb-4">Intellectual Property</h2>
+                        <h2 className="text-xl font-bold text-ink mb-3">Intellectual Property</h2>
                         <p>
                             All content on this website, including text, graphics, logos, and images,
                             is the property of Learnink Education Pvt Ltd and is protected by applicable
@@ -85,7 +89,7 @@ export default async function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-bold text-[#1a202c] mb-4">Limitation of Liability</h2>
+                        <h2 className="text-xl font-bold text-ink mb-3">Limitation of Liability</h2>
                         <p>
                             Learnink Education Pvt Ltd shall not be liable for any indirect, incidental,
                             special, or consequential damages arising from the use of our services.
@@ -93,7 +97,7 @@ export default async function TermsPage() {
                     </section>
 
                     <section className="mb-8">
-                        <h2 className="text-2xl font-bold text-[#1a202c] mb-4">Contact</h2>
+                        <h2 className="text-xl font-bold text-ink mb-3">Contact</h2>
                         <p>
                             For any questions regarding these terms, please contact us at{" "}
                             <a href={`mailto:${email}`} className="text-primary hover:underline">

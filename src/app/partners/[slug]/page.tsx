@@ -43,106 +43,110 @@ export default async function PartnerDetailPage({ params }: Props) {
     if (!partner) notFound();
 
     return (
-        <main className="min-h-screen pt-32 pb-20 flex flex-col bg-slate-50">
+        <main className="min-h-screen pt-20 flex flex-col bg-white">
             <Navbar />
-            <div className="flex-1 px-6">
-                <div className="max-w-6xl mx-auto animate-[fadeIn_0.8s_ease-out_forwards]">
-                    {/* Header Section */}
-                    <Link href="/partners" className="inline-flex items-center gap-2 text-primary/80 hover:text-primary mb-12 font-bold transition-all hover:-translate-x-1">
-                        <ArrowLeft size={20} /> Back to Partners
+
+            {/* Page banner */}
+            <header className="bg-primary-darker">
+                <div className="container-page py-12 lg:py-16">
+                    <Link href="/partners" className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition-colors hover:text-white">
+                        <ArrowLeft size={18} /> Back to Partners
                     </Link>
+                    <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
+                        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-white p-3 shadow-lg">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={partner.logo} alt={partner.name} className="h-full w-full object-contain" />
+                        </div>
+                        <div>
+                            <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">{partner.name}</h1>
+                            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/75">
+                                <span className="inline-flex items-center gap-2">
+                                    <CheckCircle2 size={16} className="text-primary-200" />
+                                    Verified Partner
+                                </span>
+                                <span className="inline-flex items-center gap-2">
+                                    <GraduationCap size={16} className="text-primary-200" />
+                                    {partner.programs?.length || 0} Programs Offered
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                        {/* Sidebar: Logo & Quick Info */}
-                        <div className="lg:col-span-1">
-                            <div className="bg-white rounded-[3rem] p-10 border border-slate-200 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center sticky top-24">
-                                <div className="w-48 h-48 rounded-3xl bg-white border border-slate-100 p-8 flex items-center justify-center mb-8 shadow-inner">
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img src={partner.logo} alt={partner.name} className="w-full h-full object-contain mix-blend-multiply" />
-                                </div>
-                                <h1 className="text-3xl font-black text-slate-900 mb-4">{partner.name}</h1>
+            <div className="flex-1 bg-primary-50">
+                <div className="container-page grid grid-cols-1 gap-8 py-12 lg:grid-cols-12 lg:py-16">
+                    {/* Main Content: Description & Programs */}
+                    <div className="space-y-8 lg:col-span-8">
+                        {/* University Description */}
+                        <section className="card p-6 sm:p-8">
+                            <h2 className="text-xl font-bold text-ink">About the University</h2>
+                            <div className="prose mt-4 max-w-none leading-relaxed text-slate-600">
+                                {partner.description || "Information about this prestigious partner will be updated shortly."}
+                            </div>
+                        </section>
 
+                        {/* Programs Offered */}
+                        <section>
+                            <h2 className="text-xl font-bold text-ink">
+                                Available Programs at {partner.name}
+                            </h2>
+
+                            <div className="mt-5 grid grid-cols-1 gap-4">
+                                {partner.programs?.length > 0 ? (
+                                    partner.programs.map((program: ProgramItem) => (
+                                        <div key={program._id} className="card card-hover group flex flex-col justify-between gap-5 p-6 md:flex-row md:items-center">
+                                            <div className="flex-1">
+                                                <span className="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary">
+                                                    {program.category}
+                                                </span>
+                                                <h3 className="mt-3 text-lg font-bold text-ink transition-colors group-hover:text-primary">{program.title}</h3>
+                                                <p className="mt-1 text-sm text-slate-500 line-clamp-1">{program.description}</p>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <Link href={`/programs/${program.slug}`} className="btn-outline px-5 py-2.5">
+                                                    Details
+                                                </Link>
+                                                <Link href="/contact" className="btn-primary px-5 py-2.5">
+                                                    Enroll Now
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="rounded-2xl border border-dashed border-primary-200 bg-white p-12 text-center text-slate-500">
+                                        No programs currently listed.
+                                    </div>
+                                )}
+                            </div>
+                        </section>
+                    </div>
+
+                    {/* Sidebar */}
+                    <aside className="lg:col-span-4">
+                        <div className="sticky top-28 rounded-2xl bg-primary p-6 text-white sm:p-8">
+                            <p className="text-lg font-semibold">Want to study at {partner.name}?</p>
+                            <p className="mt-2 text-sm text-white/80">Our counsellors will help you choose the right program.</p>
+                            <div className="mt-6 space-y-3">
                                 {partner.enrollLink && (
                                     <a
                                         href={partner.enrollLink}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="w-full bg-primary text-white py-4 rounded-2xl font-black hover:bg-primary-dark transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 group"
+                                        className="btn-light w-full"
                                     >
-                                        Direct Enrollment <ExternalLink size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                                        Direct Enrollment <ExternalLink size={16} />
                                     </a>
                                 )}
-
-                                <div className="mt-8 pt-8 border-t border-slate-100 w-full space-y-4">
-                                    <div className="flex items-center gap-3 text-slate-500 text-sm font-bold uppercase tracking-wider">
-                                        <CheckCircle2 size={18} className="text-success" />
-                                        Verified Partner
-                                    </div>
-                                    <div className="flex items-center gap-3 text-slate-500 text-sm font-bold uppercase tracking-wider">
-                                        <GraduationCap size={18} className="text-secondary" />
-                                        {partner.programs?.length || 0} Programs Offered
-                                    </div>
-                                </div>
+                                <Link
+                                    href="/contact"
+                                    className="inline-flex w-full items-center justify-center rounded-lg border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                                >
+                                    Talk to a Counsellor
+                                </Link>
                             </div>
                         </div>
-
-                        {/* Main Content: Description & Programs */}
-                        <div className="lg:col-span-2 space-y-12">
-                            {/* University Description */}
-                            <section className="bg-white rounded-[3rem] p-12 border border-slate-200 shadow-xl shadow-slate-200/50">
-                                <h2 className="text-2xl font-black text-slate-900 mb-6 flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                                        <div className="w-2 h-2 rounded-full bg-primary" />
-                                    </div>
-                                    About the University
-                                </h2>
-                                <div className="prose prose-lg text-slate-600 max-w-none leading-relaxed font-medium">
-                                    {partner.description || "Information about this prestigious partner will be updated shortly."}
-                                </div>
-                            </section>
-
-                            {/* Programs Offered */}
-                            <section>
-                                <h2 className="text-2xl font-black text-slate-900 mb-8 px-4 flex items-center gap-3">
-                                    Available Programs at {partner.name}
-                                </h2>
-
-                                <div className="grid grid-cols-1 gap-6">
-                                    {partner.programs?.length > 0 ? (
-                                        partner.programs.map((program: ProgramItem) => (
-                                            <div key={program._id} className="bg-white group p-8 rounded-[2rem] border border-slate-200 shadow-sm hover:shadow-xl hover:border-primary/50 transition-all duration-500 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                                                <div className="flex-1">
-                                                    <span className="inline-block px-3 py-1 rounded-lg bg-slate-100 text-slate-400 text-[10px] font-black uppercase tracking-widest mb-3 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-                                                        {program.category}
-                                                    </span>
-                                                    <h3 className="text-xl font-bold text-slate-800 group-hover:text-primary transition-colors">{program.title}</h3>
-                                                    <p className="text-slate-500 text-sm mt-2 line-clamp-1">{program.description}</p>
-                                                </div>
-                                                <div className="flex items-center gap-3">
-                                                    <Link
-                                                        href={`/programs/${program.slug}`}
-                                                        className="px-6 py-3 rounded-xl bg-slate-50 text-slate-600 font-bold text-sm hover:bg-slate-100 transition-all"
-                                                    >
-                                                        Details
-                                                    </Link>
-                                                    <Link
-                                                        href="/contact"
-                                                        className="px-6 py-3 rounded-xl bg-primary text-white font-bold text-sm hover:bg-primary-dark shadow-md hover:shadow-lg transition-all"
-                                                    >
-                                                        Enroll Now
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className="bg-slate-100/50 border-2 border-dashed border-slate-200 rounded-[2rem] p-12 text-center text-slate-400 font-bold italic">
-                                            No programs currently listed.
-                                        </div>
-                                    )}
-                                </div>
-                            </section>
-                        </div>
-                    </div>
+                    </aside>
                 </div>
             </div>
             <Footer />

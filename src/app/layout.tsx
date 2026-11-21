@@ -128,7 +128,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${plusJakarta.variable} font-sans antialiased bg-slate-50 text-slate-900 selection:bg-primary/20 selection:text-primary overflow-x-hidden`}
+        className={`${plusJakarta.variable} font-sans antialiased bg-white text-slate-700 selection:bg-primary-100 selection:text-primary-dark overflow-x-hidden`}
       >
         <Providers>
           {config?.googleAnalyticsId && <GoogleAnalytics gaId={config.googleAnalyticsId} />}

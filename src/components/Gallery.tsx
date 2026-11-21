@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 interface Photo {
     _id: string;
@@ -33,7 +34,7 @@ export default function Gallery() {
 
     if (loading) {
         return (
-            <section className="section-padding flex justify-center py-20 bg-white">
+            <section className="section flex justify-center bg-primary-50">
                 <Loader2 className="animate-spin text-primary w-10 h-10" />
             </section>
         );
@@ -41,52 +42,52 @@ export default function Gallery() {
 
     if (photos.length === 0) {
         return (
-            <section className="section-padding bg-white relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-6 text-center py-20 border-2 border-dashed border-slate-100 rounded-[3rem]">
-                    <h2 className="text-primary font-bold tracking-wider uppercase text-sm mb-4">Visual Journey</h2>
-                    <h3 className="text-2xl font-black text-slate-300">Gallery Content Coming Soon</h3>
-                    <p className="text-slate-400 mt-2">Add photos from the Admin Dashboard to see them here.</p>
+            <section className="section bg-primary-50">
+                <div className="container-page">
+                    <div className="card px-8 py-16 text-center">
+                        <span className="eyebrow">Visual Journey</span>
+                        <h2 className="mt-4 text-2xl font-bold text-ink">Gallery Content Coming Soon</h2>
+                        <p className="mt-2 text-slate-500">Add photos from the Admin Dashboard to see them here.</p>
+                    </div>
                 </div>
             </section>
         );
     }
 
     return (
-        <section className="section-padding bg-white relative overflow-hidden">
-            <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <section className="section bg-primary-50">
+            <div className="container-page">
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-center mb-16"
                 >
-                    <h2 className="text-primary font-bold tracking-wider uppercase text-sm mb-4">Visual Journey</h2>
-                    <h3 className="text-4xl lg:text-5xl font-black text-slate-900 mb-6">Our Campus & Events</h3>
+                    <SectionHeader eyebrow="Visual Journey" title="Our Campus & Events" />
                 </motion.div>
 
-                <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+                <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
                     {photos.map((photo, index) => (
-                        <motion.div
+                        <motion.figure
                             key={photo._id}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
+                            initial={{ opacity: 0, y: 16 }}
+                            whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 }}
-                            className="relative group rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 bg-slate-100"
+                            transition={{ delay: index * 0.06 }}
+                            className="group relative aspect-[4/3] overflow-hidden rounded-2xl bg-primary-100 shadow-sm"
                         >
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={photo.imageUrl}
                                 alt={photo.caption || "Gallery Photo"}
                                 referrerPolicy="no-referrer"
-                                className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-700"
+                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
                             {photo.caption && (
-                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-                                    <p className="text-white font-bold text-lg">{photo.caption}</p>
-                                </div>
+                                <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary-darker/90 via-primary-darker/40 to-transparent px-5 pb-4 pt-12">
+                                    <p className="text-sm font-semibold text-white">{photo.caption}</p>
+                                </figcaption>
                             )}
-                        </motion.div>
+                        </motion.figure>
                     ))}
                 </div>
             </div>

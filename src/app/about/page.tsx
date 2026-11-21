@@ -40,7 +40,7 @@ export default async function AboutPage() {
     const { yearsCount } = await getContactInfo(); // Admin → Contact → Numbers
 
     return (
-        <main className="min-h-screen pt-25 flex flex-col bg-slate-50">
+        <main className="min-h-screen pt-20 flex flex-col bg-white">
             <Navbar />
             <div className="flex-1 w-full">
                 <About yearsCount={yearsCount} />
