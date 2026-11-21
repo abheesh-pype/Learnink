@@ -34,8 +34,9 @@ export default function About({ yearsCount = DEFAULT_CONTACT.yearsCount }: { yea
         fetchConfig();
     }, []);
     return (
-        <section id="about" className="section bg-white">
-            <div className="container-page">
+        <section id="about" className="section overflow-hidden bg-white">
+            <div className="glow-blob -right-40 top-10 h-96 w-96 bg-violet/15" aria-hidden="true" />
+            <div className="container-page relative">
                 <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2 lg:gap-20">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -44,17 +45,18 @@ export default function About({ yearsCount = DEFAULT_CONTACT.yearsCount }: { yea
                         transition={{ duration: 0.7 }}
                         className="relative pb-8 pr-4 sm:pr-8"
                     >
-                        {/* Decorative brand block behind the photo */}
-                        <div className="absolute bottom-0 right-0 h-3/4 w-3/4 rounded-3xl bg-primary-100" aria-hidden="true" />
-                        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-primary-100 shadow-xl lg:aspect-square">
+                        {/* Decorative animated gradient block + dots behind the photo */}
+                        <div className="bg-brand-gradient absolute bottom-0 right-0 h-3/4 w-3/4 rounded-3xl" aria-hidden="true" />
+                        <div className="bg-dots absolute -left-6 -top-6 h-32 w-32 rounded-2xl" aria-hidden="true" />
+                        <div className="group relative aspect-[4/3] overflow-hidden rounded-3xl border-4 border-white bg-primary-100 shadow-2xl lg:aspect-square">
                             {aboutImage ? (
                                 // eslint-disable-next-line @next/next/no-img-element
-                                <img src={aboutImage} alt="About Us" className="w-full h-full object-cover" />
+                                <img src={aboutImage} alt="About Us" className="w-full h-full object-cover transition-transform duration-[1200ms] group-hover:scale-110" />
                             ) : (
-                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center"></div>
+                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center transition-transform duration-[1200ms] group-hover:scale-110"></div>
                             )}
                         </div>
-                        <div className="absolute bottom-0 left-4 flex items-center gap-4 rounded-2xl bg-primary px-6 py-5 text-white shadow-xl sm:left-8">
+                        <div className="bg-brand-gradient absolute bottom-0 left-4 flex items-center gap-4 rounded-2xl px-6 py-5 text-white shadow-2xl shadow-violet/30 animate-float sm:left-8">
                             <p className="text-3xl font-bold">{yearsCount}</p>
                             <p className="max-w-[10rem] text-sm leading-snug text-white/85">
                                 <span className="font-semibold text-white">Years</span> of experience in educational consulting and excellence.
@@ -78,14 +80,23 @@ export default function About({ yearsCount = DEFAULT_CONTACT.yearsCount }: { yea
 
                         <ul className="mt-8 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
                             {features.map((feature, index) => (
-                                <li key={index} className="flex items-start gap-3">
-                                    <CheckCircle2 className="mt-0.5 shrink-0 text-primary" size={20} />
-                                    <span className="text-[15px] font-medium text-slate-700">{feature}</span>
-                                </li>
+                                <motion.li
+                                    key={index}
+                                    initial={{ opacity: 0, x: 20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.2 + index * 0.08, duration: 0.5 }}
+                                    className="group flex items-start gap-3"
+                                >
+                                    <span className="icon-tile mt-0.5 h-6 w-6 shrink-0 rounded-full transition-transform group-hover:scale-110">
+                                        <CheckCircle2 size={14} />
+                                    </span>
+                                    <span className="text-[15px] font-medium text-slate-700 transition-colors group-hover:text-primary">{feature}</span>
+                                </motion.li>
                             ))}
                         </ul>
 
-                        <div className="mt-10 rounded-2xl border-l-4 border-primary bg-primary-50 p-6">
+                        <div className="card card-hover mt-10 border-l-4 border-l-violet bg-gradient-to-br from-primary-50 to-white p-6">
                             <h3 className="font-semibold text-ink">Our Vision</h3>
                             <p className="mt-2 text-sm leading-relaxed text-slate-600">
                                 To be the bridge that links every learner to their dream career by providing accessible, accredited, and industry-relevant educational programs.

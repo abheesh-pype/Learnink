@@ -80,11 +80,14 @@ export default async function Home() {
       {/* Call to action */}
       <section className="bg-white pb-16 lg:pb-24">
         <div className="container-page">
-          <div className="relative overflow-hidden rounded-3xl bg-primary px-6 py-12 text-center sm:px-12 lg:py-16">
-            <div className="absolute -left-16 -top-16 h-64 w-64 rounded-full bg-primary-light/30 blur-3xl" aria-hidden="true" />
-            <div className="absolute -bottom-20 -right-10 h-72 w-72 rounded-full bg-primary-darker/40 blur-3xl" aria-hidden="true" />
+          <div className="bg-brand-gradient relative overflow-hidden rounded-[2rem] px-6 py-14 text-center shadow-2xl shadow-violet/30 sm:px-12 lg:py-20">
+            <div className="glow-blob -left-16 -top-16 h-64 w-64 bg-glow/30" aria-hidden="true" />
+            <div className="glow-blob -bottom-20 -right-10 h-72 w-72 bg-white/15 [animation-delay:-6s]" aria-hidden="true" />
+            <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:22px_22px]" aria-hidden="true" />
             <div className="relative">
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Ready to Start Your Journey?</h2>
+              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+                Ready to Start Your <span className="text-shimmer-light">Journey?</span>
+              </h2>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
                 Talk to our counsellors and find the right program for your career goals.
               </p>
@@ -94,7 +97,7 @@ export default async function Home() {
                 </Link>
                 <Link
                   href="/programs"
-                  className="inline-flex items-center justify-center rounded-lg border border-white/30 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-xl border-2 border-white/40 px-7 py-3.5 text-base font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10"
                 >
                   Browse Programs
                 </Link>

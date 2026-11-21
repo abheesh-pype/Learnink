@@ -68,7 +68,7 @@ export default function AdminEnquiries() {
         <div className="animate-[fade-in_0.5s_ease-out_forwards] space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-800 mb-2">Student Enquiries</h1>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-ink mb-2">Student Enquiries</h1>
                     <p className="text-slate-600 font-medium">Track and respond to student messages.</p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -79,7 +79,7 @@ export default function AdminEnquiries() {
             </div>
 
             {/* Search Bar */}
-            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-lg shadow-slate-200/40 flex items-center gap-4">
+            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-lg shadow-primary/5 flex items-center gap-4">
                 <Search className="text-slate-400 ml-2" size={20} />
                 <input
                     type="text"

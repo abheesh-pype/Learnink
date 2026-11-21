@@ -17,10 +17,12 @@ import {
     Star,
     Loader2,
     Settings,
-    Phone
+    Phone,
+    ExternalLink
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const { data: session, status } = useSession();
@@ -34,7 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     if (status === "loading") {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-[#f0f4f8] text-primary font-bold">
+            <div className="min-h-screen flex items-center justify-center bg-primary-50 text-primary font-bold">
                 <div className="flex flex-col items-center gap-4">
                     <Loader2 className="animate-spin text-primary w-10 h-10" />
                     <span className="text-slate-500">Loading Dashboard...</span>
@@ -59,18 +61,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     ];
 
     return (
-        <div className="min-h-screen bg-[#f0f4f8] flex flex-col lg:flex-row font-sans">
+        <div className="relative flex min-h-screen flex-col bg-primary-50 font-sans lg:flex-row">
+            {/* Soft animated background for the content area */}
+            <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
+                <div className="glow-blob -right-40 -top-40 h-[30rem] w-[30rem] bg-violet/10" />
+                <div className="glow-blob -bottom-40 left-1/3 h-[26rem] w-[26rem] bg-glow/10 [animation-delay:-7s]" />
+            </div>
+
             {/* Mobile Header */}
-            <header className="lg:hidden flex items-center justify-between p-4 bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+            <header className="sticky top-0 z-50 flex items-center justify-between border-b border-white/60 bg-white/80 p-4 backdrop-blur-xl lg:hidden">
                 <Link href="/" className="flex items-center gap-2">
-                    <div className="bg-primary/10 p-2 rounded-xl">
-                        <GraduationCap className="w-5 h-5 text-primary" />
-                    </div>
-                    <span className="text-lg font-bold text-slate-800 tracking-tight">Learnink Admin</span>
+                    <span className="icon-tile h-9 w-9">
+                        <GraduationCap className="h-5 w-5" />
+                    </span>
+                    <span className="text-lg font-extrabold tracking-tight text-ink">Learnink Admin</span>
                 </Link>
                 <button
                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                    className="p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                    className="rounded-lg p-2 text-slate-600 transition-colors hover:bg-slate-100"
+                    aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
                 >
                     {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
@@ -78,24 +87,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* Sidebar */}
             <aside className={cn(
-                "fixed inset-y-0 left-0 z-40 w-72 bg-white border-r border-slate-200 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:h-screen lg:sticky lg:top-0 flex flex-col shadow-xl lg:shadow-none",
+                "fixed inset-y-0 left-0 z-40 flex w-72 flex-col overflow-hidden bg-primary-darker text-white shadow-2xl transition-transform duration-300 ease-in-out lg:sticky lg:top-0 lg:h-screen lg:translate-x-0",
                 isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
             )}>
-                <div className="p-8 hidden lg:block border-b border-slate-50">
-                    <Link href="/" className="flex items-center gap-3 group">
-                        <div className="bg-gradient-to-br from-primary to-primary-dark p-2.5 rounded-xl shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform duration-300">
-                            <GraduationCap className="w-6 h-6 text-white" />
-                        </div>
+                {/* Sidebar glow */}
+                <div className="glow-blob -left-24 -top-24 h-72 w-72 bg-violet/40" aria-hidden="true" />
+                <div className="glow-blob -bottom-24 -right-24 h-72 w-72 bg-glow/20 [animation-delay:-6s]" aria-hidden="true" />
+
+                <div className="relative hidden border-b border-white/10 p-7 lg:block">
+                    <Link href="/" className="group flex items-center gap-3">
+                        <span className="icon-tile h-11 w-11 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110">
+                            <GraduationCap className="h-6 w-6" />
+                        </span>
                         <div className="flex flex-col">
-                            <span className="text-xl font-black text-slate-800 tracking-tight leading-none group-hover:text-primary transition-colors">Learnink</span>
-                            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Admin Portal</span>
+                            <span className="text-xl font-extrabold leading-none tracking-tight">Learnink</span>
+                            <span className="mt-1 text-[11px] font-semibold uppercase tracking-widest text-white/50">Admin Portal</span>
                         </div>
                     </Link>
                 </div>
 
-                <div className="p-4 lg:px-6 lg:py-8 flex-1 overflow-y-auto custom-scrollbar">
-                    <nav className="space-y-1.5">
-                        <p className="px-4 text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 mt-2">Main Menu</p>
+                <div className="relative flex-1 overflow-y-auto p-4 lg:px-5 lg:py-6">
+                    <nav className="space-y-1">
+                        <p className="mb-3 mt-2 px-4 text-[11px] font-semibold uppercase tracking-widest text-white/40">Main Menu</p>
                         {menuItems.map((item) => {
                             const isActive = item.exact
                                 ? pathname === item.href
@@ -107,34 +120,40 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                     href={item.href}
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     className={cn(
-                                        "flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-bold transition-all duration-200 group relative overflow-hidden",
+                                        "group relative flex items-center gap-3 overflow-hidden rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300",
                                         isActive
-                                            ? "bg-gradient-to-r from-primary/10 to-transparent text-primary shadow-sm ring-1 ring-primary/20"
-                                            : "text-slate-500 hover:text-slate-800 hover:bg-slate-50"
+                                            ? "text-white shadow-lg shadow-violet/30"
+                                            : "text-white/60 hover:translate-x-1 hover:bg-white/5 hover:text-white"
                                     )}
                                 >
-                                    {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full" />}
-                                    <item.icon size={20} className={cn("transition-colors", isActive ? "text-primary" : "text-slate-400 group-hover:text-slate-600")} strokeWidth={isActive ? 2.5 : 2} />
-                                    {item.name}
+                                    {isActive && (
+                                        <motion.span
+                                            layoutId="admin-active-nav"
+                                            className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary to-violet"
+                                            transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                                        />
+                                    )}
+                                    <item.icon size={20} className={cn("relative transition-transform duration-300", isActive ? "text-white" : "text-white/50 group-hover:scale-110 group-hover:text-white")} strokeWidth={isActive ? 2.5 : 2} />
+                                    <span className="relative">{item.name}</span>
                                 </Link>
                             );
                         })}
                     </nav>
                 </div>
 
-                <div className="p-4 border-t border-slate-100 bg-slate-50/50">
-                    <div className="flex items-center gap-3 px-4 py-3 mb-2 rounded-xl bg-white border border-slate-100 shadow-sm">
-                        <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                <div className="relative border-t border-white/10 p-4">
+                    <div className="mb-2 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet to-glow font-bold text-white">
                             {session.user?.name?.charAt(0) || "A"}
                         </div>
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-bold text-slate-800 truncate">{session.user?.name || "Admin"}</p>
-                            <p className="text-xs text-slate-400 truncate">Administrator</p>
+                        <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-semibold text-white">{session.user?.name || "Admin"}</p>
+                            <p className="truncate text-xs text-white/50">Administrator</p>
                         </div>
                     </div>
                     <button
                         onClick={() => signOut({ callbackUrl: "/" })}
-                        className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl text-sm font-bold text-rose-500 hover:bg-rose-50 hover:text-rose-600 transition-all border border-transparent hover:border-rose-100"
+                        className="flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold text-rose-300 transition-all hover:bg-rose-500/15 hover:text-rose-200"
                     >
                         <LogOut size={18} />
                         Sign Out
@@ -145,16 +164,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Overlay for mobile */}
             {isMobileMenuOpen && (
                 <div
-                    className="fixed inset-0 bg-slate-900/20 z-30 lg:hidden backdrop-blur-sm"
+                    className="fixed inset-0 z-30 bg-primary-darker/40 backdrop-blur-sm lg:hidden"
                     onClick={() => setIsMobileMenuOpen(false)}
                 />
             )}
 
             {/* Main Content */}
-            <main className="flex-1 p-4 lg:p-10 pt-6 lg:pt-10 h-screen overflow-y-auto overflow-x-hidden relative">
-                <div className="max-w-7xl mx-auto animate-[fadeIn_0.5s_ease-out_forwards]">
-                    {children}
+            <main className="relative h-screen flex-1 overflow-y-auto overflow-x-hidden">
+                {/* Top bar */}
+                <div className="sticky top-0 z-20 hidden items-center justify-between border-b border-white/60 bg-white/70 px-10 py-4 backdrop-blur-xl lg:flex">
+                    <p className="text-sm font-medium text-slate-500">
+                        Signed in as <span className="font-semibold text-ink">{session.user?.name || "Admin"}</span>
+                    </p>
+                    <Link
+                        href="/"
+                        target="_blank"
+                        className="group inline-flex items-center gap-2 rounded-xl border-2 border-primary-200 bg-white px-4 py-2 text-sm font-semibold text-primary transition-all hover:-translate-y-0.5 hover:border-violet hover:shadow-lg hover:shadow-violet/15"
+                    >
+                        View Website <ExternalLink size={15} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </Link>
                 </div>
+
+                <motion.div
+                    key={pathname}
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
+                    className="mx-auto max-w-7xl p-4 pt-6 lg:p-10"
+                >
+                    {children}
+                </motion.div>
             </main>
         </div>
     );

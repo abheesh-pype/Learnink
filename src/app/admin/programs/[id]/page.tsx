@@ -86,14 +86,14 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                 <button
                     onClick={handleSubmit}
                     disabled={saving}
-                    className="px-6 py-2.5 rounded-xl font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-slate-900/20 disabled:opacity-50 bg-slate-900 text-white hover:bg-slate-800"
+                    className="px-6 py-2.5 rounded-xl font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-violet/30 disabled:opacity-50 bg-gradient-to-r from-primary to-violet text-white hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30"
                 >
                     {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                     Save Changes
                 </button>
             </div>
 
-            <div className="bg-white rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden">
+            <div className="bg-white rounded-[2rem] border border-slate-200 shadow-xl shadow-primary/5 overflow-hidden">
                 <div className="flex border-b border-slate-200 bg-slate-50 p-2 gap-2">
                     <button
                         onClick={() => setActiveTab("general")}
@@ -127,7 +127,7 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                                         type="text"
                                         value={formData.title}
                                         onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 text-slate-900 font-bold transition-all placeholder:text-slate-400"
+                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 text-slate-900 font-bold transition-all placeholder:text-slate-400"
                                         placeholder="e.g. Master of Business Administration"
                                     />
                                 </div>
@@ -137,7 +137,7 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                                         <select
                                             value={formData.category}
                                             onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                            className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 text-slate-900 font-bold transition-all appearance-none"
+                                            className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 text-slate-900 font-bold transition-all appearance-none"
                                         >
                                             <option value="Degree Breaking">Degree Breaking</option>
                                             <option value="Fast Track">Fast Track</option>
@@ -158,7 +158,7 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                                     type="text"
                                     value={formData.slug}
                                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 font-mono text-sm text-slate-700 transition-all"
+                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 font-mono text-sm text-slate-700 transition-all"
                                     placeholder="e.g. master-business-administration"
                                 />
                                 <p className="text-xs text-slate-400 pl-1">The URL-friendly version of the name. Must be unique.</p>
@@ -169,7 +169,7 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                                 <textarea
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 min-h-[100px] text-slate-900 font-medium transition-all"
+                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 min-h-[100px] text-slate-900 font-medium transition-all"
                                     placeholder="Brief summary of the program..."
                                 />
                             </div>
@@ -179,7 +179,7 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                                 <textarea
                                     value={formData.content}
                                     onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 min-h-[300px] text-slate-900 font-mono text-sm transition-all"
+                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 min-h-[300px] text-slate-900 font-mono text-sm transition-all"
                                     placeholder="<p>Detailed program content goes here...</p>"
                                 />
                             </div>
@@ -201,7 +201,7 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                                     value={formData.metaTitle}
                                     onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
                                     placeholder={formData.title}
-                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 text-slate-900 font-bold"
+                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 text-slate-900 font-bold"
                                 />
                                 <div className="flex justify-between pl-1">
                                     <p className="text-xs text-slate-400">Ideally 50-60 characters.</p>
@@ -217,7 +217,7 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                                     value={formData.metaDescription}
                                     onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
                                     placeholder={formData.description}
-                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 min-h-[100px] text-slate-900 font-medium"
+                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 min-h-[100px] text-slate-900 font-medium"
                                 />
                                 <div className="flex justify-between pl-1">
                                     <p className="text-xs text-slate-400">Ideally 150-160 characters.</p>
@@ -233,7 +233,7 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                                     type="text"
                                     value={formData.keywords}
                                     onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
-                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 text-slate-900 font-bold"
+                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 text-slate-900 font-bold"
                                     placeholder="e.g. mbbs, online degree, fast track"
                                 />
                                 <p className="text-xs text-slate-400 pl-1">Comma separated list of focus keywords.</p>

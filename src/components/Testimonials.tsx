@@ -62,21 +62,31 @@ export default function Testimonials() {
                     <SectionHeader eyebrow="Success Stories" title="What Our Students Say" />
                 </motion.div>
 
-                <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:mt-16 lg:grid-cols-3">
+                <div className="mt-16 grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-2 lg:mt-20 lg:grid-cols-3">
                     {testimonials.map((item, index) => (
                         <motion.figure
                             key={item._id}
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: 40 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.08 }}
-                            className="card relative flex flex-col p-7"
+                            viewport={{ once: true, margin: "-60px" }}
+                            transition={{ delay: index * 0.12, duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+                            className="card card-hover group flex flex-col p-7 pt-10"
                         >
-                            <Quote size={40} className="absolute right-6 top-6 text-primary-100" aria-hidden="true" />
+                            <span className="icon-tile absolute -top-5 left-7 h-11 w-11 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110" aria-hidden="true">
+                                <Quote size={20} />
+                            </span>
 
                             <div className="flex gap-1" aria-label={`Rated ${item.rating} out of 5`}>
                                 {[...Array(item.rating)].map((_, i) => (
-                                    <Star key={i} size={16} className="fill-primary text-primary" />
+                                    <motion.span
+                                        key={i}
+                                        initial={{ opacity: 0, scale: 0 }}
+                                        whileInView={{ opacity: 1, scale: 1 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: index * 0.12 + 0.3 + i * 0.08, type: "spring", stiffness: 400, damping: 15 }}
+                                    >
+                                        <Star size={18} className="fill-violet text-violet" />
+                                    </motion.span>
                                 ))}
                             </div>
 
@@ -85,7 +95,7 @@ export default function Testimonials() {
                             </blockquote>
 
                             <figcaption className="mt-6 flex items-center gap-4 border-t border-slate-100 pt-5">
-                                <TestimonialAvatar name={item.name} imageUrl={item.imageUrl} className="h-12 w-12 rounded-full shadow-none" />
+                                <TestimonialAvatar name={item.name} imageUrl={item.imageUrl} className="h-12 w-12 rounded-full shadow-md ring-2 ring-white ring-offset-2 ring-offset-primary-200" />
                                 <div>
                                     <p className="font-semibold leading-tight text-ink">{item.name}</p>
                                     {item.role && <p className="mt-0.5 text-sm text-slate-500">{item.role}</p>}

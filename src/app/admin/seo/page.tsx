@@ -198,7 +198,7 @@ export default function SEOSettings() {
                     <Globe className="w-8 h-8 text-primary" />
                 </div>
                 <div>
-                    <h1 className="text-3xl font-black text-slate-800">SEO Settings</h1>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-ink">SEO Settings</h1>
                     <p className="text-slate-500 font-medium">Manage global and per-page SEO settings</p>
                 </div>
             </div>
@@ -299,7 +299,7 @@ export default function SEOSettings() {
                                     type="text"
                                     value={formData.images.logo}
                                     onChange={(e) => setFormData(prev => ({ ...prev, images: { ...prev.images, logo: e.target.value } }))}
-                                    className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-600 focus:outline-none focus:border-primary"
+                                    className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-600 focus:outline-none focus:border-violet"
                                     placeholder="/uploads/..."
                                 />
                             </div>
@@ -355,7 +355,7 @@ export default function SEOSettings() {
                                     type="text"
                                     value={formData.images.heroBg}
                                     onChange={(e) => setFormData(prev => ({ ...prev, images: { ...prev.images, heroBg: e.target.value } }))}
-                                    className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-600 focus:outline-none focus:border-primary"
+                                    className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-600 focus:outline-none focus:border-violet"
                                     placeholder="/uploads/..."
                                 />
                             </div>
@@ -411,7 +411,7 @@ export default function SEOSettings() {
                                     type="text"
                                     value={formData.images.aboutImage}
                                     onChange={(e) => setFormData(prev => ({ ...prev, images: { ...prev.images, aboutImage: e.target.value } }))}
-                                    className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-600 focus:outline-none focus:border-primary"
+                                    className="w-full p-3 rounded-xl bg-slate-50 border border-slate-200 text-sm font-medium text-slate-600 focus:outline-none focus:border-violet"
                                     placeholder="/uploads/..."
                                 />
                             </div>
@@ -424,7 +424,7 @@ export default function SEOSettings() {
                             <button
                                 onClick={handleSubmit}
                                 disabled={saving}
-                                className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition-all flex items-center gap-2 shadow-lg shadow-slate-900/20 disabled:opacity-50"
+                                className="bg-gradient-to-r from-primary to-violet text-white px-8 py-4 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all flex items-center gap-2 shadow-lg shadow-violet/25 disabled:opacity-50"
                             >
                                 {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
                                 Save Image Settings
@@ -448,7 +448,7 @@ export default function SEOSettings() {
                                     type="text"
                                     value={formData.title}
                                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 placeholder:text-slate-400"
+                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-bold text-slate-900 placeholder:text-slate-400"
                                     placeholder="e.g. Learnink Education"
                                 />
                             </div>
@@ -459,7 +459,7 @@ export default function SEOSettings() {
                                     type="text"
                                     value={formData.keywords}
                                     onChange={(e) => setFormData({ ...formData, keywords: e.target.value })}
-                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 placeholder:text-slate-400"
+                                    className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-bold text-slate-900 placeholder:text-slate-400"
                                     placeholder="education, degrees, online courses"
                                 />
                             </div>
@@ -470,7 +470,7 @@ export default function SEOSettings() {
                             <textarea
                                 value={formData.description}
                                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-medium min-h-[100px] text-slate-900 placeholder:text-slate-400"
+                                className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-medium min-h-[100px] text-slate-900 placeholder:text-slate-400"
                                 placeholder="A brief description of your site for search engines."
                             />
                         </div>
@@ -506,7 +506,7 @@ export default function SEOSettings() {
                                         type="text"
                                         value={formData.favicon}
                                         onChange={(e) => setFormData({ ...formData, favicon: e.target.value })}
-                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 placeholder:text-slate-400"
+                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-bold text-slate-900 placeholder:text-slate-400"
                                         placeholder="https://..."
                                     />
                                 </div>
@@ -517,7 +517,7 @@ export default function SEOSettings() {
                                         type="text"
                                         value={formData.ogImage}
                                         onChange={(e) => setFormData({ ...formData, ogImage: e.target.value })}
-                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 placeholder:text-slate-400"
+                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-bold text-slate-900 placeholder:text-slate-400"
                                         placeholder="https://..."
                                     />
                                 </div>
@@ -533,7 +533,7 @@ export default function SEOSettings() {
                                         type="text"
                                         value={formData.googleAnalyticsId}
                                         onChange={(e) => setFormData({ ...formData, googleAnalyticsId: e.target.value })}
-                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 placeholder:text-slate-400"
+                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-bold text-slate-900 placeholder:text-slate-400"
                                         placeholder="G-XXXXXXXXXX"
                                     />
                                 </div>
@@ -544,7 +544,7 @@ export default function SEOSettings() {
                                         type="text"
                                         value={formData.googleVerification}
                                         onChange={(e) => setFormData({ ...formData, googleVerification: e.target.value })}
-                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 placeholder:text-slate-400"
+                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-bold text-slate-900 placeholder:text-slate-400"
                                         placeholder="Verification code"
                                     />
                                 </div>
@@ -564,7 +564,7 @@ export default function SEOSettings() {
                                 type="text"
                                 value={formData.twitterHandle}
                                 onChange={(e) => setFormData({ ...formData, twitterHandle: e.target.value })}
-                                className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 placeholder:text-slate-400"
+                                className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-bold text-slate-900 placeholder:text-slate-400"
                                 placeholder="@learnink"
                             />
                         </div>
@@ -584,7 +584,7 @@ export default function SEOSettings() {
                                             ...formData,
                                             socialLinks: { ...formData.socialLinks, [social]: e.target.value }
                                         })}
-                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-bold text-slate-900 placeholder:text-slate-400"
+                                        className="w-full p-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-bold text-slate-900 placeholder:text-slate-400"
                                         placeholder={`https://${social}.com/...`}
                                     />
                                 </div>
@@ -599,7 +599,7 @@ export default function SEOSettings() {
                             <textarea
                                 value={formData.robotsTxt}
                                 onChange={(e) => setFormData({ ...formData, robotsTxt: e.target.value })}
-                                className="w-full p-4 rounded-xl bg-[#1e293b] text-green-400 font-mono text-sm border border-slate-700 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all min-h-[200px]"
+                                className="w-full p-4 rounded-xl bg-[#1e293b] text-green-400 font-mono text-sm border border-slate-700 focus:outline-none focus:ring-2 focus:ring-violet/40 transition-all min-h-[200px]"
                                 placeholder="User-agent: *..."
                             />
                             <p className="text-xs text-slate-500 pl-1">
@@ -613,7 +613,7 @@ export default function SEOSettings() {
                             <button
                                 type="submit"
                                 disabled={saving}
-                                className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition-all flex items-center gap-2 shadow-lg shadow-slate-900/20 disabled:opacity-50"
+                                className="bg-gradient-to-r from-primary to-violet text-white px-8 py-4 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all flex items-center gap-2 shadow-lg shadow-violet/25 disabled:opacity-50"
                             >
                                 {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
                                 Save Global Settings
@@ -636,7 +636,7 @@ export default function SEOSettings() {
                                 className="w-full p-6 flex items-center justify-between hover:bg-slate-50 transition-colors"
                             >
                                 <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <div className="icon-tile w-10 h-10">
                                         <FileText size={20} className="text-primary" />
                                     </div>
                                     <div className="text-left">
@@ -656,7 +656,7 @@ export default function SEOSettings() {
                                                 type="text"
                                                 value={pageSeoData[page.key]?.title || ""}
                                                 onChange={(e) => updatePageSEO(page.key, 'title', e.target.value)}
-                                                className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-medium text-slate-900 placeholder:text-slate-400"
+                                                className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-medium text-slate-900 placeholder:text-slate-400"
                                                 placeholder={`${page.label} | Learnink Education`}
                                             />
                                         </div>
@@ -667,7 +667,7 @@ export default function SEOSettings() {
                                                 type="text"
                                                 value={pageSeoData[page.key]?.keywords || ""}
                                                 onChange={(e) => updatePageSEO(page.key, 'keywords', e.target.value)}
-                                                className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-medium text-slate-900 placeholder:text-slate-400"
+                                                className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-medium text-slate-900 placeholder:text-slate-400"
                                                 placeholder="keyword1, keyword2"
                                             />
                                         </div>
@@ -678,7 +678,7 @@ export default function SEOSettings() {
                                         <textarea
                                             value={pageSeoData[page.key]?.description || ""}
                                             onChange={(e) => updatePageSEO(page.key, 'description', e.target.value)}
-                                            className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-medium min-h-[80px] text-slate-900 placeholder:text-slate-400"
+                                            className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-medium min-h-[80px] text-slate-900 placeholder:text-slate-400"
                                             placeholder="Description for this page..."
                                         />
                                     </div>
@@ -689,7 +689,7 @@ export default function SEOSettings() {
                                             type="text"
                                             value={pageSeoData[page.key]?.ogImage || ""}
                                             onChange={(e) => updatePageSEO(page.key, 'ogImage', e.target.value)}
-                                            className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all font-medium text-slate-900 placeholder:text-slate-400"
+                                            className="w-full p-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all font-medium text-slate-900 placeholder:text-slate-400"
                                             placeholder="https://... (leave empty to use default)"
                                         />
                                     </div>
@@ -711,7 +711,7 @@ export default function SEOSettings() {
                                     <button
                                         onClick={() => handlePageSEOSave(page.key)}
                                         disabled={savingPage === page.key}
-                                        className="bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition-all flex items-center gap-2 shadow-lg shadow-slate-900/20 disabled:opacity-50"
+                                        className="bg-gradient-to-r from-primary to-violet text-white px-6 py-3 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all flex items-center gap-2 shadow-lg shadow-violet/25 disabled:opacity-50"
                                     >
                                         {savingPage === page.key ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                                         Save {page.label} SEO

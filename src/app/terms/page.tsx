@@ -38,8 +38,10 @@ export default async function TermsPage() {
     return (
         <main className="min-h-screen pt-20 flex flex-col bg-white">
             <Navbar />
-            <header className="bg-primary-darker">
-                <div className="container-page py-12 lg:py-16">
+            <header className="bg-brand-gradient relative overflow-hidden">
+                <div className="glow-blob -right-24 -top-24 h-80 w-80 bg-glow/25" aria-hidden="true" />
+                <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:22px_22px]" aria-hidden="true" />
+                <div className="container-page relative py-14 lg:py-20">
                     <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">Terms of Service</h1>
                 </div>
             </header>

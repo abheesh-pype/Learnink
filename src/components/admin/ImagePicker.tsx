@@ -128,7 +128,7 @@ export default function ImagePicker({ onChange, variant = "wide" }: ImagePickerP
                         type="url"
                         value={linkInput}
                         onChange={(e) => changeLink(e.target.value)}
-                        className="w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-slate-900 font-bold"
+                        className="w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all text-slate-900 font-bold"
                         placeholder="Paste a Google Images, Drive or image link"
                     />
                     <p className="text-xs text-slate-500 pl-1">

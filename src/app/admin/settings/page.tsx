@@ -69,11 +69,11 @@ export default function IntegrationSettings() {
     return (
         <div className="animate-[fade-in_0.5s_ease-out_forwards] max-w-4xl mx-auto pb-20">
             <div className="mb-8">
-                <h1 className="text-3xl font-black text-slate-800 mb-2">Integration Settings</h1>
+                <h1 className="text-3xl font-extrabold tracking-tight text-ink mb-2">Integration Settings</h1>
                 <p className="text-slate-600 font-medium">Configure connections to external tools and CRMs.</p>
             </div>
 
-            <div className="bg-white rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/50 overflow-hidden">
+            <div className="bg-white rounded-[2rem] border border-slate-200 shadow-xl shadow-primary/5 overflow-hidden">
                 <div className="p-8 border-b border-slate-100 bg-slate-50/50">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-blue-500 shadow-sm">
@@ -140,7 +140,7 @@ export default function IntegrationSettings() {
                         <button
                             type="submit"
                             disabled={saving}
-                            className="bg-slate-900 text-white px-8 py-4 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
+                            className="bg-gradient-to-r from-primary to-violet text-white px-8 py-4 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center gap-2"
                         >
                             {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
                             Save Changes

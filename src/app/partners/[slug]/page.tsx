@@ -47,8 +47,10 @@ export default async function PartnerDetailPage({ params }: Props) {
             <Navbar />
 
             {/* Page banner */}
-            <header className="bg-primary-darker">
-                <div className="container-page py-12 lg:py-16">
+            <header className="bg-brand-gradient relative overflow-hidden">
+                <div className="glow-blob -right-24 -top-24 h-80 w-80 bg-glow/25" aria-hidden="true" />
+                <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:22px_22px]" aria-hidden="true" />
+                <div className="container-page relative py-14 lg:py-20">
                     <Link href="/partners" className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition-colors hover:text-white">
                         <ArrowLeft size={18} /> Back to Partners
                     </Link>
@@ -124,7 +126,7 @@ export default async function PartnerDetailPage({ params }: Props) {
 
                     {/* Sidebar */}
                     <aside className="lg:col-span-4">
-                        <div className="sticky top-28 rounded-2xl bg-primary p-6 text-white sm:p-8">
+                        <div className="bg-brand-gradient sticky top-28 overflow-hidden rounded-2xl p-6 text-white shadow-xl shadow-violet/25 sm:p-8">
                             <p className="text-lg font-semibold">Want to study at {partner.name}?</p>
                             <p className="mt-2 text-sm text-white/80">Our counsellors will help you choose the right program.</p>
                             <div className="mt-6 space-y-3">

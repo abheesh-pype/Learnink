@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 /*
- * Learnink design system
- * Colours come from the logo: indigo (#41348F) + white, with tints/shades of the same indigo.
+ * Learnink design system — "vibrant gradient"
+ * Logo indigo (#41348F) + white, with a violet and soft pink glow from the same family.
  */
 @theme {
     --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
@@ -10,13 +10,17 @@
     /* Brand indigo (logo) */
     --color-primary: #41348F;
     --color-primary-dark: #2F2570;
-    --color-primary-darker: #1E1748;
+    --color-primary-darker: #1A1440;
     --color-primary-light: #6A5DB8;
-    --color-primary-50: #F5F3FB;
-    --color-primary-100: #ECE9F7;
-    --color-primary-200: #D8D2EF;
+    --color-primary-50: #F6F4FD;
+    --color-primary-100: #ECE8FA;
+    --color-primary-200: #D9D1F5;
 
-    /* Secondary stays in the same indigo family so the palette matches the logo */
+    /* Accent glow (same family as the logo) */
+    --color-violet: #7C5CFF;
+    --color-glow: #E879F9;
+
+    /* Secondary stays in the indigo family */
     --color-secondary: #6A5DB8;
 
     /* Heading ink */
@@ -26,78 +30,120 @@
     --color-brand-blue: #41348F;
 
     --animate-float: float 6s ease-in-out infinite;
-    --animate-blob: blob 7s infinite;
+    --animate-float-slow: float 9s ease-in-out infinite;
+    --animate-blob: blob 14s ease-in-out infinite;
     --animate-fade-in-up: fadeInUp 0.5s ease-out forwards;
+    --animate-gradient: gradientMove 10s ease infinite;
+    --animate-shimmer: shimmer 4s linear infinite;
+    --animate-marquee: marquee 35s linear infinite;
+    --animate-spin-slow: spin 18s linear infinite;
+    --animate-pulse-ring: pulseRing 2.4s ease-out infinite;
 
     @keyframes float {
-        0% {
-            transform: translateY(0px);
-        }
-
-        50% {
-            transform: translateY(-20px);
-        }
-
-        100% {
-            transform: translateY(0px);
-        }
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-14px); }
     }
 
     @keyframes blob {
-        0% {
-            transform: translate(0, 0) scale(1);
-        }
-
-        33% {
-            transform: translate(30px, -50px) scale(1.1);
-        }
-
-        66% {
-            transform: translate(-20px, 20px) scale(0.9);
-        }
-
-        100% {
-            transform: translate(0, 0) scale(1);
-        }
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        33% { transform: translate(40px, -50px) scale(1.12); }
+        66% { transform: translate(-30px, 25px) scale(0.92); }
     }
 
     @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    @keyframes gradientMove {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    @keyframes shimmer {
+        from { background-position: 0% center; }
+        to { background-position: 200% center; }
+    }
+
+    @keyframes marquee {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+    }
+
+    @keyframes pulseRing {
+        0% { transform: scale(0.9); opacity: 0.7; }
+        100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    @keyframes shine {
+        from { transform: translateX(-120%) skewX(-20deg); }
+        to { transform: translateX(220%) skewX(-20deg); }
     }
 }
 
 /* ---------- Layout ---------- */
 
-/* Standard page container */
 .container-page {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
 }
 
-/* Vertical rhythm for page sections */
 .section {
-    @apply py-16 sm:py-20 lg:py-24;
+    @apply relative py-20 sm:py-24 lg:py-28;
+}
+
+/* ---------- Brand gradients ---------- */
+
+/* Animated indigo → violet → pink background */
+.bg-brand-gradient {
+    background-image: linear-gradient(120deg, var(--color-primary-darker), var(--color-primary), var(--color-violet), #9D4EDD, var(--color-primary));
+    background-size: 300% 300%;
+    animation: var(--animate-gradient);
+}
+
+/* Shimmering gradient text */
+.text-shimmer {
+    background-image: linear-gradient(90deg, var(--color-primary), var(--color-violet), var(--color-glow), var(--color-violet), var(--color-primary));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: var(--animate-shimmer);
+}
+
+/* Lighter shimmer for dark backgrounds */
+.text-shimmer-light {
+    background-image: linear-gradient(90deg, #ffffff, var(--color-primary-200), var(--color-glow), var(--color-primary-200), #ffffff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: var(--animate-shimmer);
+}
+
+/* Soft glowing blob used as animated background decoration */
+.glow-blob {
+    @apply pointer-events-none absolute rounded-full blur-3xl;
+    animation: var(--animate-blob);
+}
+
+/* Subtle dotted grid texture */
+.bg-dots {
+    background-image: radial-gradient(color-mix(in oklab, var(--color-primary) 18%, transparent) 1px, transparent 1px);
+    background-size: 22px 22px;
 }
 
 /* ---------- Section headings ---------- */
 
 .eyebrow {
-    @apply inline-flex items-center gap-2 rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary;
+    @apply inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary shadow-sm backdrop-blur;
 }
 
 .section-title {
-    @apply mt-4 text-3xl font-bold tracking-tight text-ink sm:text-4xl;
+    @apply mt-5 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl lg:text-[2.75rem] lg:leading-tight;
 }
 
 .section-lead {
-    @apply mt-4 text-base leading-relaxed text-slate-600 sm:text-lg;
+    @apply mt-5 text-base leading-relaxed text-slate-600 sm:text-lg;
 }
 
 /* ---------- Buttons ---------- */
@@ -105,29 +151,98 @@
 .btn-primary,
 .btn-outline,
 .btn-light {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50;
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet focus-visible:ring-offset-2 disabled:opacity-50;
 }
 
+/* Gradient button with a light sweep on hover */
 .btn-primary {
-    @apply bg-primary text-white shadow-sm hover:bg-primary-dark;
+    @apply text-white shadow-lg shadow-primary/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/40;
+    background-image: linear-gradient(120deg, var(--color-primary), var(--color-violet), var(--color-primary));
+    background-size: 200% auto;
+    background-position: 0% center;
+}
+
+.btn-primary:hover {
+    background-position: 100% center;
+}
+
+.btn-primary::after,
+.btn-light::after {
+    content: "";
+    @apply pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-white/30;
+    transform: translateX(-120%) skewX(-20deg);
+}
+
+.btn-primary:hover::after,
+.btn-light:hover::after {
+    animation: shine 0.8s ease;
 }
 
 .btn-outline {
-    @apply border border-primary-200 bg-white text-primary hover:border-primary hover:bg-primary-50;
+    @apply border-2 border-primary-200 bg-white text-primary hover:-translate-y-0.5 hover:border-violet hover:shadow-lg hover:shadow-violet/15;
 }
 
 .btn-light {
-    @apply bg-white text-primary shadow-sm hover:bg-primary-50;
+    @apply bg-white text-primary shadow-lg shadow-black/10 hover:-translate-y-0.5 hover:shadow-xl;
+}
+
+.btn-light::after {
+    @apply bg-primary/10;
 }
 
 /* ---------- Cards ---------- */
 
 .card {
-    @apply rounded-2xl border border-slate-200 bg-white shadow-sm;
+    @apply rounded-2xl border border-slate-200/80 bg-white shadow-sm;
 }
 
+/* Lift + glowing gradient border on hover */
 .card-hover {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:border-primary-200 hover:shadow-lg hover:shadow-primary/5;
+    @apply relative isolate transition-all duration-300 hover:-translate-y-1.5 hover:border-transparent hover:shadow-2xl hover:shadow-violet/15;
+}
+
+.card-hover::before {
+    content: "";
+    @apply pointer-events-none absolute -inset-px -z-10 rounded-[inherit] opacity-0 transition-opacity duration-300;
+    padding: 1.5px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-violet), var(--color-glow));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
+
+.card-hover:hover::before {
+    @apply opacity-100;
+}
+
+/* Frosted glass panel */
+.glass {
+    @apply border border-white/50 bg-white/70 shadow-xl backdrop-blur-xl;
+}
+
+.glass-dark {
+    @apply border border-white/15 bg-white/10 backdrop-blur-xl;
+}
+
+/* Gradient icon tile */
+.icon-tile {
+    @apply flex items-center justify-center rounded-xl text-white shadow-lg shadow-violet/25;
+    background-image: linear-gradient(135deg, var(--color-primary), var(--color-violet));
+}
+
+/* ---------- Marquee (infinite logo strip) ---------- */
+
+.marquee-mask {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.marquee-track {
+    animation: var(--animate-marquee);
+}
+
+.marquee-mask:hover .marquee-track {
+    animation-play-state: paused;
 }
 
 /* ---------- Legacy helpers (still used in a few places) ---------- */
@@ -137,9 +252,22 @@
 }
 
 .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-light;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-violet;
 }
 
 .section-padding {
     @apply py-16 px-4 sm:px-6 lg:py-24 lg:px-8;
+}
+
+/* ---------- Accessibility: calm everything down for reduced-motion users ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }

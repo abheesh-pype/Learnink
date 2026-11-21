@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import { motion, useScroll, useSpring } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useSiteConfig } from "@/components/SiteConfigProvider";
 import { DEFAULT_LOGO } from "@/lib/site";
@@ -21,6 +22,8 @@ export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
     const { logo } = useSiteConfig(); // Admin → SEO Settings → Site Logo (falls back to /logo.png)
+    const { scrollYProgress } = useScroll();
+    const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 25, mass: 0.3 });
 
     // "/" only matches the home page; other links also stay active on their sub-pages (e.g. /programs/some-slug).
     const isActive = (href: string) =>
@@ -37,10 +40,18 @@ export default function Navbar() {
     return (
         <nav
             className={cn(
-                "fixed top-0 left-0 right-0 z-50 bg-white transition-shadow duration-300",
-                scrolled ? "border-b border-slate-200 shadow-sm" : "border-b border-transparent"
+                "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+                scrolled
+                    ? "border-b border-white/60 bg-white/80 shadow-lg shadow-primary/5 backdrop-blur-xl"
+                    : "border-b border-transparent bg-white"
             )}
         >
+            {/* Scroll progress bar */}
+            <motion.div
+                className="absolute bottom-0 left-0 right-0 h-[3px] origin-left bg-gradient-to-r from-primary via-violet to-glow"
+                style={{ scaleX: progress }}
+                aria-hidden="true"
+            />
             <div className="container-page">
                 <div className="flex h-20 items-center justify-between gap-6">
                     <Link href="/" className="flex shrink-0 items-center">
@@ -52,7 +63,7 @@ export default function Navbar() {
                             onError={(e) => {
                                 if (!e.currentTarget.src.endsWith(DEFAULT_LOGO)) e.currentTarget.src = DEFAULT_LOGO;
                             }}
-                            className="h-11 w-auto object-contain"
+                            className="h-11 w-auto object-contain transition-transform duration-300 hover:scale-105"
                         />
                     </Link>
 
@@ -87,7 +98,7 @@ export default function Navbar() {
                         </Link>
                         <Link
                             href="/contact"
-                            className="inline-flex items-center rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-slate-700"
+                            className="inline-flex items-center rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl"
                         >
                             Enquire Now
                         </Link>

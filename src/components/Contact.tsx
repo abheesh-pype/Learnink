@@ -5,6 +5,7 @@ import { Mail, Phone, MapPin, Send, Loader2, Clock, MessageCircle, Users, BookOp
 import { useEffect, useState } from "react";
 import { DEFAULT_CONTACT, telHref, type ContactInfo } from "@/lib/contact";
 import SectionHeader from "@/components/ui/SectionHeader";
+import CountUp from "@/components/ui/CountUp";
 
 interface ProgramOption {
     _id: string;
@@ -78,7 +79,7 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
             subtitle: contact.phoneHours,
             value: contact.phone,
             href: telHref(contact.phone),
-            color: "bg-primary"
+            color: ""
         },
         {
             icon: Mail,
@@ -86,7 +87,7 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
             subtitle: contact.emailNote,
             value: contact.email,
             href: `mailto:${contact.email}`,
-            color: "bg-primary-dark"
+            color: ""
         },
         {
             icon: MapPin,
@@ -96,7 +97,7 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
             // Opens the map link if one is set, otherwise a Google Maps search for the address.
             href: contact.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${contact.hqName}, ${contact.hqAddress.replace(/\n/g, ", ")}`)}`,
             external: true,
-            color: "bg-primary-light"
+            color: ""
         }
     ];
 
@@ -105,8 +106,10 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
     const labelClass = "text-sm font-semibold text-ink";
 
     return (
-        <section id="contact" className="section bg-primary-50">
-            <div className="container-page">
+        <section id="contact" className="section overflow-hidden bg-primary-50">
+            <div className="glow-blob -left-40 top-20 h-96 w-96 bg-violet/15" aria-hidden="true" />
+            <div className="glow-blob -right-40 bottom-20 h-96 w-96 bg-glow/10 [animation-delay:-7s]" aria-hidden="true" />
+            <div className="container-page relative">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
@@ -136,7 +139,7 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
                             {...("external" in info && info.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                             className="card card-hover group flex items-start gap-4 p-6"
                         >
-                            <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white ${info.color}`}>
+                            <span className={`icon-tile h-12 w-12 shrink-0 transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${info.color}`}>
                                 <info.icon size={22} />
                             </span>
                             <div className="min-w-0 flex-1">
@@ -287,27 +290,28 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
                         className="flex flex-col gap-6 lg:col-span-5"
                     >
                         {/* Address Card */}
-                        <div className="rounded-2xl bg-primary-darker p-6 text-white sm:p-8">
-                            <div className="flex items-center gap-3">
+                        <div className="relative overflow-hidden rounded-2xl bg-primary-darker p-6 text-white sm:p-8">
+                            <div className="glow-blob -right-16 -top-16 h-48 w-48 bg-violet/40" aria-hidden="true" />
+                            <div className="relative flex items-center gap-3">
                                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10">
                                     <MapPin size={20} />
                                 </span>
                                 <h2 className="text-lg font-semibold">Headquarters</h2>
                             </div>
-                            <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-white/75">
+                            <p className="relative mt-4 whitespace-pre-line text-sm leading-relaxed text-white/75">
                                 {contact.hqName}
                                 {"\n"}
                                 {contact.hqAddress}
                             </p>
-                            <div className="mt-6 flex items-center gap-2 border-t border-white/10 pt-5 text-sm text-white/70">
+                            <div className="relative mt-6 flex items-center gap-2 border-t border-white/10 pt-5 text-sm text-white/70">
                                 <Clock size={16} />
                                 <span>{contact.hqHours}</span>
                             </div>
                         </div>
 
                         {/* Admission Status */}
-                        <div className="relative overflow-hidden rounded-2xl bg-primary p-6 text-white sm:p-8">
-                            <GraduationCap className="absolute -bottom-4 -right-4 text-white/10" size={120} aria-hidden="true" />
+                        <div className="bg-brand-gradient relative overflow-hidden rounded-2xl p-6 text-white shadow-xl shadow-violet/25 sm:p-8">
+                            <GraduationCap className="absolute -bottom-4 -right-4 text-white/10 animate-float-slow" size={120} aria-hidden="true" />
                             <div className="relative">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-lg font-semibold">Admissions</h2>
@@ -328,18 +332,18 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
 
                         {/* Stats */}
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="card p-5">
-                                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-50 text-primary">
+                            <div className="card card-hover group p-5">
+                                <span className="icon-tile h-10 w-10 transition-transform duration-300 group-hover:rotate-6">
                                     <Users size={20} />
                                 </span>
-                                <p className="mt-3 text-2xl font-bold text-primary">{contact.studentsCount}</p>
+                                <p className="mt-3 text-2xl font-extrabold"><span className="text-shimmer"><CountUp value={contact.studentsCount} /></span></p>
                                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Happy Students</p>
                             </div>
-                            <div className="card p-5">
-                                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-50 text-primary">
+                            <div className="card card-hover group p-5">
+                                <span className="icon-tile h-10 w-10 transition-transform duration-300 group-hover:rotate-6">
                                     <BookOpen size={20} />
                                 </span>
-                                <p className="mt-3 text-2xl font-bold text-primary">{contact.universitiesCount}</p>
+                                <p className="mt-3 text-2xl font-extrabold"><span className="text-shimmer"><CountUp value={contact.universitiesCount} /></span></p>
                                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Universities</p>
                             </div>
                         </div>

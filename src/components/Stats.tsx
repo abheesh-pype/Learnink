@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Users, BookOpen, Globe, Award } from "lucide-react";
 import { DEFAULT_CONTACT, type ContactInfo } from "@/lib/contact";
+import CountUp from "@/components/ui/CountUp";
 
 type StatNumbers = Pick<ContactInfo, "studentsCount" | "coursesCount" | "universitiesCount" | "yearsCount">;
 
@@ -42,26 +43,28 @@ export default function Stats({ numbers = DEFAULT_CONTACT }: { numbers?: StatNum
     return (
         <section className="relative z-10 bg-white">
             <div className="container-page">
-                <div className="-mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-slate-200 bg-slate-200 shadow-xl shadow-primary/5 lg:grid-cols-4">
-                    {stats.map((stat, index) => (
-                        <motion.div
-                            key={stat.id}
-                            initial={{ opacity: 0, y: 16 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.08 }}
-                            className="flex items-start gap-4 bg-white p-5 sm:p-7"
-                        >
-                            <span className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary sm:flex">
-                                <stat.icon size={24} />
-                            </span>
-                            <div>
-                                <p className="text-2xl font-bold tracking-tight text-primary sm:text-3xl">{stat.value}</p>
+                <div className="bg-brand-gradient relative -mt-14 overflow-hidden rounded-3xl p-1.5 shadow-2xl shadow-violet/25">
+                    <div className="grid grid-cols-2 gap-1.5 lg:grid-cols-4">
+                        {stats.map((stat, index) => (
+                            <motion.div
+                                key={stat.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: index * 0.1, duration: 0.6 }}
+                                className="group rounded-[1.25rem] bg-white/95 p-5 text-center transition-colors duration-300 hover:bg-white sm:p-7"
+                            >
+                                <span className="icon-tile mx-auto h-12 w-12 transition-transform duration-300 group-hover:-translate-y-1 group-hover:rotate-6">
+                                    <stat.icon size={22} />
+                                </span>
+                                <p className="mt-4 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
+                                    <span className="text-shimmer"><CountUp value={stat.value} /></span>
+                                </p>
                                 <p className="mt-1 text-sm font-semibold text-ink">{stat.label}</p>
                                 <p className="mt-0.5 hidden text-xs text-slate-500 sm:block">{stat.desc}</p>
-                            </div>
-                        </motion.div>
-                    ))}
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>

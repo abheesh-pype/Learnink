@@ -51,8 +51,10 @@ export default function Programs({ limit }: ProgramsProps) {
     }, [limit]);
 
     return (
-        <section id="programs" className="section bg-primary-50">
-            <div className="container-page">
+        <section id="programs" className="section overflow-hidden bg-primary-50">
+            <div className="glow-blob -right-40 top-0 h-96 w-96 bg-violet/15" aria-hidden="true" />
+            <div className="glow-blob -left-40 bottom-0 h-96 w-96 bg-glow/10 [animation-delay:-6s]" aria-hidden="true" />
+            <div className="container-page relative">
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -83,15 +85,17 @@ export default function Programs({ limit }: ProgramsProps) {
                                 return (
                                     <motion.article
                                         key={program._id}
-                                        initial={{ opacity: 0, y: 20 }}
+                                        initial={{ opacity: 0, y: 40 }}
                                         whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: index * 0.08, duration: 0.5 }}
-                                        className="card card-hover group flex flex-col p-6 sm:p-7"
+                                        viewport={{ once: true, margin: "-60px" }}
+                                        transition={{ delay: index * 0.1, duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+                                        className="card card-hover group flex flex-col overflow-hidden p-6 sm:p-7"
                                     >
-                                        <div className="flex items-start justify-between gap-4">
-                                            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-white">
-                                                <Icon size={24} strokeWidth={1.75} />
+                                        {/* Corner glow that grows on hover */}
+                                        <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-violet/10 blur-2xl transition-all duration-500 group-hover:scale-150 group-hover:bg-violet/20" aria-hidden="true" />
+                                        <div className="relative flex items-start justify-between gap-4">
+                                            <span className="icon-tile h-14 w-14 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">
+                                                <Icon size={26} strokeWidth={1.75} />
                                             </span>
                                             {program.category && (
                                                 <span className="rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary">
@@ -99,7 +103,7 @@ export default function Programs({ limit }: ProgramsProps) {
                                                 </span>
                                             )}
                                         </div>
-                                        <h3 className="mt-5 text-xl font-bold text-ink transition-colors group-hover:text-primary">
+                                        <h3 className="relative mt-6 text-xl font-bold text-ink transition-colors group-hover:text-primary">
                                             {program.title}
                                         </h3>
                                         <p className="mt-3 flex-1 text-[15px] leading-relaxed text-slate-600 line-clamp-3">
@@ -108,9 +112,12 @@ export default function Programs({ limit }: ProgramsProps) {
                                         <div className="mt-6 border-t border-slate-100 pt-5">
                                             <Link
                                                 href={`/programs/${program.slug}`}
-                                                className="inline-flex items-center gap-2 text-sm font-semibold text-primary"
+                                                className="inline-flex items-center gap-2 text-sm font-semibold text-primary after:absolute after:inset-0 after:content-['']"
                                             >
-                                                Learn More <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                                                Learn More
+                                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-100 transition-all duration-300 group-hover:translate-x-1 group-hover:bg-primary group-hover:text-white">
+                                                    <ArrowRight size={14} />
+                                                </span>
                                             </Link>
                                         </div>
                                     </motion.article>

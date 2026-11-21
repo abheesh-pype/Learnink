@@ -48,11 +48,14 @@ export default function Footer() {
         { icon: Youtube, key: 'youtube', href: socialLinks.youtube },
     ].filter(s => s.href);
 
-    const linkClass = "text-white/70 transition-colors hover:text-white";
+    const linkClass = "inline-block text-white/70 transition-all duration-300 hover:translate-x-1 hover:text-white";
 
     return (
-        <footer className="mt-auto bg-primary-darker text-white/70">
-            <div className="container-page py-16 lg:py-20">
+        <footer className="relative mt-auto overflow-hidden bg-primary-darker text-white/70">
+            <div className="bg-brand-gradient absolute inset-x-0 top-0 h-1" aria-hidden="true" />
+            <div className="glow-blob -right-40 -top-40 h-96 w-96 bg-violet/25" aria-hidden="true" />
+            <div className="glow-blob -bottom-48 -left-40 h-96 w-96 bg-glow/10 [animation-delay:-6s]" aria-hidden="true" />
+            <div className="container-page relative py-16 lg:py-20">
                 <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12">
                     <div className="space-y-5 lg:col-span-4">
                         <Link href="/" className="inline-flex">
@@ -78,7 +81,7 @@ export default function Footer() {
                                         href={social.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10 text-white transition-colors hover:bg-white hover:text-primary"
+                                        className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-br hover:from-violet hover:to-glow hover:shadow-lg hover:shadow-violet/40"
                                         aria-label={`Follow us on ${social.key}`}
                                     >
                                         <social.icon size={18} />
@@ -140,7 +143,7 @@ export default function Footer() {
                 </div>
             </div>
 
-            <div className="border-t border-white/10">
+            <div className="relative border-t border-white/10">
                 <div className="container-page flex flex-col items-center justify-between gap-4 py-6 text-sm md:flex-row">
                     <p className="text-white/60">
                         © {new Date().getFullYear()} Learnink Education Pvt Ltd. <span className="mx-2 hidden md:inline">•</span> All rights reserved.

@@ -81,7 +81,7 @@ const SECTIONS: { title: string; description: string; icon: typeof Phone; fields
 ];
 
 const inputClass =
-    "w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-slate-900 font-bold";
+    "w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all text-slate-900 font-bold";
 
 export default function AdminContact() {
     const [form, setForm] = useState<ContactInfo>(DEFAULT_CONTACT);
@@ -137,7 +137,7 @@ export default function AdminContact() {
         <form onSubmit={handleSubmit} className="max-w-5xl mx-auto animate-[fade-in_0.5s_ease-out_forwards] space-y-8 pb-28">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-800 mb-2">Contact Details</h1>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-ink mb-2">Contact Details</h1>
                     <p className="text-slate-600 font-medium">Phone, email and address shown on the website&apos;s Contact page.</p>
                 </div>
                 <Link
@@ -153,7 +153,7 @@ export default function AdminContact() {
                 {SECTIONS.map(({ title, description, icon: Icon, fields }) => (
                     <section key={title} className="bg-white p-6 lg:p-8 rounded-[2rem] border border-slate-200 shadow-sm space-y-5">
                         <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
-                            <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary-dark">
+                            <div className="icon-tile w-10 h-10">
                                 <Icon size={20} />
                             </div>
                             <div>
@@ -221,7 +221,7 @@ export default function AdminContact() {
                     <button
                         type="submit"
                         disabled={saving}
-                        className="shrink-0 bg-slate-900 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-800 transition-all flex items-center gap-2 shadow-lg shadow-slate-900/20 disabled:opacity-50"
+                        className="shrink-0 bg-gradient-to-r from-primary to-violet text-white px-6 py-3 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all flex items-center gap-2 shadow-lg shadow-violet/25 disabled:opacity-50"
                     >
                         {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                         Save

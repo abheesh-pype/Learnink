@@ -77,20 +77,20 @@ export default function AdminPrograms() {
         <div className="animate-[fadeIn_0.5s_ease-out_forwards] space-y-8 pb-20">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-800 mb-2">Manage Programs</h1>
+                    <h1 className="text-3xl font-extrabold tracking-tight text-ink mb-2">Manage Programs</h1>
                     <p className="text-slate-600 font-medium">Add, edit or remove educational offerings.</p>
                 </div>
                 <button
                     onClick={handleCreate}
                     disabled={creating}
-                    className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold shadow-lg shadow-slate-900/20 self-start md:self-auto disabled:opacity-50 bg-slate-900 text-white hover:bg-slate-800 transition-all"
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold shadow-lg shadow-violet/25 self-start md:self-auto disabled:opacity-50 bg-gradient-to-r from-primary to-violet text-white hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all"
                 >
                     {creating ? <Loader2 className="animate-spin" size={20} /> : <Plus size={20} />}
                     Add New Program
                 </button>
             </div>
 
-            <div className="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-xl shadow-slate-200/50 relative overflow-hidden">
+            <div className="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-xl shadow-primary/5 relative overflow-hidden">
                 <div className="relative mb-8">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                     <input
@@ -98,7 +98,7 @@ export default function AdminPrograms() {
                         placeholder="Search programs..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-12 pr-6 py-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all text-slate-900 placeholder:text-slate-400 font-medium"
+                        className="w-full pl-12 pr-6 py-4 rounded-xl bg-white border-2 border-slate-200 focus:outline-none focus:border-violet focus:ring-4 focus:ring-violet/15 transition-all text-slate-900 placeholder:text-slate-400 font-medium"
                     />
                 </div>
 

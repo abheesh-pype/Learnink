@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { GraduationCap, Lock, User, Loader2, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { GraduationCap, Lock, User, Loader2, ArrowRight, ShieldCheck, BarChart3, Sparkles } from "lucide-react";
 
 export default function AdminLogin() {
     const [username, setUsername] = useState("");
@@ -35,86 +37,132 @@ export default function AdminLogin() {
         }
     };
 
-
+    const inputClass =
+        "w-full rounded-xl border-2 border-slate-200 bg-white py-3.5 pl-12 pr-4 font-medium text-ink placeholder:text-slate-400 transition-all focus:border-violet focus:outline-none focus:ring-4 focus:ring-violet/15";
 
     return (
+        <div className="grid min-h-screen grid-cols-1 bg-white lg:grid-cols-2">
+            {/* Brand panel */}
+            <div className="bg-brand-gradient relative hidden overflow-hidden p-12 text-white lg:flex lg:flex-col lg:justify-between">
+                <div className="glow-blob -left-20 -top-20 h-96 w-96 bg-glow/30" aria-hidden="true" />
+                <div className="glow-blob -bottom-32 -right-20 h-[28rem] w-[28rem] bg-white/10 [animation-delay:-6s]" aria-hidden="true" />
+                <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:22px_22px]" aria-hidden="true" />
 
-        <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-[#f0f4f8]">
-            {/* Geometric Background */}
-            <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-primary/5 rounded-full blur-[80px]" />
-                <div className="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-blue-100 rounded-full blur-[80px]" />
+                <Link href="/" className="relative flex items-center gap-3">
+                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 backdrop-blur">
+                        <GraduationCap size={24} />
+                    </span>
+                    <span className="text-xl font-extrabold tracking-tight">Learnink</span>
+                </Link>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
+                    className="relative max-w-md"
+                >
+                    <h2 className="text-4xl font-extrabold leading-tight tracking-tight xl:text-5xl">
+                        Manage your <span className="text-shimmer-light">education platform</span> with ease.
+                    </h2>
+                    <p className="mt-5 text-lg text-white/80">Programs, universities, enquiries and website content — all in one place.</p>
+
+                    <ul className="mt-10 space-y-4">
+                        {[
+                            { icon: BarChart3, text: "Live dashboard of programs and enquiries" },
+                            { icon: Sparkles, text: "Update website content instantly" },
+                            { icon: ShieldCheck, text: "Secure admin-only access" },
+                        ].map(({ icon: Icon, text }, i) => (
+                            <motion.li
+                                key={text}
+                                initial={{ opacity: 0, x: -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.4 + i * 0.12, duration: 0.5 }}
+                                className="flex items-center gap-3"
+                            >
+                                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/15 backdrop-blur">
+                                    <Icon size={18} />
+                                </span>
+                                <span className="font-medium text-white/90">{text}</span>
+                            </motion.li>
+                        ))}
+                    </ul>
+                </motion.div>
+
+                <p className="relative text-sm text-white/60">&copy; {new Date().getFullYear()} Learnink Education System</p>
             </div>
 
-            <div className="w-full max-w-md relative z-10 animate-[slideUp_0.5s_ease-out_forwards]">
-                <div className="text-center mb-10">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-white text-primary mb-6 shadow-xl shadow-slate-200 border border-slate-100">
-                        <GraduationCap size={40} strokeWidth={1.5} />
+            {/* Form panel */}
+            <div className="relative flex items-center justify-center overflow-hidden p-6 sm:p-12">
+                <div className="glow-blob -right-32 top-10 h-80 w-80 bg-violet/15 lg:hidden" aria-hidden="true" />
+                <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+                    className="relative w-full max-w-md"
+                >
+                    <div className="mb-10">
+                        <span className="icon-tile mb-6 h-14 w-14 animate-float">
+                            <GraduationCap size={28} strokeWidth={1.75} />
+                        </span>
+                        <h1 className="text-3xl font-extrabold tracking-tight text-ink">Admin Portal</h1>
+                        <p className="mt-2 font-medium text-slate-500">Secure Access Dashboard</p>
                     </div>
-                    <h1 className="text-3xl font-black text-[#1a202c] mb-2 tracking-tight">Admin Portal</h1>
-                    <p className="text-slate-500 font-medium">Secure Access Dashboard</p>
-                </div>
 
-                <div className="bg-white p-10 rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden group">
-                    <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         {error && (
-                            <div className="p-4 bg-red-50 text-red-600 text-sm font-bold rounded-xl text-center animate-[fadeIn_0.3s_ease-out_forwards] flex items-center justify-center gap-2 border border-red-100">
-                                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                            <div className="flex items-center gap-2 rounded-xl border border-red-100 bg-red-50 p-4 text-sm font-bold text-red-600 animate-[fadeInUp_0.3s_ease-out_forwards]">
+                                <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-red-500" />
                                 {error}
                             </div>
                         )}
 
-                        <div className="space-y-2 group/input">
-                            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1 group-focus-within/input:text-primary transition-colors">
+                        <div className="group/input space-y-2">
+                            <label htmlFor="login-username" className="text-sm font-semibold text-slate-600 transition-colors group-focus-within/input:text-violet">
                                 Username
                             </label>
                             <div className="relative">
-                                <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-primary transition-colors">
-                                    <User size={20} />
-                                </div>
+                                <User size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 transition-colors group-focus-within/input:text-violet" />
                                 <input
+                                    id="login-username"
                                     type="text"
                                     value={username}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    className="w-full pl-14 pr-5 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-[#1a202c] placeholder:text-slate-400"
+                                    className={inputClass}
                                     placeholder="Enter your ID"
+                                    autoComplete="username"
                                     required
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2 group/input">
-                            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest pl-1 group-focus-within/input:text-primary transition-colors">
+                        <div className="group/input space-y-2">
+                            <label htmlFor="login-password" className="text-sm font-semibold text-slate-600 transition-colors group-focus-within/input:text-violet">
                                 Password
                             </label>
                             <div className="relative">
-                                <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within/input:text-primary transition-colors">
-                                    <Lock size={20} />
-                                </div>
+                                <Lock size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 transition-colors group-focus-within/input:text-violet" />
                                 <input
+                                    id="login-password"
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-14 pr-5 py-4 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-[#1a202c] placeholder:text-slate-400"
+                                    className={inputClass}
                                     placeholder="••••••••"
+                                    autoComplete="current-password"
                                     required
                                 />
                             </div>
                         </div>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:shadow-slate-900/20 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed group/btn"
-                        >
-                            {loading ? <Loader2 className="animate-spin" /> : <>Access Dashboard <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" /></>}
+                        <button type="submit" disabled={loading} className="btn-primary group/btn w-full py-4 text-base disabled:cursor-not-allowed">
+                            {loading ? <Loader2 className="animate-spin" /> : <>Access Dashboard <ArrowRight size={18} className="transition-transform group-hover/btn:translate-x-1" /></>}
                         </button>
                     </form>
-                </div>
 
-                <p className="text-center mt-8 text-sm font-medium text-slate-400">
-                    &copy; {new Date().getFullYear()} Learnink Education System
-                </p>
+                    <p className="mt-10 text-center text-sm font-medium text-slate-400">
+                        <Link href="/" className="transition-colors hover:text-violet">← Back to website</Link>
+                    </p>
+                </motion.div>
             </div>
         </div>
     );
