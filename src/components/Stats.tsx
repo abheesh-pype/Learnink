@@ -2,39 +2,43 @@
 
 import { motion } from "framer-motion";
 import { Users, BookOpen, Globe, Award } from "lucide-react";
+import { DEFAULT_CONTACT, type ContactInfo } from "@/lib/contact";
 
-const stats = [
-    {
-        id: 1,
-        label: "Active Students",
-        value: "10,000+",
-        icon: Users,
-        desc: "Trust Learnink for their education"
-    },
-    {
-        id: 2,
-        label: "Courses Offered",
-        value: "500+",
-        icon: BookOpen,
-        desc: "Across various disciplines"
-    },
-    {
-        id: 3,
-        label: "University Partners",
-        value: "50+",
-        icon: Globe,
-        desc: "Global accredited seeds"
-    },
-    {
-        id: 4,
-        label: "Years of Excellence",
-        value: "12+",
-        icon: Award,
-        desc: "Shaping careers since 2012"
-    },
-];
+type StatNumbers = Pick<ContactInfo, "studentsCount" | "coursesCount" | "universitiesCount" | "yearsCount">;
 
-export default function Stats() {
+/** Homepage stats. The numbers are edited in Admin → Contact → Numbers. */
+export default function Stats({ numbers = DEFAULT_CONTACT }: { numbers?: StatNumbers }) {
+    const stats = [
+        {
+            id: 1,
+            label: "Active Students",
+            value: numbers.studentsCount,
+            icon: Users,
+            desc: "Trust Learnink for their education"
+        },
+        {
+            id: 2,
+            label: "Courses Offered",
+            value: numbers.coursesCount,
+            icon: BookOpen,
+            desc: "Across various disciplines"
+        },
+        {
+            id: 3,
+            label: "University Partners",
+            value: numbers.universitiesCount,
+            icon: Globe,
+            desc: "Accredited universities worldwide"
+        },
+        {
+            id: 4,
+            label: "Years of Excellence",
+            value: numbers.yearsCount,
+            icon: Award,
+            desc: "Shaping careers in education"
+        },
+    ];
+
     return (
         <section className="py-20 relative">
             <div className="max-w-7xl mx-auto px-6">

@@ -13,8 +13,10 @@ const features = [
 ];
 
 import { useState, useEffect } from "react";
+import { DEFAULT_CONTACT } from "@/lib/contact";
 
-export default function About() {
+/** `yearsCount` comes from Admin → Contact → Numbers → Years of Experience. */
+export default function About({ yearsCount = DEFAULT_CONTACT.yearsCount }: { yearsCount?: string }) {
     const [aboutImage, setAboutImage] = useState("");
 
     useEffect(() => {
@@ -51,7 +53,7 @@ export default function About() {
                             )}
                         </div>
                         <div className="absolute -bottom-8 -right-8 bg-white p-8 rounded-2xl shadow-xl max-w-xs animate-[slideUp_0.8s_ease-out_forwards] border border-slate-100">
-                            <p className="text-primary font-bold text-xl mb-1">10+ Years</p>
+                            <p className="text-primary font-bold text-xl mb-1">{yearsCount} Years</p>
                             <p className="text-sm text-slate-500">Experience in educational consulting and excellence.</p>
                         </div>
                     </motion.div>

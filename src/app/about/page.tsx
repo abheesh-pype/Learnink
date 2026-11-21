@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { withPageUrl } from "@/lib/site";
 import About from "@/components/About";
+import { getContactInfo } from "@/lib/contactSettings";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { PageSEO, SiteConfig } from "@/lib/models";
@@ -35,12 +36,14 @@ async function buildMetadata(): Promise<Metadata> {
     }
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+    const { yearsCount } = await getContactInfo(); // Admin → Contact → Numbers
+
     return (
         <main className="min-h-screen pt-25 flex flex-col bg-slate-50">
             <Navbar />
             <div className="flex-1 w-full">
-                <About />
+                <About yearsCount={yearsCount} />
             </div>
             <Footer />
         </main>

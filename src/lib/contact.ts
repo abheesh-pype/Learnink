@@ -14,13 +14,16 @@ export interface ContactInfo {
     hqHours: string;
     admissionsTitle: string;
     admissionsText: string;
+    // Numbers: shown on the Contact page cards, the homepage stats and the About "years" badge.
     studentsCount: string;
     universitiesCount: string;
+    coursesCount: string;
+    yearsCount: string;
 }
 
 export const CONTACT_FIELDS = [
     "phone", "phoneHours", "email", "emailNote", "visitLocation", "visitNote", "mapUrl",
-    "hqName", "hqAddress", "hqHours", "admissionsTitle", "admissionsText", "studentsCount", "universitiesCount",
+    "hqName", "hqAddress", "hqHours", "admissionsTitle", "admissionsText", "studentsCount", "universitiesCount", "coursesCount", "yearsCount",
 ] as const satisfies readonly (keyof ContactInfo)[];
 
 /** The values that were hard-coded before; used until the admin saves their own. */
@@ -39,6 +42,8 @@ export const DEFAULT_CONTACT: ContactInfo = {
     admissionsText: "Applications open for all degree programs.",
     studentsCount: "10K+",
     universitiesCount: "50+",
+    coursesCount: "500+",
+    yearsCount: "10+",
 };
 
 /** Fills any empty field with its default, so the page never shows a blank card. */

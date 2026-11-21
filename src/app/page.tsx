@@ -3,6 +3,8 @@ import { Metadata } from "next";
 import { withPageUrl } from "@/lib/site";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import Stats from "@/components/Stats";
+import { getContactInfo } from "@/lib/contactSettings";
 import Programs from "@/components/Programs";
 import Partners from "@/components/Partners";
 import Gallery from "@/components/Gallery";
@@ -42,11 +44,15 @@ async function buildMetadata(): Promise<Metadata> {
   }
 }
 
-export default function Home() {
+export default async function Home() {
+  // Stats numbers are edited in Admin → Contact → Numbers.
+  const contact = await getContactInfo();
+
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
       <Hero />
+      <Stats numbers={contact} />
 
       {/* Featured Partners Section */}
       <div>

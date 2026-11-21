@@ -313,6 +313,8 @@ export const ContactSettings = new Model('contact_settings', {
     admissionsText: 'text',
     studentsCount: 'text',
     universitiesCount: 'text',
+    coursesCount: 'text',
+    yearsCount: 'text',
 });
 
 // Admin auth users

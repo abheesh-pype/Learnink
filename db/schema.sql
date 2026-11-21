@@ -140,6 +140,12 @@ CREATE TABLE IF NOT EXISTS contact_settings (
     admissions_text    text,
     students_count     text,
     universities_count text,
+    courses_count      text,
+    years_count        text,
     created_at         timestamptz NOT NULL DEFAULT now(),
     updated_at         timestamptz NOT NULL DEFAULT now()
 );
+
+-- Upgrades for databases created before these columns existed.
+ALTER TABLE contact_settings ADD COLUMN IF NOT EXISTS courses_count text;
+ALTER TABLE contact_settings ADD COLUMN IF NOT EXISTS years_count text;

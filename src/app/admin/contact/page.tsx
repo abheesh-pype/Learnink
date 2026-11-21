@@ -69,11 +69,13 @@ const SECTIONS: { title: string; description: string; icon: typeof Phone; fields
     },
     {
         title: "Numbers",
-        description: "The two small stat cards.",
+        description: "Contact page stat cards, homepage stats and the About section's experience badge.",
         icon: BarChart3,
         fields: [
-            { key: "studentsCount", label: "Happy Students", placeholder: DEFAULT_CONTACT.studentsCount },
-            { key: "universitiesCount", label: "Universities", placeholder: DEFAULT_CONTACT.universitiesCount },
+            { key: "studentsCount", label: "Students", placeholder: DEFAULT_CONTACT.studentsCount, hint: "Contact page + homepage" },
+            { key: "universitiesCount", label: "Universities", placeholder: DEFAULT_CONTACT.universitiesCount, hint: "Contact page + homepage" },
+            { key: "coursesCount", label: "Courses Offered", placeholder: DEFAULT_CONTACT.coursesCount, hint: "Homepage" },
+            { key: "yearsCount", label: "Years of Experience", placeholder: DEFAULT_CONTACT.yearsCount, hint: "Homepage + About section (\"10+ Years\")" },
         ],
     },
 ];
