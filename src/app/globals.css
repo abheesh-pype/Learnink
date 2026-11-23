@@ -81,6 +81,43 @@
     }
 }
 
+/* ---------- Hero entrance (pure CSS: starts on first paint, no waiting for JavaScript) ---------- */
+
+@keyframes heroUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes heroMask {
+    from { transform: translateY(110%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes heroSlideIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes heroZoom {
+    from { transform: scale(1.12); }
+    to { transform: scale(1); }
+}
+
+@keyframes heroDraw {
+    to { stroke-dashoffset: 0; }
+}
+
+/* Set the delay per element with style={{ animationDelay: "..." }} */
+.hero-up { animation: heroUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.hero-mask { display: inline-block; animation: heroMask 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.hero-slide-in { animation: heroSlideIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.hero-zoom { animation: heroZoom 8s ease-out both; }
+.hero-draw {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: heroDraw 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+}
+
 /* ---------- Layout ---------- */
 
 .container-page {

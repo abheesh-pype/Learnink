@@ -3,6 +3,9 @@ import { Program } from '@/lib/models';
 import dbConnect from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 
+// Refreshed when programs or universities change (lib/revalidate.ts), or every 5 minutes.
+export const revalidate = 300;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = SITE_URL;
 

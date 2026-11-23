@@ -4,9 +4,8 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, GraduationCap, BadgeCheck, Clock, Compass, Sparkles, PlayCircle } from "lucide-react";
 import { useState, useEffect } from "react";
-
-// Shown when no Hero Background is uploaded in Admin → SEO Settings (same photo the About section uses).
-const FALLBACK_HERO_IMAGE = "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=1600&auto=format&fit=crop";
+import { preload } from "react-dom";
+import { useSiteConfig } from "@/components/SiteConfigProvider";
 
 const highlights = [
     { icon: BadgeCheck, text: "Leading Universities" },
@@ -20,47 +19,29 @@ const ROTATE_EVERY_MS = 2600;
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-const fadeUp = (delay: number) => ({
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.7, delay, ease: EASE },
-});
+// Entrance animations are plain CSS (see .hero-* in globals.css) so they start the moment the page
+// paints, instead of waiting for JavaScript to load. Only the rotating word needs JavaScript.
+const delay = (seconds: number) => ({ animationDelay: `${seconds}s` });
 
 /** A word that slides up from behind an invisible mask. */
-function MaskedWord({ children, delay }: { children: React.ReactNode; delay: number }) {
+function MaskedWord({ children, delay: d }: { children: React.ReactNode; delay: number }) {
     return (
         <span className="inline-block overflow-hidden pb-2 align-bottom">
-            <motion.span
-                className="inline-block"
-                initial={{ y: "110%" }}
-                animate={{ y: 0 }}
-                transition={{ duration: 0.8, delay, ease: EASE }}
-            >
+            <span className="hero-mask" style={delay(d)}>
                 {children}
-            </motion.span>
+            </span>
         </span>
     );
 }
 
 export default function Hero() {
-    const [heroBg, setHeroBg] = useState("");
     const [wordIndex, setWordIndex] = useState(0);
     const reduceMotion = useReducedMotion();
-
-    useEffect(() => {
-        const fetchConfig = async () => {
-            try {
-                const res = await fetch("/api/admin/seo");
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.images?.heroBg) setHeroBg(data.images.heroBg);
-                }
-            } catch {
-                console.error("Failed to load site config");
-            }
-        };
-        fetchConfig();
-    }, []);
+    // Only the Hero Background uploaded in Admin → SEO Settings is shown. It comes from the server
+    // with the page, so there is no placeholder photo to flash before it loads.
+    const { heroBg } = useSiteConfig();
+    // Puts <link rel="preload"> in the page <head> so the browser downloads the image first.
+    if (heroBg) preload(heroBg, { as: "image", fetchPriority: "high" });
 
     useEffect(() => {
         if (reduceMotion) return;
@@ -70,23 +51,19 @@ export default function Hero() {
 
     return (
         <section className="relative isolate overflow-hidden bg-primary-darker pt-20">
-            {/* Background image: fades in, then slowly zooms (Ken Burns) */}
-            <motion.div
-                key={heroBg || "fallback"}
-                className="absolute inset-0 -z-20"
-                initial={{ opacity: 0, scale: 1.15 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ opacity: { duration: 1.2 }, scale: { duration: 8, ease: "easeOut" } }}
-                aria-hidden="true"
-            >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                    src={heroBg || FALLBACK_HERO_IMAGE}
-                    alt=""
-                    referrerPolicy="no-referrer"
-                    className="h-full w-full object-cover"
-                />
-            </motion.div>
+            {/* Background image: shown as soon as it downloads (high priority), then slowly zooms out */}
+            {heroBg && (
+                <div className="hero-zoom absolute inset-0 -z-20" aria-hidden="true">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={heroBg}
+                        alt=""
+                        referrerPolicy="no-referrer"
+                        fetchPriority="high"
+                        className="h-full w-full object-cover"
+                    />
+                </div>
+            )}
 
             {/* Brand-colored overlay so the text stays readable on any photo */}
             <div
@@ -103,27 +80,21 @@ export default function Hero() {
             <div className="container-page relative grid min-h-[34rem] grid-cols-1 items-center gap-12 pb-24 pt-16 lg:min-h-[40rem] lg:grid-cols-[1.4fr_1fr] lg:pb-32 lg:pt-24">
                 {/* Left Content */}
                 <div>
-                    <motion.span
-                        {...fadeUp(0)}
-                        className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur"
+                    <span
+                        className="hero-up inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur"
                     >
                         <Sparkles size={14} className="text-glow" />
                         Start your favourite course
-                    </motion.span>
+                    </span>
 
                     <h1 className="mt-6 text-5xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-6xl lg:text-7xl">
                         <span className="sr-only">Rebuild Your {ROTATING_WORDS[0]}</span>
                         <span aria-hidden="true">
-                            <MaskedWord delay={0.1}>Rebuild</MaskedWord>{" "}
-                            <MaskedWord delay={0.22}>Your</MaskedWord>
+                            <MaskedWord delay={0.05}>Rebuild</MaskedWord>{" "}
+                            <MaskedWord delay={0.12}>Your</MaskedWord>
                             <br />
                             <span className="relative inline-block overflow-hidden pb-3 align-bottom">
-                                <motion.span
-                                    className="inline-block"
-                                    initial={{ y: "110%" }}
-                                    animate={{ y: 0 }}
-                                    transition={{ duration: 0.8, delay: 0.34, ease: EASE }}
-                                >
+                                <span className="hero-mask" style={delay(0.2)}>
                                     <AnimatePresence mode="wait" initial={false}>
                                         <motion.span
                                             key={ROTATING_WORDS[wordIndex]}
@@ -136,17 +107,16 @@ export default function Hero() {
                                             {ROTATING_WORDS[wordIndex]}
                                         </motion.span>
                                     </AnimatePresence>
-                                </motion.span>
+                                </span>
                                 {/* Hand-drawn underline that draws itself */}
                                 <svg className="absolute -bottom-0.5 left-0 h-4 w-full" viewBox="0 0 200 16" preserveAspectRatio="none" fill="none">
-                                    <motion.path
+                                    <path
+                                        className="hero-draw"
+                                        pathLength={1}
                                         d="M3 11 C 50 3, 120 3, 197 9"
                                         stroke="url(#hero-underline)"
                                         strokeWidth="5"
                                         strokeLinecap="round"
-                                        initial={{ pathLength: 0 }}
-                                        animate={{ pathLength: 1 }}
-                                        transition={{ duration: 0.9, delay: 0.9, ease: EASE }}
                                     />
                                     <defs>
                                         <linearGradient id="hero-underline" x1="0" x2="1">
@@ -159,11 +129,11 @@ export default function Hero() {
                         </span>
                     </h1>
 
-                    <motion.p {...fadeUp(0.55)} className="mt-6 max-w-lg text-lg leading-relaxed text-white/80 sm:text-xl">
+                    <p className="hero-up mt-6 max-w-lg text-lg leading-relaxed text-white/80 sm:text-xl" style={delay(0.3)}>
                         Learn from anywhere and build your <span className="font-semibold text-white">brighter career</span>.
-                    </motion.p>
+                    </p>
 
-                    <motion.div {...fadeUp(0.65)} className="mt-10 flex flex-wrap gap-4">
+                    <div className="hero-up mt-10 flex flex-wrap gap-4" style={delay(0.4)}>
                         <Link href="/programs" className="btn-light group px-7 py-4 text-base">
                             Explore Programs
                             <ArrowRight className="transition-transform group-hover:translate-x-1" size={18} />
@@ -175,30 +145,25 @@ export default function Hero() {
                             <PlayCircle size={20} className="text-glow transition-transform group-hover:scale-110" />
                             Learn More
                         </Link>
-                    </motion.div>
+                    </div>
 
                     <ul className="mt-10 flex flex-wrap gap-x-6 gap-y-3">
                         {highlights.map(({ icon: Icon, text }, i) => (
-                            <motion.li
+                            <li
                                 key={text}
-                                {...fadeUp(0.75 + i * 0.08)}
-                                className="flex items-center gap-2 text-sm font-medium text-white/80"
+                                style={delay(0.5 + i * 0.06)}
+                                className="hero-up flex items-center gap-2 text-sm font-medium text-white/80"
                             >
                                 <Icon size={18} className="text-glow" />
                                 {text}
-                            </motion.li>
+                            </li>
                         ))}
                     </ul>
                 </div>
 
                 {/* Right: floating glass badges over the background */}
                 <div className="relative hidden h-full min-h-[22rem] lg:block">
-                    <motion.div
-                        initial={{ opacity: 0, x: 40 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, delay: 1.0, ease: EASE }}
-                        className="absolute right-6 top-[18%]"
-                    >
+                    <div className="hero-slide-in absolute right-6 top-[18%]" style={delay(0.5)}>
                         <div className="glass-dark flex items-center gap-3 rounded-2xl px-5 py-4 shadow-2xl shadow-black/20 animate-float">
                             <span className="icon-tile h-11 w-11">
                                 <GraduationCap size={22} />
@@ -208,14 +173,9 @@ export default function Hero() {
                                 <p className="text-xs text-white/70">Apply today</p>
                             </div>
                         </div>
-                    </motion.div>
+                    </div>
 
-                    <motion.div
-                        initial={{ opacity: 0, x: 40 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.8, delay: 1.2, ease: EASE }}
-                        className="absolute bottom-[18%] left-4"
-                    >
+                    <div className="hero-slide-in absolute bottom-[18%] left-4" style={delay(0.65)}>
                         <div className="glass-dark flex items-center gap-3 rounded-2xl px-5 py-4 shadow-2xl shadow-black/20 animate-float-slow [animation-delay:-3s]">
                             <span className="relative">
                                 <span className="absolute inset-0 rounded-xl bg-violet/60 animate-pulse-ring" aria-hidden="true" />
@@ -228,7 +188,7 @@ export default function Hero() {
                                 <p className="text-xs text-white/70">Guidance at every step</p>
                             </div>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
             </div>
         </section>

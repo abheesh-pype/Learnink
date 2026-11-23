@@ -11,17 +11,19 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: "swap",
 });
 
-import { SiteConfig } from "@/lib/models";
-import dbConnect from "@/lib/db";
 
 import { SITE_URL as siteUrl, DEFAULT_FAVICON, DEFAULT_LOGO } from "@/lib/site";
 import SiteConfigProvider from "@/components/SiteConfigProvider";
 import { getContactInfo } from "@/lib/contactSettings";
+import { getSiteConfig } from "@/lib/publicData";
+
+// Pages are cached on the server so visitors don't wait for the database (hosted in the USA) on every visit.
+// Admin saves refresh the cache immediately (see lib/revalidate.ts); this is just a safety net.
+export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
-    await dbConnect();
-    const config = await SiteConfig.findOne({ key: 'global-seo' }).lean();
+    const config = await getSiteConfig();
 
     if (config) {
       const socialLinks = [];
@@ -88,15 +90,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-async function getSiteConfig() {
-  try {
-    await dbConnect();
-    return await SiteConfig.findOne({ key: 'global-seo' }).lean();
-  } catch {
-    return null;
-  }
-}
-
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -135,6 +128,7 @@ export default async function RootLayout({
           <SiteConfigProvider
             value={{
               logo: config?.images?.logo || DEFAULT_LOGO,
+              heroBg: config?.images?.heroBg || "",
               socialLinks: config?.socialLinks || {},
             }}
           >

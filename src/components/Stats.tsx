@@ -41,10 +41,11 @@ export default function Stats({ numbers = DEFAULT_CONTACT }: { numbers?: StatNum
     ];
 
     return (
-        <section className="relative z-10 bg-white">
+        <section className="relative bg-white py-12 lg:py-16">
             <div className="container-page">
-                <div className="bg-brand-gradient relative -mt-14 overflow-hidden rounded-3xl p-1.5 shadow-2xl shadow-violet/25">
-                    <div className="grid grid-cols-2 gap-1.5 lg:grid-cols-4">
+                <div>
+                    {/* Separate cards (same style as the Programs cards), no frame, placed below the hero */}
+                    <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
                         {stats.map((stat, index) => (
                             <motion.div
                                 key={stat.id}
@@ -52,7 +53,7 @@ export default function Stats({ numbers = DEFAULT_CONTACT }: { numbers?: StatNum
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1, duration: 0.6 }}
-                                className="group rounded-[1.25rem] bg-white/95 p-5 text-center transition-colors duration-300 hover:bg-white sm:p-7"
+                                className="card card-hover group p-5 text-center sm:p-7"
                             >
                                 <span className="icon-tile mx-auto h-12 w-12 transition-transform duration-300 group-hover:-translate-y-1 group-hover:rotate-6">
                                     <stat.icon size={22} />

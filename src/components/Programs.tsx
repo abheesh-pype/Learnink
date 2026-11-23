@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import SectionHeader from "@/components/ui/SectionHeader";
 
-interface Program {
+export interface Program {
     _id: string;
     title: string;
     description: string;
@@ -27,13 +27,18 @@ const getIcon = (category: string) => {
 
 interface ProgramsProps {
     limit?: number;
+    /** Programs loaded on the server. When given, the section renders immediately without fetching. */
+    initialPrograms?: Program[];
 }
 
-export default function Programs({ limit }: ProgramsProps) {
-    const [programs, setPrograms] = useState<Program[]>([]);
-    const [loading, setLoading] = useState(true);
+export default function Programs({ limit, initialPrograms }: ProgramsProps) {
+    const [programs, setPrograms] = useState<Program[]>(() =>
+        initialPrograms ? (limit ? initialPrograms.slice(0, limit) : initialPrograms) : []
+    );
+    const [loading, setLoading] = useState(!initialPrograms);
 
     useEffect(() => {
+        if (initialPrograms) return;
         const fetchPrograms = async () => {
             try {
                 const res = await fetch("/api/programs");
@@ -48,7 +53,7 @@ export default function Programs({ limit }: ProgramsProps) {
             }
         };
         fetchPrograms();
-    }, [limit]);
+    }, [limit, initialPrograms]);
 
     return (
         <section id="programs" className="section overflow-hidden bg-primary-50">

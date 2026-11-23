@@ -12,14 +12,17 @@ import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { PageSEO, SiteConfig } from "@/lib/models";
+import { PageSEO } from "@/lib/models";
+import { getGalleryPhotos, getPartners, getPrograms, getSiteConfig, getTestimonials } from "@/lib/publicData";
 import dbConnect from "@/lib/db";
 
 async function buildMetadata(): Promise<Metadata> {
   try {
     await dbConnect();
-    const pageSeo = await PageSEO.findOne({ pageKey: 'home' }).lean();
-    const globalConfig = await SiteConfig.findOne({ key: 'global-seo' }).lean();
+    const [pageSeo, globalConfig] = await Promise.all([
+      PageSEO.findOne({ pageKey: 'home' }).lean(),
+      getSiteConfig(),
+    ]);
 
     const title = pageSeo?.title || globalConfig?.title || "Learnink Education | Linking Learning, Skills & Careers";
     const description = pageSeo?.description || globalConfig?.description || "Learnink Education Pvt Ltd is an all-in-one education platform offering degree programs, fast track courses, and more.";
@@ -46,7 +49,14 @@ async function buildMetadata(): Promise<Metadata> {
 
 export default async function Home() {
   // Stats numbers are edited in Admin → Contact → Numbers.
-  const contact = await getContactInfo();
+  // Everything the page shows is loaded here, in parallel, so it arrives with the HTML.
+  const [contact, programs, partners, photos, testimonials] = await Promise.all([
+    getContactInfo(),
+    getPrograms(),
+    getPartners(),
+    getGalleryPhotos(),
+    getTestimonials(),
+  ]);
 
   return (
     <main className="min-h-screen bg-white flex flex-col">
@@ -56,7 +66,7 @@ export default async function Home() {
 
       {/* Featured Programs Section */}
       <div className="bg-primary-50 pb-16 lg:pb-24">
-        <Programs limit={3} />
+        <Programs limit={3} initialPrograms={programs} />
         <div className="-mt-4 text-center lg:-mt-8">
           <Link href="/programs" className="btn-primary">
             View All Programs <ArrowRight size={18} />
@@ -66,7 +76,7 @@ export default async function Home() {
 
       {/* Featured Partners Section */}
       <div className="bg-white pb-16 lg:pb-24">
-        <Partners limit={6} />
+        <Partners limit={6} initialPartners={partners} />
         <div className="-mt-4 text-center lg:-mt-8">
           <Link href="/partners" className="btn-outline">
             View All Universities <ArrowRight size={18} />
@@ -74,8 +84,8 @@ export default async function Home() {
         </div>
       </div>
 
-      <Gallery />
-      <Testimonials />
+      <Gallery initialPhotos={photos} />
+      <Testimonials initialTestimonials={testimonials} />
 
       {/* Call to action */}
       <section className="bg-white pb-16 lg:pb-24">

@@ -3,6 +3,7 @@ import dbConnect from "@/lib/db";
 import { Partner } from "@/lib/models";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { refreshPublicPages } from "@/lib/revalidate";
 
 export async function PATCH(
     req: NextRequest,
@@ -23,6 +24,7 @@ export async function PATCH(
             return NextResponse.json({ error: "Partner not found" }, { status: 404 });
         }
 
+        refreshPublicPages();
         return NextResponse.json(JSON.parse(JSON.stringify(partner)));
     } catch {
         return NextResponse.json({ error: "Failed to update partner" }, { status: 500 });
@@ -42,6 +44,7 @@ export async function DELETE(
     try {
         const { id } = await params;
         await Partner.findByIdAndDelete(id);
+        refreshPublicPages();
         return NextResponse.json({ message: "Partner deleted" });
     } catch {
         return NextResponse.json({ error: "Failed to delete partner" }, { status: 500 });

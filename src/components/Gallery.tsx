@@ -5,17 +5,19 @@ import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
 
-interface Photo {
+export interface Photo {
     _id: string;
     imageUrl: string;
     caption?: string;
 }
 
-export default function Gallery() {
-    const [photos, setPhotos] = useState<Photo[]>([]);
-    const [loading, setLoading] = useState(true);
+/** `initialPhotos`: photos loaded on the server, so the section renders immediately without fetching. */
+export default function Gallery({ initialPhotos }: { initialPhotos?: Photo[] }) {
+    const [photos, setPhotos] = useState<Photo[]>(initialPhotos ?? []);
+    const [loading, setLoading] = useState(!initialPhotos);
 
     useEffect(() => {
+        if (initialPhotos) return;
         const fetchPhotos = async () => {
             try {
                 const res = await fetch("/api/gallery");
@@ -30,7 +32,7 @@ export default function Gallery() {
             }
         };
         fetchPhotos();
-    }, []);
+    }, [initialPhotos]);
 
     if (loading) {
         return (

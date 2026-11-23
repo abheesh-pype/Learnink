@@ -5,6 +5,7 @@ import dbConnect from "@/lib/db";
 import { ContactSettings } from "@/lib/models";
 import { CONTACT_FIELDS, EMAIL_RE, withContactDefaults, type ContactInfo } from "@/lib/contact";
 import { getContactInfo } from "@/lib/contactSettings";
+import { refreshPublicPages } from "@/lib/revalidate";
 
 const MAX_LENGTH = 300;
 
@@ -44,6 +45,7 @@ export async function PUT(req: Request) {
 
         await dbConnect();
         const saved = await ContactSettings.findOneAndUpdate({ key: "contact" }, { ...data }, { upsert: true }).lean();
+        refreshPublicPages();
         return NextResponse.json(withContactDefaults(saved));
     } catch (e) {
         console.error("Failed to save contact settings", e);

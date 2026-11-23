@@ -2,6 +2,9 @@ import { SiteConfig } from "@/lib/models";
 import dbConnect from "@/lib/db";
 import { DEFAULT_ROBOTS_TXT, SITE_URL } from "@/lib/site";
 
+// Refreshed when the admin saves SEO settings (lib/revalidate.ts), or every 5 minutes.
+export const revalidate = 300;
+
 // Serves the robots.txt written in Admin → SEO Settings → Robots.txt Configuration.
 export async function GET() {
     let body = DEFAULT_ROBOTS_TXT;

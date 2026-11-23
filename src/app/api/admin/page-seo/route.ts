@@ -3,6 +3,7 @@ import { PageSEO } from "@/lib/models";
 import dbConnect from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { refreshPublicPages } from "@/lib/revalidate";
 
 // Get all page SEO settings or specific page
 export async function GET(req: NextRequest) {
@@ -47,6 +48,7 @@ export async function PUT(req: NextRequest) {
             { new: true, upsert: true }
         ).lean();
 
+        refreshPublicPages();
         return NextResponse.json(JSON.parse(JSON.stringify(pageSeo)));
     } catch {
         return NextResponse.json({ error: "Failed to update page SEO" }, { status: 500 });

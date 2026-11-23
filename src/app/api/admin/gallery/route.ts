@@ -3,6 +3,7 @@ import dbConnect from "@/lib/db";
 import { GalleryPhoto } from "@/lib/models";
 import { getServerSession } from "next-auth";
 import { isUploadedImagePath, normalizeImageUrl } from "@/lib/imageUrl";
+import { refreshPublicPages } from "@/lib/revalidate";
 
 export async function GET() {
     try {
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
         }
 
         const photo = await GalleryPhoto.create({ ...body, imageUrl });
+        refreshPublicPages();
         return NextResponse.json(photo);
     } catch {
         return NextResponse.json({ error: "Failed to create photo" }, { status: 500 });

@@ -6,7 +6,7 @@ import { Quote, Star } from "lucide-react";
 import TestimonialAvatar from "@/components/TestimonialAvatar";
 import SectionHeader from "@/components/ui/SectionHeader";
 
-interface Testimonial {
+export interface Testimonial {
     _id: string;
     name: string;
     content: string;
@@ -15,11 +15,13 @@ interface Testimonial {
     rating: number;
 }
 
-export default function Testimonials() {
-    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-    const [loading, setLoading] = useState(true);
+/** `initialTestimonials`: loaded on the server, so the section renders immediately without fetching. */
+export default function Testimonials({ initialTestimonials }: { initialTestimonials?: Testimonial[] }) {
+    const [testimonials, setTestimonials] = useState<Testimonial[]>(initialTestimonials ?? []);
+    const [loading, setLoading] = useState(!initialTestimonials);
 
     useEffect(() => {
+        if (initialTestimonials) return;
         const fetchTestimonials = async () => {
             try {
                 const res = await fetch("/api/testimonials");
@@ -34,7 +36,7 @@ export default function Testimonials() {
             }
         };
         fetchTestimonials();
-    }, []);
+    }, [initialTestimonials]);
 
     if (loading) return null;
     if (testimonials.length === 0) {

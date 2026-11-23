@@ -6,7 +6,7 @@ import { Building2 } from "lucide-react";
 import Link from "next/link";
 import SectionHeader from "@/components/ui/SectionHeader";
 
-interface Partner {
+export interface Partner {
     _id: string;
     name: string;
     logo: string;
@@ -16,13 +16,18 @@ interface Partner {
 interface PartnersProps {
     limit?: number;
     fullWidth?: boolean;
+    /** Partners loaded on the server. When given, the section renders immediately without fetching. */
+    initialPartners?: Partner[];
 }
 
-export default function Partners({ limit, fullWidth = false }: PartnersProps) {
-    const [partners, setPartners] = useState<Partner[]>([]);
-    const [loading, setLoading] = useState(true);
+export default function Partners({ limit, fullWidth = false, initialPartners }: PartnersProps) {
+    const [partners, setPartners] = useState<Partner[]>(() =>
+        initialPartners ? (limit ? initialPartners.slice(0, limit) : initialPartners) : []
+    );
+    const [loading, setLoading] = useState(!initialPartners);
 
     useEffect(() => {
+        if (initialPartners) return;
         const fetchPrograms = async () => {
             try {
                 const res = await fetch("/api/partners");
@@ -37,7 +42,7 @@ export default function Partners({ limit, fullWidth = false }: PartnersProps) {
             }
         };
         fetchPrograms();
-    }, [limit]);
+    }, [limit, initialPartners]);
 
     const header = (
         <SectionHeader

@@ -3,6 +3,7 @@ import { SiteConfig } from "@/lib/models";
 import dbConnect from "@/lib/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { refreshPublicPages } from "@/lib/revalidate";
 
 export async function GET() {
     try {
@@ -58,6 +59,7 @@ export async function PUT(request: Request) {
             { new: true, upsert: true }
         ).lean();
 
+        refreshPublicPages();
         return NextResponse.json(JSON.parse(JSON.stringify(config)));
     } catch {
         return NextResponse.json(

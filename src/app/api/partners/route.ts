@@ -3,6 +3,7 @@ import dbConnect from "@/lib/db";
 import { Partner } from "@/lib/models";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { refreshPublicPages } from "@/lib/revalidate";
 
 export async function GET() {
     await dbConnect();
@@ -24,6 +25,7 @@ export async function POST(req: NextRequest) {
     try {
         const data = await req.json();
         const partner = await Partner.create(data);
+        refreshPublicPages();
         return NextResponse.json(JSON.parse(JSON.stringify(partner)), { status: 201 });
     } catch {
         return NextResponse.json({ error: "Failed to create partner" }, { status: 500 });

@@ -3,6 +3,7 @@ import dbConnect from "@/lib/db";
 import { Testimonial } from "@/lib/models";
 import { getServerSession } from "next-auth";
 import { isUploadedImagePath, normalizeImageUrl } from "@/lib/imageUrl";
+import { refreshPublicPages } from "@/lib/revalidate";
 
 export async function GET() {
     try {
@@ -33,6 +34,7 @@ export async function POST(req: Request) {
         }
 
         const testimonial = await Testimonial.create({ ...body, imageUrl });
+        refreshPublicPages();
         return NextResponse.json(testimonial);
     } catch {
         return NextResponse.json({ error: "Failed to create testimonial" }, { status: 500 });

@@ -3,6 +3,7 @@ import dbConnect from "@/lib/db";
 import { Program } from "@/lib/models";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
+import { refreshPublicPages } from "@/lib/revalidate";
 
 export async function GET() {
     await dbConnect();
@@ -25,6 +26,7 @@ export async function POST(req: NextRequest) {
     try {
         const data = await req.json();
         const program = await Program.create(data);
+        refreshPublicPages();
         return NextResponse.json(JSON.parse(JSON.stringify(program)), { status: 201 });
     } catch {
         return NextResponse.json({ error: "Failed to create program" }, { status: 500 });

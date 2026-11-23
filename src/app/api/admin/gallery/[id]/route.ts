@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import { GalleryPhoto } from "@/lib/models";
 import { getServerSession } from "next-auth";
+import { refreshPublicPages } from "@/lib/revalidate";
 
 export async function DELETE(
     req: Request,
@@ -14,6 +15,7 @@ export async function DELETE(
         await dbConnect();
         const { id } = await params;
         await GalleryPhoto.findByIdAndDelete(id);
+        refreshPublicPages();
         return NextResponse.json({ message: "Photo deleted" });
     } catch {
         return NextResponse.json({ error: "Failed to delete photo" }, { status: 500 });
