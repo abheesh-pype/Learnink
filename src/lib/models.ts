@@ -306,6 +306,8 @@ export const Testimonial = new Model('testimonials', {
     imageUrl: 'text',
     rating: 'int',
     order: 'int',
+    source: 'text', // 'website' | 'google' (copied from a Google review)
+    sourceUrl: 'text', // optional link to the original Google review
 });
 
 // Private admin CRM settings singleton (key = 'crm-integration')
@@ -335,6 +337,7 @@ export const ContactSettings = new Model('contact_settings', {
     universitiesCount: 'text',
     coursesCount: 'text',
     yearsCount: 'text',
+    extras: 'json', // { phones, emails, locations, offices }: additional entries
 });
 
 // Admin auth users

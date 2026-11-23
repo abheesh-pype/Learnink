@@ -33,7 +33,32 @@ export async function POST(req: Request) {
             }
         }
 
-        const testimonial = await Testimonial.create({ ...body, imageUrl });
+        const text = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
+        const name = text(body.name, 120);
+        const content = text(body.content, 2000);
+        if (!name || !content) {
+            return NextResponse.json({ error: "Please enter the student's name and the review text." }, { status: 400 });
+        }
+        const rating = Math.min(5, Math.max(1, Math.round(Number(body.rating)) || 5));
+        const order = Number.isFinite(Number(body.order)) ? Math.trunc(Number(body.order)) : 0;
+
+        // Copied from a Google review: tagged on the website, with an optional link to the original review.
+        const source = body.source === "google" ? "google" : "website";
+        const sourceUrl = source === "google" ? text(body.sourceUrl, 1000) : "";
+        if (sourceUrl && !/^https:\/\/\S+$/i.test(sourceUrl)) {
+            return NextResponse.json({ error: "The Google review link must start with https://" }, { status: 400 });
+        }
+
+        const testimonial = await Testimonial.create({
+            name,
+            content,
+            role: text(body.role, 120),
+            rating,
+            order,
+            imageUrl,
+            source,
+            sourceUrl: sourceUrl || null,
+        });
         refreshPublicPages();
         return NextResponse.json(testimonial);
     } catch {

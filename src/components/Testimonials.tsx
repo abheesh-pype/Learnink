@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { Quote, Star } from "lucide-react";
 import TestimonialAvatar from "@/components/TestimonialAvatar";
 import SectionHeader from "@/components/ui/SectionHeader";
+import GoogleReviewTag from "@/components/GoogleReviewTag";
 
 export interface Testimonial {
     _id: string;
@@ -13,6 +14,8 @@ export interface Testimonial {
     role?: string;
     imageUrl?: string;
     rating: number;
+    source?: "website" | "google";
+    sourceUrl?: string | null;
 }
 
 /** `initialTestimonials`: loaded on the server, so the section renders immediately without fetching. */
@@ -75,10 +78,13 @@ export default function Testimonials({ initialTestimonials }: { initialTestimoni
                             className="card flex flex-col p-7 sm:p-8"
                         >
 
-                            <div className="flex gap-1" aria-label={`Rated ${item.rating} out of 5`}>
-                                {[...Array(item.rating)].map((_, i) => (
-                                    <Star key={i} size={15} className="fill-primary text-primary" />
-                                ))}
+                            <div className="flex items-center justify-between gap-3">
+                                <div className="flex gap-1" aria-label={`Rated ${item.rating} out of 5`}>
+                                    {[...Array(item.rating)].map((_, i) => (
+                                        <Star key={i} size={15} className="fill-primary text-primary" />
+                                    ))}
+                                </div>
+                                {item.source === "google" && <GoogleReviewTag url={item.sourceUrl} />}
                             </div>
 
                             <Quote size={28} strokeWidth={1.25} className="mt-5 text-primary-200" aria-hidden="true" />

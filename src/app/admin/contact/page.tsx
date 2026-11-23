@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Phone, Mail, MapPin, Building2, GraduationCap, BarChart3, Save, Loader2, ExternalLink, CheckCircle2 } from "lucide-react";
-import { DEFAULT_CONTACT, EMAIL_RE, type ContactInfo } from "@/lib/contact";
+import { Phone, Mail, MapPin, Building2, GraduationCap, BarChart3, Save, Loader2, ExternalLink, CheckCircle2, Plus, Trash2 } from "lucide-react";
+import { DEFAULT_CONTACT, EMAIL_RE, MAX_EXTRAS_PER_TYPE, type ContactExtras, type ContactInfo, type ContactTextField } from "@/lib/contact";
 
 type Field = {
-    key: keyof ContactInfo;
+    key: ContactTextField;
     label: string;
     placeholder?: string;
     hint?: string;
@@ -15,8 +15,17 @@ type Field = {
     required?: boolean;
 };
 
+type ExtraType = keyof ContactExtras;
+
+/** "+ Add another …" entries for a section; each becomes its own card on the Contact page. */
+type ExtraConfig = {
+    type: ExtraType;
+    itemLabel: string; // "Phone", "Email", …
+    fields: { key: string; label: string; type?: "text" | "email" | "tel" | "url"; placeholder?: string; multiline?: boolean; main?: boolean }[];
+};
+
 // Each section matches a card on the public Contact page.
-const SECTIONS: { title: string; description: string; icon: typeof Phone; fields: Field[] }[] = [
+const SECTIONS: { title: string; description: string; icon: typeof Phone; fields: Field[]; extra?: ExtraConfig }[] = [
     {
         title: "Call Us",
         description: "Phone card. Visitors can tap the number to call.",
@@ -25,6 +34,14 @@ const SECTIONS: { title: string; description: string; icon: typeof Phone; fields
             { key: "phone", label: "Phone Number", type: "tel", placeholder: DEFAULT_CONTACT.phone, required: true },
             { key: "phoneHours", label: "Calling Hours", placeholder: DEFAULT_CONTACT.phoneHours },
         ],
+        extra: {
+            type: "phones",
+            itemLabel: "Phone",
+            fields: [
+                { key: "phone", label: "Phone Number", type: "tel", placeholder: "+91 90000 00000", main: true },
+                { key: "note", label: "Note Under Title", placeholder: "e.g. Admissions desk, Mon-Fri" },
+            ],
+        },
     },
     {
         title: "Email Us",
@@ -34,6 +51,14 @@ const SECTIONS: { title: string; description: string; icon: typeof Phone; fields
             { key: "email", label: "Email Address", type: "email", placeholder: DEFAULT_CONTACT.email, required: true },
             { key: "emailNote", label: "Note Under Title", placeholder: DEFAULT_CONTACT.emailNote },
         ],
+        extra: {
+            type: "emails",
+            itemLabel: "Email",
+            fields: [
+                { key: "email", label: "Email Address", type: "email", placeholder: "admissions@example.com", main: true },
+                { key: "note", label: "Note Under Title", placeholder: "e.g. Admissions team" },
+            ],
+        },
     },
     {
         title: "Visit Us",
@@ -47,6 +72,15 @@ const SECTIONS: { title: string; description: string; icon: typeof Phone; fields
                 hint: "Leave empty to search Google Maps for the headquarters address.",
             },
         ],
+        extra: {
+            type: "locations",
+            itemLabel: "Location (white card)",
+            fields: [
+                { key: "location", label: "Location", placeholder: "e.g. Kochi, Kerala", main: true },
+                { key: "note", label: "Note Under Title", placeholder: "e.g. Branch Office" },
+                { key: "mapUrl", label: "Google Maps Link (optional)", type: "url", placeholder: "https://maps.app.goo.gl/..." },
+            ],
+        },
     },
     {
         title: "Headquarters",
@@ -57,6 +91,15 @@ const SECTIONS: { title: string; description: string; icon: typeof Phone; fields
             { key: "hqAddress", label: "Address", placeholder: DEFAULT_CONTACT.hqAddress, multiline: true, hint: "Press Enter for a new line." },
             { key: "hqHours", label: "Office Hours", placeholder: DEFAULT_CONTACT.hqHours },
         ],
+        extra: {
+            type: "offices",
+            itemLabel: "Office (dark card)",
+            fields: [
+                { key: "name", label: "Office Name", placeholder: "e.g. Learnink Kochi Centre", main: true },
+                { key: "address", label: "Address", placeholder: "Street, City - PIN", multiline: true },
+                { key: "hours", label: "Office Hours", placeholder: "Mon - Sat: 9am - 6pm" },
+            ],
+        },
     },
     {
         title: "Admissions",
@@ -98,10 +141,24 @@ export default function AdminContact() {
             .finally(() => setLoading(false));
     }, []);
 
-    const update = (key: keyof ContactInfo, value: string) => {
+    const update = (key: ContactTextField, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
         setSavedAt(null);
     };
+
+    // --- Additional entries ---
+    const setExtras = (type: ExtraType, change: (list: Record<string, string>[]) => Record<string, string>[]) => {
+        setForm((prev) => ({
+            ...prev,
+            extras: { ...prev.extras, [type]: change(prev.extras[type] as unknown as Record<string, string>[]) },
+        }));
+        setSavedAt(null);
+    };
+    const addExtra = (config: ExtraConfig) =>
+        setExtras(config.type, (list) => [...list, Object.fromEntries(config.fields.map((f) => [f.key, ""]))]);
+    const removeExtra = (type: ExtraType, index: number) => setExtras(type, (list) => list.filter((_, i) => i !== index));
+    const updateExtra = (type: ExtraType, index: number, key: string, value: string) =>
+        setExtras(type, (list) => list.map((item, i) => (i === index ? { ...item, [key]: value } : item)));
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -150,7 +207,7 @@ export default function AdminContact() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {SECTIONS.map(({ title, description, icon: Icon, fields }) => (
+                {SECTIONS.map(({ title, description, icon: Icon, fields, extra }) => (
                     <section key={title} className="bg-white p-6 lg:p-8 rounded-lg border border-slate-200 shadow-sm space-y-5">
                         <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
                             <div className="icon-tile w-10 h-10">
@@ -196,6 +253,16 @@ export default function AdminContact() {
                                 </div>
                             );
                         })}
+
+                        {extra && (
+                            <ExtraEntries
+                                config={extra}
+                                items={form.extras[extra.type] as unknown as Record<string, string>[]}
+                                onAdd={() => addExtra(extra)}
+                                onRemove={(i) => removeExtra(extra.type, i)}
+                                onChange={(i, key, value) => updateExtra(extra.type, i, key, value)}
+                            />
+                        )}
                     </section>
                 ))}
             </div>
@@ -229,5 +296,70 @@ export default function AdminContact() {
                 </div>
             </div>
         </form>
+    );
+}
+
+/** List of additional entries for one section, with "+ Add another" and delete buttons. */
+function ExtraEntries({
+    config, items, onAdd, onRemove, onChange,
+}: {
+    config: ExtraConfig;
+    items: Record<string, string>[];
+    onAdd: () => void;
+    onRemove: (index: number) => void;
+    onChange: (index: number, key: string, value: string) => void;
+}) {
+    const full = items.length >= MAX_EXTRAS_PER_TYPE;
+    return (
+        <div className="space-y-4 border-t border-dashed border-slate-200 pt-5">
+            {items.map((item, i) => (
+                <div key={i} className="space-y-3 rounded-md border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex items-center justify-between">
+                        <p className="text-xs font-bold uppercase tracking-widest text-primary">
+                            Additional {config.itemLabel} #{i + 1}
+                        </p>
+                        <button
+                            type="button"
+                            onClick={() => onRemove(i)}
+                            className="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-bold text-rose-600 transition-colors hover:bg-rose-50"
+                            aria-label={`Delete additional ${config.itemLabel.toLowerCase()} #${i + 1}`}
+                        >
+                            <Trash2 size={14} /> Delete
+                        </button>
+                    </div>
+                    {config.fields.map((field) => {
+                        const id = `extra-${config.type}-${i}-${field.key}`;
+                        const common = {
+                            id,
+                            value: item[field.key] ?? "",
+                            placeholder: field.placeholder,
+                            maxLength: 300,
+                        };
+                        return (
+                            <div key={field.key} className="space-y-1.5">
+                                <label htmlFor={id} className="pl-1 text-xs font-bold uppercase tracking-widest text-slate-500">
+                                    {field.label}
+                                    {field.main && <span className="text-rose-500"> *</span>}
+                                </label>
+                                {field.multiline ? (
+                                    <textarea {...common} rows={2} onChange={(e) => onChange(i, field.key, e.target.value)} className={`${inputClass} resize-y`} />
+                                ) : (
+                                    <input {...common} type={field.type ?? "text"} onChange={(e) => onChange(i, field.key, e.target.value)} className={inputClass} />
+                                )}
+                            </div>
+                        );
+                    })}
+                    <p className="pl-1 text-xs text-slate-500">Shown as its own card on the Contact page. Leave the starred field empty to skip it.</p>
+                </div>
+            ))}
+            <button
+                type="button"
+                onClick={onAdd}
+                disabled={full}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-md border-2 border-dashed border-slate-300 py-3 text-sm font-bold text-slate-600 transition-colors hover:border-primary hover:text-primary disabled:opacity-50"
+            >
+                <Plus size={16} /> {full ? `Maximum ${MAX_EXTRAS_PER_TYPE} reached` : `Add another ${config.itemLabel.toLowerCase()}`}
+            </button>
+        </div>
     );
 }

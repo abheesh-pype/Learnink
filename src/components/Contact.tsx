@@ -98,7 +98,39 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
             href: contact.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${contact.hqName}, ${contact.hqAddress.replace(/\n/g, ", ")}`)}`,
             external: true,
             color: ""
-        }
+        },
+        // Additional entries from Admin → Contact ("+ Add another …"), each as its own card after the main three.
+        ...contact.extras.phones.map((p) => ({
+            icon: Phone,
+            title: "Call Us",
+            subtitle: p.note,
+            value: p.phone,
+            href: telHref(p.phone),
+            color: "",
+        })),
+        ...contact.extras.emails.map((e) => ({
+            icon: Mail,
+            title: "Email Us",
+            subtitle: e.note,
+            value: e.email,
+            href: `mailto:${e.email}`,
+            color: "",
+        })),
+        ...contact.extras.locations.map((l) => ({
+            icon: MapPin,
+            title: "Visit Us",
+            subtitle: l.note,
+            value: l.location,
+            href: l.mapUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(l.location)}`,
+            external: true,
+            color: "",
+        })),
+    ];
+
+    // Dark address cards: the headquarters first, then any additional offices.
+    const offices = [
+        { title: "Headquarters", name: contact.hqName, address: contact.hqAddress, hours: contact.hqHours },
+        ...contact.extras.offices.map((o) => ({ title: "Office", name: o.name, address: o.address, hours: o.hours })),
     ];
 
     const fieldClass =
@@ -287,24 +319,26 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
                         transition={{ delay: 0.1 }}
                         className="flex flex-col gap-6 lg:col-span-5"
                     >
-                        {/* Address Card */}
-                        <div className="relative overflow-hidden rounded-lg bg-primary-darker p-6 text-white sm:p-8">
-                            <div className="relative flex items-center gap-3">
-                                <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10">
-                                    <MapPin size={20} />
-                                </span>
-                                <h2 className="text-lg font-semibold">Headquarters</h2>
+                        {/* Address cards (headquarters + additional offices) */}
+                        {offices.map((office, i) => (
+                            <div key={i} className="relative overflow-hidden rounded-lg bg-primary-darker p-6 text-white sm:p-8">
+                                <div className="relative flex items-center gap-3">
+                                    <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10">
+                                        <MapPin size={20} />
+                                    </span>
+                                    <h2 className="text-lg font-semibold">{office.title}</h2>
+                                </div>
+                                <p className="relative mt-4 whitespace-pre-line text-sm leading-relaxed text-white/75">
+                                    {[office.name, office.address].filter(Boolean).join("\n")}
+                                </p>
+                                {office.hours && (
+                                    <div className="relative mt-6 flex items-center gap-2 border-t border-white/10 pt-5 text-sm text-white/70">
+                                        <Clock size={16} />
+                                        <span>{office.hours}</span>
+                                    </div>
+                                )}
                             </div>
-                            <p className="relative mt-4 whitespace-pre-line text-sm leading-relaxed text-white/75">
-                                {contact.hqName}
-                                {"\n"}
-                                {contact.hqAddress}
-                            </p>
-                            <div className="relative mt-6 flex items-center gap-2 border-t border-white/10 pt-5 text-sm text-white/70">
-                                <Clock size={16} />
-                                <span>{contact.hqHours}</span>
-                            </div>
-                        </div>
+                        ))}
 
                         {/* Admission Status */}
                         <div className="bg-brand-gradient relative overflow-hidden rounded-lg p-6 text-white shadow-sm sm:p-8">

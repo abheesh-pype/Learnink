@@ -183,3 +183,10 @@ CREATE TABLE IF NOT EXISTS gallery_sections (
 ALTER TABLE gallery_photos ADD COLUMN IF NOT EXISTS section_id uuid REFERENCES gallery_sections(id) ON DELETE CASCADE;
 
 CREATE INDEX IF NOT EXISTS gallery_photos_section_idx ON gallery_photos (section_id);
+
+-- Additional contact entries (extra phones, emails, "Visit Us" locations, headquarters offices).
+ALTER TABLE contact_settings ADD COLUMN IF NOT EXISTS extras jsonb NOT NULL DEFAULT '{}'::jsonb;
+
+-- Testimonials copied from Google reviews: tagged on the website, optionally linking to the original review.
+ALTER TABLE testimonials ADD COLUMN IF NOT EXISTS source text NOT NULL DEFAULT 'website';
+ALTER TABLE testimonials ADD COLUMN IF NOT EXISTS source_url text;

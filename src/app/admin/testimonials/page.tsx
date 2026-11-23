@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Plus, Trash2, Loader2, Star } from "lucide-react";
 import ImagePicker, { EMPTY_IMAGE, resolvePickedImage, type PickedImage } from "@/components/admin/ImagePicker";
 import TestimonialAvatar from "@/components/TestimonialAvatar";
+import GoogleReviewTag from "@/components/GoogleReviewTag";
 
 interface Testimonial {
     _id: string;
@@ -13,6 +14,8 @@ interface Testimonial {
     imageUrl?: string;
     rating: number;
     order: number;
+    source?: "website" | "google";
+    sourceUrl?: string | null;
 }
 
 export default function AdminTestimonials() {
@@ -29,6 +32,9 @@ export default function AdminTestimonials() {
     const [error, setError] = useState("");
     const [rating, setRating] = useState(5);
     const [order, setOrder] = useState("0");
+    // Copied from a Google review: shows a "Google review" tag on the website.
+    const [fromGoogle, setFromGoogle] = useState(false);
+    const [sourceUrl, setSourceUrl] = useState("");
 
     useEffect(() => {
         fetchTestimonials();
@@ -63,7 +69,11 @@ export default function AdminTestimonials() {
             const res = await fetch("/api/admin/testimonials", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, content, role, imageUrl, rating, order: parseInt(order) || 0 }),
+                body: JSON.stringify({
+                    name, content, role, imageUrl, rating, order: parseInt(order) || 0,
+                    source: fromGoogle ? "google" : "website",
+                    sourceUrl: fromGoogle ? sourceUrl : "",
+                }),
             });
             const saved = await res.json();
             if (!res.ok) throw new Error(saved.error || "Failed to add testimonial.");
@@ -71,6 +81,7 @@ export default function AdminTestimonials() {
             setName("");
             setContent("");
             setRole("");
+            setSourceUrl("");
             setPickerKey((k) => k + 1);
             setImage(EMPTY_IMAGE);
             setOrder((prev) => ((parseInt(prev) || 0) + 1).toString());
@@ -133,6 +144,36 @@ export default function AdminTestimonials() {
                                 <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Content</label>
                                 <textarea value={content} onChange={(e) => setContent(e.target.value)} className="w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:border-violet focus:outline-none transition-all font-medium h-32" required />
                             </div>
+                            <div className="space-y-3 rounded-md border border-slate-200 bg-slate-50 p-4">
+                                <label className="flex cursor-pointer items-start gap-3">
+                                    <input
+                                        type="checkbox"
+                                        checked={fromGoogle}
+                                        onChange={(e) => setFromGoogle(e.target.checked)}
+                                        className="mt-0.5 h-4 w-4 accent-primary"
+                                    />
+                                    <span>
+                                        <span className="block text-sm font-bold text-slate-800">This is a Google review</span>
+                                        <span className="block text-xs text-slate-500">Shows a &quot;Google review&quot; tag on the website. Copy the reviewer&apos;s name, stars and text exactly as on Google.</span>
+                                    </span>
+                                </label>
+                                {fromGoogle && (
+                                    <div className="space-y-1.5">
+                                        <label htmlFor="google-review-url" className="pl-1 text-xs font-bold uppercase tracking-widest text-slate-500">
+                                            Link to the review <span className="font-medium normal-case tracking-normal text-slate-400">(optional)</span>
+                                        </label>
+                                        <input
+                                            id="google-review-url"
+                                            type="url"
+                                            value={sourceUrl}
+                                            onChange={(e) => setSourceUrl(e.target.value)}
+                                            placeholder="https://maps.app.goo.gl/..."
+                                            className="w-full rounded-md border-2 border-slate-200 bg-white px-4 py-3 text-sm font-semibold focus:border-primary focus:outline-none"
+                                        />
+                                        <p className="pl-1 text-xs text-slate-500">In Google Maps, open the review → Share → Copy link. Visitors can click the tag to read it on Google.</p>
+                                    </div>
+                                )}
+                            </div>
                             {error && <p className="text-sm font-bold text-rose-600 pl-1">{error}</p>}
                             <button type="submit" disabled={submitting || (!image.empty && !image.ready)} className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-xl font-bold hover:shadow-sm transition-all shadow-lg active:scale-95 disabled:opacity-50">
                                 {submitting ? <Loader2 className="animate-spin" /> : "Publish Testimonial"}
@@ -150,9 +191,12 @@ export default function AdminTestimonials() {
                                 <div key={item._id} className="bg-white p-6 rounded-lg border border-slate-200 flex items-start gap-6 group hover:border-violet/50 hover:shadow-sm transition-all duration-300">
                                     <TestimonialAvatar name={item.name} imageUrl={item.imageUrl} />
                                     <div className="flex-1">
-                                        <div className="flex items-center gap-3 mb-2">
+                                        <div className="mb-2 flex flex-wrap items-center gap-3">
                                             <h4 className="font-black text-slate-800">{item.name}</h4>
-                                            <div className="flex text-violet-500"><Star size={12} className="fill-current" /></div>
+                                            <div className="flex text-primary" aria-label={`Rated ${item.rating} out of 5`}>
+                                                {Array.from({ length: item.rating }, (_, i) => <Star key={i} size={12} className="fill-current" />)}
+                                            </div>
+                                            {item.source === "google" && <GoogleReviewTag url={item.sourceUrl} />}
                                         </div>
                                         <p className="text-slate-500 text-sm italic">&quot;{item.content}&quot;</p>
                                     </div>

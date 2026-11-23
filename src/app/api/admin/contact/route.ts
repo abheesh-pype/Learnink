@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import dbConnect from "@/lib/db";
 import { ContactSettings } from "@/lib/models";
-import { CONTACT_FIELDS, EMAIL_RE, withContactDefaults, type ContactInfo } from "@/lib/contact";
+import { CONTACT_FIELDS, EMAIL_RE, normalizeExtras, validateExtras, withContactDefaults, type ContactTextField } from "@/lib/contact";
 import { getContactInfo } from "@/lib/contactSettings";
 import { refreshPublicPages } from "@/lib/revalidate";
 
@@ -24,7 +24,7 @@ export async function PUT(req: Request) {
         const body = await req.json();
 
         // Keep only known text fields, trimmed.
-        const data = {} as ContactInfo;
+        const data = {} as Record<ContactTextField, string>;
         for (const field of CONTACT_FIELDS) {
             const value = body?.[field];
             data[field] = typeof value === "string" ? value.trim() : "";
@@ -43,8 +43,13 @@ export async function PUT(req: Request) {
             return NextResponse.json({ error: "The map link must start with https://" }, { status: 400 });
         }
 
+        // Additional phones / emails / locations / offices.
+        const extras = normalizeExtras(body?.extras);
+        const extrasError = validateExtras(extras);
+        if (extrasError) return NextResponse.json({ error: extrasError }, { status: 400 });
+
         await dbConnect();
-        const saved = await ContactSettings.findOneAndUpdate({ key: "contact" }, { ...data }, { upsert: true }).lean();
+        const saved = await ContactSettings.findOneAndUpdate({ key: "contact" }, { ...data, extras }, { upsert: true }).lean();
         refreshPublicPages();
         return NextResponse.json(withContactDefaults(saved));
     } catch (e) {
