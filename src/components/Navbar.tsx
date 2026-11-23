@@ -3,13 +3,20 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
-import { motion, useScroll, useSpring } from "framer-motion";
+import { ArrowUpRight, Menu, X } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useSiteConfig } from "@/components/SiteConfigProvider";
 import { DEFAULT_LOGO } from "@/lib/site";
 
-const NavLinks = [
+// Only a few links are shown in the header pill; the full list lives in the Menu.
+const QuickLinks = [
+    { name: "Programs", href: "/programs" },
+    { name: "Universities", href: "/partners" },
+    { name: "Contact", href: "/contact" },
+];
+
+const MenuLinks = [
     { name: "Home", href: "/" },
     { name: "About", href: "/about" },
     { name: "Programs", href: "/programs" },
@@ -17,44 +24,38 @@ const NavLinks = [
     { name: "Contact", href: "/contact" },
 ];
 
+const pill = "flex items-center rounded-xl bg-primary-darker/85 p-1.5 shadow-lg shadow-black/20 ring-1 ring-white/10 backdrop-blur-md";
+const pillItem =
+    "rounded-lg px-4 py-2 text-[15px] font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70";
+
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
     const pathname = usePathname();
     const { logo } = useSiteConfig(); // Admin → SEO Settings → Site Logo (falls back to /logo.png)
-    const { scrollYProgress } = useScroll();
-    const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 25, mass: 0.3 });
 
     // "/" only matches the home page; other links also stay active on their sub-pages (e.g. /programs/some-slug).
     const isActive = (href: string) =>
         href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
 
+    // While the full-screen menu is open: lock page scrolling and close on Escape.
     useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
+        if (!isOpen) return;
+        const previous = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        const onKey = (e: KeyboardEvent) => e.key === "Escape" && setIsOpen(false);
+        window.addEventListener("keydown", onKey);
+        return () => {
+            document.body.style.overflow = previous;
+            window.removeEventListener("keydown", onKey);
         };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+    }, [isOpen]);
 
     return (
-        <nav
-            className={cn(
-                "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-                scrolled
-                    ? "border-b border-white/60 bg-white/80 shadow-lg shadow-primary/5 backdrop-blur-xl"
-                    : "border-b border-transparent bg-white"
-            )}
-        >
-            {/* Scroll progress bar */}
-            <motion.div
-                className="absolute bottom-0 left-0 right-0 h-[3px] origin-left bg-gradient-to-r from-primary via-violet to-glow"
-                style={{ scaleX: progress }}
-                aria-hidden="true"
-            />
-            <div className="container-page">
-                <div className="flex h-20 items-center justify-between gap-6">
-                    <Link href="/" className="flex shrink-0 items-center">
+        <>
+            {/* Floating header: no bar, just the logo and two pills over the page */}
+            <nav className="pointer-events-none fixed inset-x-0 top-0 z-50">
+                <div className="container-page flex h-20 items-center justify-between gap-4 pt-2">
+                    <Link href="/" className="pointer-events-auto flex shrink-0 items-center">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src={logo}
@@ -63,106 +64,124 @@ export default function Navbar() {
                             onError={(e) => {
                                 if (!e.currentTarget.src.endsWith(DEFAULT_LOGO)) e.currentTarget.src = DEFAULT_LOGO;
                             }}
-                            className="h-11 w-auto object-contain transition-transform duration-300 hover:scale-105"
+                            className="h-12 w-auto object-contain shadow-lg shadow-black/20"
                         />
                     </Link>
 
-                    {/* Desktop Links */}
-                    <div className="hidden md:flex items-center gap-8">
-                        {NavLinks.map((link) => {
-                            const active = isActive(link.href);
-                            return (
-                                <Link
-                                    key={link.name}
-                                    href={link.href}
-                                    aria-current={active ? "page" : undefined}
-                                    className={cn(
-                                        "relative py-2 text-[15px] font-semibold transition-colors after:content-[''] after:absolute after:-bottom-0.5 after:left-0 after:h-0.5 after:rounded-full after:transition-all after:duration-300",
-                                        active
-                                            ? "text-brand-blue after:w-full after:bg-brand-blue"
-                                            : "text-slate-600 hover:text-slate-900 after:w-0 after:bg-slate-900 hover:after:w-full"
-                                    )}
-                                >
-                                    {link.name}
-                                </Link>
-                            );
-                        })}
-                    </div>
-
-                    <div className="hidden md:flex items-center gap-2">
-                        <Link
-                            href="/admin/login"
-                            className="rounded-lg px-4 py-2.5 text-sm font-semibold text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
-                        >
-                            Login
-                        </Link>
-                        <Link
-                            href="/contact"
-                            className="inline-flex items-center rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800 hover:shadow-xl"
-                        >
-                            Enquire Now
-                        </Link>
-                    </div>
-
-                    {/* Mobile Menu Button */}
-                    <button
-                        className="md:hidden rounded-lg p-2 text-slate-800 transition-colors hover:bg-slate-100"
-                        onClick={() => setIsOpen(!isOpen)}
-                        aria-label={isOpen ? "Close menu" : "Open menu"}
-                        aria-expanded={isOpen}
-                    >
-                        {isOpen ? <X size={26} /> : <Menu size={26} />}
-                    </button>
-                </div>
-            </div>
-
-            {/* Mobile Menu */}
-            {isOpen && (
-                <div className="md:hidden border-t border-slate-200 bg-white shadow-lg animate-[fadeInUp_0.25s_ease-out_forwards]">
-                    <div className="container-page flex flex-col py-4">
-                        {NavLinks.map((link) => {
-                            const active = isActive(link.href);
-                            return (
-                                <Link
-                                    key={link.name}
-                                    href={link.href}
-                                    aria-current={active ? "page" : undefined}
-                                    className={cn(
-                                        "flex items-center gap-3 rounded-lg px-3 py-3 text-base font-semibold",
-                                        active ? "text-brand-blue" : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
-                                    )}
-                                    onClick={() => setIsOpen(false)}
-                                >
-                                    <span
-                                        className={cn(
-                                            "pb-1 border-b-2",
-                                            active ? "border-brand-blue" : "border-transparent"
-                                        )}
+                    <div className="pointer-events-auto flex items-center gap-3">
+                        {/* Quick links (desktop) */}
+                        <div className={cn(pill, "hidden md:flex")}>
+                            {QuickLinks.map((link) => {
+                                const active = isActive(link.href);
+                                return (
+                                    <Link
+                                        key={link.name}
+                                        href={link.href}
+                                        aria-current={active ? "page" : undefined}
+                                        className={cn(pillItem, active && "bg-white font-semibold text-brand-blue hover:bg-white hover:text-brand-blue")}
                                     >
                                         {link.name}
-                                    </span>
-                                </Link>
-                            );
-                        })}
-                        <div className="mt-3 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4">
-                            <Link
-                                href="/admin/login"
-                                className="rounded-lg border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-600 hover:bg-slate-50"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                Staff Login
+                                    </Link>
+                                );
+                            })}
+                        </div>
+
+                        {/* Enquire + Menu */}
+                        <div className={pill}>
+                            <Link href="/contact#enquiry-form" className={cn(pillItem, "hidden sm:inline-flex items-center gap-1.5")}>
+                                Enquire <ArrowUpRight size={16} />
                             </Link>
-                            <Link
-                                href="/contact"
-                                className="rounded-lg bg-slate-900 px-4 py-3 text-center text-sm font-semibold text-white hover:bg-slate-700"
-                                onClick={() => setIsOpen(false)}
+                            <button
+                                type="button"
+                                onClick={() => setIsOpen(true)}
+                                className={cn(pillItem, "inline-flex items-center gap-2")}
+                                aria-expanded={isOpen}
+                                aria-controls="site-menu"
                             >
-                                Enquire Now
-                            </Link>
+                                Menu <Menu size={18} />
+                            </button>
                         </div>
                     </div>
                 </div>
-            )}
-        </nav>
+            </nav>
+
+            {/* Full-screen menu */}
+            <AnimatePresence>
+                {isOpen && (
+                    <motion.div
+                        id="site-menu"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Site menu"
+                        className="fixed inset-0 z-[60] overflow-y-auto bg-primary-darker text-white"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.25 }}
+                    >
+                        <div className="absolute -right-40 -top-40 h-[32rem] w-[32rem] rounded-full bg-violet/25 blur-3xl" aria-hidden="true" />
+                        <div className="container-page relative flex min-h-full flex-col pb-10">
+                            <div className="flex h-20 items-center justify-between pt-2">
+                                <Link href="/" onClick={() => setIsOpen(false)}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={logo} alt="Learnink" referrerPolicy="no-referrer" className="h-12 w-auto object-contain" />
+                                </Link>
+                                <button
+                                    type="button"
+                                    onClick={() => setIsOpen(false)}
+                                    className={cn(pill, pillItem, "gap-2 px-5")}
+                                    autoFocus
+                                >
+                                    Close <X size={18} />
+                                </button>
+                            </div>
+
+                            <ul className="mt-12 flex-1 space-y-2 lg:mt-16">
+                                {MenuLinks.map((link, i) => {
+                                    const active = isActive(link.href);
+                                    return (
+                                        <motion.li
+                                            key={link.name}
+                                            initial={{ opacity: 0, y: 24 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: 0.05 + i * 0.05, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                                        >
+                                            <Link
+                                                href={link.href}
+                                                onClick={() => setIsOpen(false)}
+                                                aria-current={active ? "page" : undefined}
+                                                className="group inline-flex items-center gap-4 py-1 font-display text-5xl text-white/85 transition-colors hover:text-white sm:text-6xl lg:text-7xl"
+                                            >
+                                                <span className={cn("border-b-2 pb-1", active ? "border-white text-white" : "border-transparent")}>
+                                                    {link.name}
+                                                </span>
+                                                <ArrowUpRight className="opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" size={36} />
+                                            </Link>
+                                        </motion.li>
+                                    );
+                                })}
+                            </ul>
+
+                            <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-white/15 pt-8">
+                                <Link
+                                    href="/contact#enquiry-form"
+                                    onClick={() => setIsOpen(false)}
+                                    className="btn-light px-6 py-3 text-base"
+                                >
+                                    Enquire Now <ArrowUpRight size={18} />
+                                </Link>
+                                <Link
+                                    href="/admin/login"
+                                    onClick={() => setIsOpen(false)}
+                                    className="rounded-xl px-5 py-3 text-sm font-semibold text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+                                >
+                                    Staff Login
+                                </Link>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
     );
 }

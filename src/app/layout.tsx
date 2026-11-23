@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
@@ -8,6 +8,14 @@ import { OrganizationSchema, WebSiteSchema } from "@/components/JsonLd";
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-plus-jakarta",
+  display: "swap",
+});
+
+// Serif font for large display headings (homepage hero, menu). Use with the `font-display` class.
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  variable: "--font-cormorant",
   display: "swap",
 });
 
@@ -105,7 +113,7 @@ export default async function RootLayout({
   if (config?.socialLinks?.youtube) socialLinks.push(config.socialLinks.youtube);
 
   return (
-    <html lang="en" className="scroll-smooth scroll-pt-28">
+    <html lang="en" className={`${plusJakarta.variable} ${cormorant.variable} scroll-smooth scroll-pt-28`}>
       <head>
         <OrganizationSchema
           name={config?.title || "Learnink Education"}
@@ -121,7 +129,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${plusJakarta.variable} font-sans antialiased bg-white text-slate-700 selection:bg-primary-100 selection:text-primary-dark overflow-x-hidden`}
+        className={`font-sans antialiased bg-white text-slate-700 selection:bg-primary-100 selection:text-primary-dark overflow-x-hidden`}
       >
         <Providers>
           {config?.googleAnalyticsId && <GoogleAnalytics gaId={config.googleAnalyticsId} />}

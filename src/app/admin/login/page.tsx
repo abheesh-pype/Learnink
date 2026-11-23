@@ -5,11 +5,12 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { GraduationCap, Lock, User, Loader2, ArrowRight, ShieldCheck, BarChart3, Sparkles } from "lucide-react";
+import { Eye, EyeOff, GraduationCap, Lock, User, Loader2, ArrowRight, ShieldCheck, BarChart3, Sparkles } from "lucide-react";
 
 export default function AdminLogin() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -143,14 +144,24 @@ export default function AdminLogin() {
                                 <Lock size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 transition-colors group-focus-within/input:text-violet" />
                                 <input
                                     id="login-password"
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className={inputClass}
+                                    className={inputClass.replace("pr-4", "pr-12")}
                                     placeholder="••••••••"
                                     autoComplete="current-password"
                                     required
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword((s) => !s)}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-violet focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet"
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                    aria-pressed={showPassword}
+                                    aria-controls="login-password"
+                                >
+                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                </button>
                             </div>
                         </div>
 
