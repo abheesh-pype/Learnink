@@ -4,10 +4,11 @@
 // cache(): each query runs at most once per request, even if several places ask for it.
 import { cache } from "react";
 import dbConnect from "@/lib/db";
-import { GalleryPhoto, Partner, Program, SiteConfig, Testimonial } from "@/lib/models";
+import { Partner, Program, SiteConfig, Testimonial } from "@/lib/models";
+import { loadGallerySections } from "@/lib/gallery";
 import type { Program as ProgramItem } from "@/components/Programs";
 import type { Partner as PartnerItem } from "@/components/Partners";
-import type { Photo as PhotoItem } from "@/components/Gallery";
+import type { GallerySection as GallerySectionItem } from "@/components/Gallery";
 import type { Testimonial as TestimonialItem } from "@/components/Testimonials";
 
 /** Turns DB rows into plain JSON (dates → strings) so they can be passed to client components. */
@@ -43,8 +44,9 @@ export const getPartners = cache(() =>
     safe<PartnerItem[]>("partners", async () => toPlain(await Partner.find({}).sort({ order: 1 }).lean()), [])
 );
 
-export const getGalleryPhotos = cache(() =>
-    safe<PhotoItem[]>("gallery", async () => toPlain(await GalleryPhoto.find({}).sort({ order: 1, createdAt: -1 })), [])
+// Gallery headings, each with its photos / videos (empty sections left out).
+export const getGallerySections = cache(() =>
+    safe<GallerySectionItem[]>("gallery", () => loadGallerySections(), [])
 );
 
 export const getTestimonials = cache(() =>

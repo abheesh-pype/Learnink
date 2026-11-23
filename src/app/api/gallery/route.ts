@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/db";
-import { GalleryPhoto } from "@/lib/models";
+import { loadGallerySections } from "@/lib/gallery";
 
+// Public: gallery sections (heading + photos / videos), empty sections left out.
 export async function GET() {
     try {
-        await dbConnect();
-        const photos = await GalleryPhoto.find({}).sort({ order: 1, createdAt: -1 });
-        return NextResponse.json(photos);
+        return NextResponse.json(await loadGallerySections());
     } catch {
         return NextResponse.json({ error: "Failed to fetch gallery" }, { status: 500 });
     }

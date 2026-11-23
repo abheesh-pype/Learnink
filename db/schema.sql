@@ -168,3 +168,18 @@ CREATE INDEX IF NOT EXISTS hero_enquiries_created_at_idx ON hero_enquiries (crea
 
 -- Gallery items can be photos or videos.
 ALTER TABLE gallery_photos ADD COLUMN IF NOT EXISTS media_type text NOT NULL DEFAULT 'image';
+
+-- Gallery sections (e.g. "Annual Day 2026"): each has a heading and its own photos / videos.
+CREATE TABLE IF NOT EXISTS gallery_sections (
+    id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    title       text NOT NULL,
+    description text,
+    "order"     integer NOT NULL DEFAULT 0,
+    created_at  timestamptz NOT NULL DEFAULT now(),
+    updated_at  timestamptz NOT NULL DEFAULT now()
+);
+
+-- Deleting a section deletes its photos / videos too.
+ALTER TABLE gallery_photos ADD COLUMN IF NOT EXISTS section_id uuid REFERENCES gallery_sections(id) ON DELETE CASCADE;
+
+CREATE INDEX IF NOT EXISTS gallery_photos_section_idx ON gallery_photos (section_id);

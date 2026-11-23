@@ -1,40 +1,43 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
-import GalleryMedia from "@/components/GalleryMedia";
+import GalleryCollage from "@/components/GalleryCollage";
 
-export interface Photo {
+export interface GalleryItem {
     _id: string;
     imageUrl: string; // photo or video URL
     mediaType?: "image" | "video";
     caption?: string;
 }
 
-/** `initialPhotos`: photos loaded on the server, so the section renders immediately without fetching. */
-export default function Gallery({ initialPhotos }: { initialPhotos?: Photo[] }) {
-    const [photos, setPhotos] = useState<Photo[]>(initialPhotos ?? []);
-    const [loading, setLoading] = useState(!initialPhotos);
+export interface GallerySection {
+    _id: string;
+    title: string;
+    description?: string | null;
+    items: GalleryItem[];
+}
+
+/**
+ * Homepage gallery: each heading with ONE row of its photos / videos and an "Explore More" button that opens
+ * the Gallery page filtered to that heading. Grouped by heading (Admin → Photo Gallery → sections), in the admin's order.
+ * `initialSections`: loaded on the server, so it renders immediately without fetching.
+ */
+export default function Gallery({ initialSections }: { initialSections?: GallerySection[] }) {
+    const [sections, setSections] = useState<GallerySection[]>(initialSections ?? []);
+    const [loading, setLoading] = useState(!initialSections);
 
     useEffect(() => {
-        if (initialPhotos) return;
-        const fetchPhotos = async () => {
-            try {
-                const res = await fetch("/api/gallery");
-                if (res.ok) {
-                    const data = await res.json();
-                    setPhotos(data);
-                }
-            } catch (error) {
-                console.error("Failed to load gallery", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchPhotos();
-    }, [initialPhotos]);
+        if (initialSections) return;
+        fetch("/api/gallery")
+            .then((res) => (res.ok ? res.json() : []))
+            .then(setSections)
+            .catch((error) => console.error("Failed to load gallery", error))
+            .finally(() => setLoading(false));
+    }, [initialSections]);
 
     if (loading) {
         return (
@@ -44,7 +47,7 @@ export default function Gallery({ initialPhotos }: { initialPhotos?: Photo[] }) 
         );
     }
 
-    if (photos.length === 0) {
+    if (sections.length === 0) {
         return (
             <section className="section bg-primary-50">
                 <div className="container-page">
@@ -61,47 +64,47 @@ export default function Gallery({ initialPhotos }: { initialPhotos?: Photo[] }) 
     return (
         <section id="gallery" className="section scroll-mt-24 overflow-hidden bg-primary-50">
             <div className="container-page relative">
-                <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                >
+                <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
                     <SectionHeader eyebrow="Visual Journey" title="Our Campus & Events" />
                 </motion.div>
 
-                <div className="mt-12 grid auto-rows-[220px] grid-cols-1 gap-5 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3">
-                    {photos.map((photo, index) => (
-                        <motion.figure
-                            key={photo._id}
-                            initial={{ opacity: 0, y: 16 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-40px" }}
-                            transition={{ delay: (index % 6) * 0.08, duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
-                            className={`group relative overflow-hidden rounded-md bg-primary-100 ${
-                                index === 0 && photos.length >= 3 ? "sm:col-span-2 sm:row-span-2" : ""
-                            }`}
-                        >
-                            <GalleryMedia
-                                url={photo.imageUrl}
-                                mediaType={photo.mediaType}
-                                alt={photo.caption || (photo.mediaType === "video" ? "Gallery video" : "Gallery photo")}
-                            />
-                            {photo.caption && (
-                                // Photos: caption over the bottom. Videos: caption at the top so it doesn't cover the player controls.
-                                <figcaption
-                                    className={
-                                        photo.mediaType === "video"
-                                            ? "pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-primary-darker/80 to-transparent px-5 pb-10 pt-4"
-                                            : "absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary-darker/90 via-primary-darker/40 to-transparent px-5 pb-5 pt-14"
-                                    }
-                                >
-                                    <p className="text-sm font-medium text-white">{photo.caption}</p>
-                                </figcaption>
-                            )}
-                        </motion.figure>
+                <div className="mt-12 space-y-16 lg:mt-16 lg:space-y-20">
+                    {sections.map((section) => (
+                        <div key={section._id}>
+                            {/* Section heading, e.g. "Annual Day 2026" */}
+                            <div className="flex flex-col gap-2 border-b border-primary-200 pb-4 sm:flex-row sm:items-end sm:justify-between">
+                                <div>
+                                    <h3 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{section.title}</h3>
+                                    {section.description && (
+                                        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-slate-600">{section.description}</p>
+                                    )}
+                                </div>
+                                <p className="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
+                                    {countLabel(section.items)}
+                                </p>
+                            </div>
+
+                            <GalleryCollage section={section} maxRows={1} />
+
+                            <div className="mt-6">
+                                <Link href={`/gallery/${section._id}`} className="btn-outline group">
+                                    Explore More
+                                    <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+                                </Link>
+                            </div>
+                        </div>
                     ))}
                 </div>
             </div>
         </section>
     );
+}
+
+/** "4 photos · 1 video" */
+export function countLabel(items: GalleryItem[]) {
+    const videos = items.filter((i) => i.mediaType === "video").length;
+    const photos = items.length - videos;
+    return [photos && `${photos} photo${photos === 1 ? "" : "s"}`, videos && `${videos} video${videos === 1 ? "" : "s"}`]
+        .filter(Boolean)
+        .join(" · ");
 }

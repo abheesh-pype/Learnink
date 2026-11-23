@@ -14,7 +14,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PageSEO } from "@/lib/models";
-import { getGalleryPhotos, getPartners, getPrograms, getSiteConfig, getTestimonials } from "@/lib/publicData";
+import { getGallerySections, getPartners, getPrograms, getSiteConfig, getTestimonials } from "@/lib/publicData";
 import dbConnect from "@/lib/db";
 
 async function buildMetadata(): Promise<Metadata> {
@@ -51,11 +51,11 @@ async function buildMetadata(): Promise<Metadata> {
 export default async function Home() {
   // Stats numbers are edited in Admin → Contact → Numbers.
   // Everything the page shows is loaded here, in parallel, so it arrives with the HTML.
-  const [contact, programs, partners, photos, testimonials] = await Promise.all([
+  const [contact, programs, partners, gallery, testimonials] = await Promise.all([
     getContactInfo(),
     getPrograms(),
     getPartners(),
-    getGalleryPhotos(),
+    getGallerySections(),
     getTestimonials(),
   ]);
 
@@ -87,7 +87,7 @@ export default async function Home() {
         </div>
       </div>
 
-      <Gallery initialPhotos={photos} />
+      <Gallery initialSections={gallery} />
       <Testimonials initialTestimonials={testimonials} />
 
       {/* Call to action */}

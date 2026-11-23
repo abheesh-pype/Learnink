@@ -284,9 +284,17 @@ export const PageSEO = new Model('page_seos', {
     enabled: 'bool',
 });
 
+// Gallery headings (e.g. "Annual Day 2026"); each owns photos / videos via gallery_photos.section_id.
+export const GallerySection = new Model('gallery_sections', {
+    title: 'text',
+    description: 'text',
+    order: 'int',
+});
+
 export const GalleryPhoto = new Model('gallery_photos', {
     imageUrl: 'text', // image or video URL (column name kept for existing data)
     mediaType: 'text', // 'image' | 'video'
+    sectionId: 'text', // gallery_sections.id (uuid)
     caption: 'text',
     order: 'int',
 });

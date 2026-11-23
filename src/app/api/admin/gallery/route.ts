@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
-import { GalleryPhoto } from "@/lib/models";
+import { GalleryPhoto, GallerySection } from "@/lib/models";
+import { UUID_RE } from "@/lib/gallery";
 import { getServerSession } from "next-auth";
 import { isUploadedImagePath, normalizeImageUrl } from "@/lib/imageUrl";
 import { isUploadedVideoPath, normalizeVideoUrl } from "@/lib/videoUrl";
@@ -24,6 +25,12 @@ export async function POST(req: Request) {
         await dbConnect();
         const body = await req.json();
 
+        // Every item belongs to a section (heading).
+        const sectionId = typeof body.sectionId === "string" ? body.sectionId : "";
+        if (!UUID_RE.test(sectionId) || !(await GallerySection.findById(sectionId))) {
+            return NextResponse.json({ error: "Choose a gallery section first." }, { status: 400 });
+        }
+
         const mediaType = body.mediaType === "video" ? "video" : "image";
         const raw = typeof body.imageUrl === "string" ? body.imageUrl.trim() : "";
 
@@ -44,8 +51,13 @@ export async function POST(req: Request) {
         }
 
         const caption = typeof body.caption === "string" ? body.caption.trim().slice(0, 300) : "";
-        const order = Number.isFinite(Number(body.order)) ? Math.trunc(Number(body.order)) : 0;
-        const photo = await GalleryPhoto.create({ imageUrl, mediaType, caption, order });
+        // New items go to the end of their section unless a position is given.
+        let order = Number(body.order);
+        if (!Number.isFinite(order)) {
+            const last = await GalleryPhoto.findOne({ sectionId }).sort({ order: -1 }).lean();
+            order = (last?.order ?? -1) + 1;
+        }
+        const photo = await GalleryPhoto.create({ imageUrl, mediaType, caption, order: Math.trunc(order), sectionId });
         refreshPublicPages();
         return NextResponse.json(photo);
     } catch {

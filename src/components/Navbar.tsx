@@ -13,6 +13,7 @@ import { DEFAULT_LOGO } from "@/lib/site";
 const QuickLinks = [
     { name: "Programs", href: "/programs" },
     { name: "Universities", href: "/partners" },
+    { name: "Gallery", href: "/gallery" },
     { name: "Contact", href: "/contact" },
 ];
 
@@ -21,6 +22,7 @@ const MenuLinks = [
     { name: "About", href: "/about" },
     { name: "Programs", href: "/programs" },
     { name: "Universities", href: "/partners" },
+    { name: "Gallery", href: "/gallery" },
     { name: "Contact", href: "/contact" },
 ];
 
