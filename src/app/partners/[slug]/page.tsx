@@ -48,19 +48,17 @@ export default async function PartnerDetailPage({ params }: Props) {
 
             {/* Page banner */}
             <header className="bg-brand-gradient relative overflow-hidden">
-                <div className="glow-blob -right-24 -top-24 h-80 w-80 bg-glow/25" aria-hidden="true" />
-                <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:22px_22px]" aria-hidden="true" />
                 <div className="container-page relative py-14 lg:py-20">
                     <Link href="/partners" className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition-colors hover:text-white">
                         <ArrowLeft size={18} /> Back to Partners
                     </Link>
                     <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
-                        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-white p-3 shadow-lg">
+                        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-lg bg-white p-3 shadow-lg">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={partner.logo} alt={partner.name} className="h-full w-full object-contain" />
                         </div>
                         <div>
-                            <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">{partner.name}</h1>
+                            <h1 className="font-display text-4xl font-medium leading-tight text-white sm:text-5xl">{partner.name}</h1>
                             <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/75">
                                 <span className="inline-flex items-center gap-2">
                                     <CheckCircle2 size={16} className="text-primary-200" />
@@ -82,7 +80,7 @@ export default async function PartnerDetailPage({ params }: Props) {
                     <div className="space-y-8 lg:col-span-8">
                         {/* University Description */}
                         <section className="card p-6 sm:p-8">
-                            <h2 className="text-xl font-bold text-ink">About the University</h2>
+                            <h2 className="font-display text-3xl font-semibold text-ink">About the University</h2>
                             <div className="prose mt-4 max-w-none leading-relaxed text-slate-600">
                                 {partner.description || "Information about this prestigious partner will be updated shortly."}
                             </div>
@@ -90,7 +88,7 @@ export default async function PartnerDetailPage({ params }: Props) {
 
                         {/* Programs Offered */}
                         <section>
-                            <h2 className="text-xl font-bold text-ink">
+                            <h2 className="font-display text-3xl font-semibold text-ink">
                                 Available Programs at {partner.name}
                             </h2>
 
@@ -99,7 +97,7 @@ export default async function PartnerDetailPage({ params }: Props) {
                                     partner.programs.map((program: ProgramItem) => (
                                         <div key={program._id} className="card card-hover group flex flex-col justify-between gap-5 p-6 md:flex-row md:items-center">
                                             <div className="flex-1">
-                                                <span className="inline-block rounded-full bg-primary-50 px-3 py-1 text-xs font-semibold text-primary">
+                                                <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                                                     {program.category}
                                                 </span>
                                                 <h3 className="mt-3 text-lg font-bold text-ink transition-colors group-hover:text-primary">{program.title}</h3>
@@ -116,7 +114,7 @@ export default async function PartnerDetailPage({ params }: Props) {
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="rounded-2xl border border-dashed border-primary-200 bg-white p-12 text-center text-slate-500">
+                                    <div className="rounded-lg border border-dashed border-primary-200 bg-white p-12 text-center text-slate-500">
                                         No programs currently listed.
                                     </div>
                                 )}
@@ -126,8 +124,8 @@ export default async function PartnerDetailPage({ params }: Props) {
 
                     {/* Sidebar */}
                     <aside className="lg:col-span-4">
-                        <div className="bg-brand-gradient sticky top-28 overflow-hidden rounded-2xl p-6 text-white shadow-xl shadow-violet/25 sm:p-8">
-                            <p className="text-lg font-semibold">Want to study at {partner.name}?</p>
+                        <div className="bg-brand-gradient sticky top-28 overflow-hidden rounded-lg p-6 text-white shadow-sm sm:p-8">
+                            <p className="font-display text-2xl font-semibold">Want to study at {partner.name}?</p>
                             <p className="mt-2 text-sm text-white/80">Our counsellors will help you choose the right program.</p>
                             <div className="mt-6 space-y-3">
                                 {partner.enrollLink && (

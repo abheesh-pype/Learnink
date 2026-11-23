@@ -24,9 +24,9 @@ const MenuLinks = [
     { name: "Contact", href: "/contact" },
 ];
 
-const pill = "flex items-center rounded-xl bg-primary-darker/85 p-1.5 shadow-lg shadow-black/20 ring-1 ring-white/10 backdrop-blur-md";
+const pill = "flex items-center rounded-md bg-primary-darker/90 p-1.5 shadow-lg shadow-black/20 ring-1 ring-white/10 backdrop-blur-md";
 const pillItem =
-    "rounded-lg px-4 py-2 text-[15px] font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70";
+    "rounded px-4 py-2 text-[15px] font-medium text-white/90 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);

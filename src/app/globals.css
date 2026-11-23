@@ -1,103 +1,80 @@
 @import "tailwindcss";
 
 /*
- * Learnink design system — "vibrant gradient"
- * Logo indigo (#41348F) + white, with a violet and soft pink glow from the same family.
+ * Learnink design system — "classic academic"
+ * Logo navy (#41348F) on warm paper white, serif display headings, thin rules, quiet motion.
+ * No gradients, glows or glass: colour comes from the photography and the navy.
  */
 @theme {
     --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
     --font-display: var(--font-cormorant), ui-serif, Georgia, serif;
 
-    /* Brand indigo (logo) */
+    /* Brand navy (logo) */
     --color-primary: #41348F;
     --color-primary-dark: #2F2570;
-    --color-primary-darker: #1A1440;
+    --color-primary-darker: #1C173F;
     --color-primary-light: #6A5DB8;
-    --color-primary-50: #F6F4FD;
-    --color-primary-100: #ECE8FA;
-    --color-primary-200: #D9D1F5;
 
-    /* Accent glow (same family as the logo) */
-    --color-violet: #7C5CFF;
-    --color-glow: #E879F9;
+    /* Warm neutrals (paper, rules) used for tinted sections, chips and borders */
+    --color-primary-50: #F7F5F0;
+    --color-primary-100: #EFEBE3;
+    --color-primary-200: #DDD7CB;
 
-    /* Secondary stays in the indigo family */
+    /*
+     * Former accent colours. Kept as names so existing classes still work, but they now resolve
+     * to the navy family instead of bright violet / pink.
+     */
+    --color-violet: #41348F;
+    --color-glow: #D9D3EE;
+
     --color-secondary: #6A5DB8;
 
     /* Heading ink */
-    --color-ink: #17132F;
+    --color-ink: #1A1730;
 
     /* Logo background blue — used only for the active navbar link */
     --color-brand-blue: #41348F;
 
-    --animate-float: float 6s ease-in-out infinite;
-    --animate-float-slow: float 9s ease-in-out infinite;
-    --animate-blob: blob 14s ease-in-out infinite;
     --animate-fade-in-up: fadeInUp 0.5s ease-out forwards;
-    --animate-gradient: gradientMove 10s ease infinite;
-    --animate-shimmer: shimmer 4s linear infinite;
-    --animate-marquee: marquee 35s linear infinite;
-    --animate-spin-slow: spin 18s linear infinite;
-    --animate-pulse-ring: pulseRing 2.4s ease-out infinite;
-
-    @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-14px); }
-    }
-
-    @keyframes blob {
-        0%, 100% { transform: translate(0, 0) scale(1); }
-        33% { transform: translate(40px, -50px) scale(1.12); }
-        66% { transform: translate(-30px, 25px) scale(0.92); }
-    }
+    --animate-marquee: marquee 50s linear infinite;
 
     @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(20px); }
+        from { opacity: 0; transform: translateY(12px); }
         to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes gradientMove {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-    }
-
-    @keyframes shimmer {
-        from { background-position: 0% center; }
-        to { background-position: 200% center; }
     }
 
     @keyframes marquee {
         from { transform: translateX(0); }
         to { transform: translateX(-50%); }
     }
+}
 
-    @keyframes pulseRing {
-        0% { transform: scale(0.9); opacity: 0.7; }
-        100% { transform: scale(1.6); opacity: 0; }
-    }
+/* ---------- Base ---------- */
 
-    @keyframes shine {
-        from { transform: translateX(-120%) skewX(-20deg); }
-        to { transform: translateX(220%) skewX(-20deg); }
-    }
+body {
+    @apply bg-white text-slate-700;
+}
+
+::selection {
+    @apply bg-primary-100 text-ink;
 }
 
 /* ---------- Hero (pure CSS: starts on first paint, no waiting for JavaScript) ---------- */
 
 @keyframes heroUp {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes heroDrift {
     from { transform: scale(1); }
-    to { transform: scale(1.1) translate(-1.5%, -1%); }
+    to { transform: scale(1.08) translate(-1.5%, -1%); }
 }
 
 /* Set the delay per element with style={{ animationDelay: "..." }} */
-.hero-up { animation: heroUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.hero-up { animation: heroUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
 /* Slow endless drift of the background photo; the hero pause button stops it */
-.hero-drift { animation: heroDrift 24s ease-in-out infinite alternate; }
+.hero-drift { animation: heroDrift 30s ease-in-out infinite alternate; }
 
 /* ---------- Layout ---------- */
 
@@ -109,55 +86,49 @@
     @apply relative py-20 sm:py-24 lg:py-28;
 }
 
-/* ---------- Brand gradients ---------- */
+/* ---------- Solid surfaces (formerly gradients) ---------- */
 
-/* Animated indigo → violet → pink background */
+/* Dark navy band, e.g. call-to-action and page banners */
 .bg-brand-gradient {
-    background-image: linear-gradient(120deg, var(--color-primary-darker), var(--color-primary), var(--color-violet), #9D4EDD, var(--color-primary));
-    background-size: 300% 300%;
-    animation: var(--animate-gradient);
+    @apply bg-primary-darker;
 }
 
-/* Shimmering gradient text */
+/* Emphasised word in a heading: navy, italic serif */
 .text-shimmer {
-    background-image: linear-gradient(90deg, var(--color-primary), var(--color-violet), var(--color-glow), var(--color-violet), var(--color-primary));
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: var(--animate-shimmer);
+    @apply font-display italic text-primary;
 }
 
-/* Lighter shimmer for dark backgrounds */
 .text-shimmer-light {
-    background-image: linear-gradient(90deg, #ffffff, var(--color-primary-200), var(--color-glow), var(--color-primary-200), #ffffff);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: var(--animate-shimmer);
+    @apply font-display italic text-white;
 }
 
-/* Soft glowing blob used as animated background decoration */
+.text-gradient {
+    @apply text-primary;
+}
+
+/* Decorative blobs and dot grids are retired; hidden so old markup renders nothing. */
 .glow-blob {
-    @apply pointer-events-none absolute rounded-full blur-3xl;
-    animation: var(--animate-blob);
+    display: none;
 }
 
-/* Subtle dotted grid texture */
 .bg-dots {
-    background-image: radial-gradient(color-mix(in oklab, var(--color-primary) 18%, transparent) 1px, transparent 1px);
-    background-size: 22px 22px;
+    background: none;
 }
 
 /* ---------- Section headings ---------- */
 
+/* Small uppercase label with a short rule, e.g. "— OUR PROGRAMS" */
 .eyebrow {
-    @apply inline-flex items-center gap-2 rounded-full border border-primary-200 bg-white/80 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary shadow-sm backdrop-blur;
+    @apply inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary;
+}
+
+.eyebrow::before {
+    content: "";
+    @apply h-px w-8 bg-current;
 }
 
 .section-title {
-    @apply mt-5 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl lg:text-[2.75rem] lg:leading-tight;
+    @apply mt-4 font-display text-4xl font-medium leading-[1.1] text-ink sm:text-5xl lg:text-[3.25rem];
 }
 
 .section-lead {
@@ -169,90 +140,51 @@
 .btn-primary,
 .btn-outline,
 .btn-light {
-    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl px-6 py-3 text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet focus-visible:ring-offset-2 disabled:opacity-50;
+    @apply relative inline-flex items-center justify-center gap-2 rounded-md px-6 py-3 text-sm font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50;
 }
 
-/* Gradient button with a light sweep on hover */
 .btn-primary {
-    @apply text-white shadow-lg shadow-primary/30 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/40;
-    background-image: linear-gradient(120deg, var(--color-primary), var(--color-violet), var(--color-primary));
-    background-size: 200% auto;
-    background-position: 0% center;
-}
-
-.btn-primary:hover {
-    background-position: 100% center;
-}
-
-.btn-primary::after,
-.btn-light::after {
-    content: "";
-    @apply pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-white/30;
-    transform: translateX(-120%) skewX(-20deg);
-}
-
-.btn-primary:hover::after,
-.btn-light:hover::after {
-    animation: shine 0.8s ease;
+    @apply bg-primary text-white hover:bg-primary-dark;
 }
 
 .btn-outline {
-    @apply border-2 border-primary-200 bg-white text-primary hover:-translate-y-0.5 hover:border-violet hover:shadow-lg hover:shadow-violet/15;
+    @apply border border-primary bg-transparent text-primary hover:bg-primary hover:text-white;
 }
 
 .btn-light {
-    @apply bg-white text-primary shadow-lg shadow-black/10 hover:-translate-y-0.5 hover:shadow-xl;
-}
-
-.btn-light::after {
-    @apply bg-primary/10;
+    @apply bg-white text-ink hover:bg-primary-50;
 }
 
 /* ---------- Cards ---------- */
 
 .card {
-    @apply rounded-2xl border border-slate-200/80 bg-white shadow-sm;
+    @apply rounded-lg border border-slate-200 bg-white;
 }
 
-/* Lift + glowing gradient border on hover */
+/* Quiet hover: darker rule and a soft shadow, no lift */
 .card-hover {
-    @apply relative isolate transition-all duration-300 hover:-translate-y-1.5 hover:border-transparent hover:shadow-2xl hover:shadow-violet/15;
+    @apply relative transition-[border-color,box-shadow] duration-200 hover:border-slate-300 hover:shadow-[0_8px_30px_-12px_rgba(26,23,48,0.18)];
 }
 
-.card-hover::before {
-    content: "";
-    @apply pointer-events-none absolute -inset-px -z-10 rounded-[inherit] opacity-0 transition-opacity duration-300;
-    padding: 1.5px;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-violet), var(--color-glow));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-}
-
-.card-hover:hover::before {
-    @apply opacity-100;
-}
-
-/* Frosted glass panel */
+/* Simple solid panels (formerly frosted glass) */
 .glass {
-    @apply border border-white/50 bg-white/70 shadow-xl backdrop-blur-xl;
+    @apply border border-slate-200 bg-white shadow-sm;
 }
 
 .glass-dark {
-    @apply border border-white/15 bg-white/10 backdrop-blur-xl;
+    @apply border border-white/15 bg-primary-darker/80;
 }
 
-/* Gradient icon tile */
+/* Icon holder: plain navy outline square */
 .icon-tile {
-    @apply flex items-center justify-center rounded-xl text-white shadow-lg shadow-violet/25;
-    background-image: linear-gradient(135deg, var(--color-primary), var(--color-violet));
+    @apply flex items-center justify-center rounded-md border border-primary-200 bg-primary-50 text-primary;
 }
 
-/* ---------- Marquee (infinite logo strip) ---------- */
+/* ---------- Marquee (logo strip) ---------- */
 
 .marquee-mask {
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 
 .marquee-track {
@@ -266,11 +198,7 @@
 /* ---------- Legacy helpers (still used in a few places) ---------- */
 
 .glass-panel {
-    @apply bg-white/70 backdrop-blur-xl border border-white/40 shadow-xl;
-}
-
-.text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-violet;
+    @apply border border-slate-200 bg-white;
 }
 
 .section-padding {

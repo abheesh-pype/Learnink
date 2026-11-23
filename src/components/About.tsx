@@ -35,7 +35,6 @@ export default function About({ yearsCount = DEFAULT_CONTACT.yearsCount }: { yea
     }, []);
     return (
         <section id="about" className="section overflow-hidden bg-white">
-            <div className="glow-blob -right-40 top-10 h-96 w-96 bg-violet/15" aria-hidden="true" />
             <div className="container-page relative">
                 <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2 lg:gap-20">
                     <motion.div
@@ -45,19 +44,18 @@ export default function About({ yearsCount = DEFAULT_CONTACT.yearsCount }: { yea
                         transition={{ duration: 0.7 }}
                         className="relative pb-8 pr-4 sm:pr-8"
                     >
-                        {/* Decorative animated gradient block + dots behind the photo */}
-                        <div className="bg-brand-gradient absolute bottom-0 right-0 h-3/4 w-3/4 rounded-3xl" aria-hidden="true" />
-                        <div className="bg-dots absolute -left-6 -top-6 h-32 w-32 rounded-2xl" aria-hidden="true" />
-                        <div className="group relative aspect-[4/3] overflow-hidden rounded-3xl border-4 border-white bg-primary-100 shadow-2xl lg:aspect-square">
+                        {/* Thin offset frame behind the photo */}
+                        <div className="absolute bottom-0 right-0 h-[85%] w-[85%] rounded-md border border-primary-200" aria-hidden="true" />
+                        <div className="group relative aspect-[4/3] overflow-hidden rounded-md bg-primary-100 lg:aspect-square">
                             {aboutImage ? (
                                 // eslint-disable-next-line @next/next/no-img-element
-                                <img src={aboutImage} alt="About Us" className="w-full h-full object-cover transition-transform duration-[1200ms] group-hover:scale-110" />
+                                <img src={aboutImage} alt="About Us" className="w-full h-full object-cover transition-transform duration-[1200ms]" />
                             ) : (
-                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center transition-transform duration-[1200ms] group-hover:scale-110"></div>
+                                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center transition-transform duration-[1200ms]"></div>
                             )}
                         </div>
-                        <div className="bg-brand-gradient absolute bottom-0 left-4 flex items-center gap-4 rounded-2xl px-6 py-5 text-white shadow-2xl shadow-violet/30 animate-float sm:left-8">
-                            <p className="text-3xl font-bold">{yearsCount}</p>
+                        <div className="absolute bottom-0 left-4 flex items-center gap-4 rounded-md bg-primary-darker px-6 py-5 text-white sm:left-8">
+                            <p className="text-4xl font-light tracking-tight">{yearsCount}</p>
                             <p className="max-w-[10rem] text-sm leading-snug text-white/85">
                                 <span className="font-semibold text-white">Years</span> of experience in educational consulting and excellence.
                             </p>
@@ -72,7 +70,7 @@ export default function About({ yearsCount = DEFAULT_CONTACT.yearsCount }: { yea
                     >
                         <span className="eyebrow">About Us</span>
                         <h2 className="section-title">
-                            Learnink Education <span className="text-primary">Pvt Ltd</span>
+                            Learnink Education <span className="italic text-primary">Pvt Ltd</span>
                         </h2>
                         <p className="section-lead">
                             Learnink Education is a premier all-in-one education platform dedicated to transforming how individuals acquire knowledge and build their careers. Our platform is built on the vision of seamlessly linking academic learning with practical skills and professional growth.
@@ -82,22 +80,22 @@ export default function About({ yearsCount = DEFAULT_CONTACT.yearsCount }: { yea
                             {features.map((feature, index) => (
                                 <motion.li
                                     key={index}
-                                    initial={{ opacity: 0, x: 20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
+                                    initial={{ opacity: 0 }}
+                                    whileInView={{ opacity: 1 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: 0.2 + index * 0.08, duration: 0.5 }}
                                     className="group flex items-start gap-3"
                                 >
-                                    <span className="icon-tile mt-0.5 h-6 w-6 shrink-0 rounded-full transition-transform group-hover:scale-110">
+                                    <span className="icon-tile mt-0.5 h-6 w-6 shrink-0 rounded-full transition-transform">
                                         <CheckCircle2 size={14} />
                                     </span>
-                                    <span className="text-[15px] font-medium text-slate-700 transition-colors group-hover:text-primary">{feature}</span>
+                                    <span className="text-[15px] text-slate-700">{feature}</span>
                                 </motion.li>
                             ))}
                         </ul>
 
-                        <div className="card card-hover mt-10 border-l-4 border-l-violet bg-gradient-to-br from-primary-50 to-white p-6">
-                            <h3 className="font-semibold text-ink">Our Vision</h3>
+                        <div className="mt-10 border-l-2 border-primary bg-primary-50 p-6">
+                            <h3 className="font-display text-2xl font-semibold text-ink">Our Vision</h3>
                             <p className="mt-2 text-sm leading-relaxed text-slate-600">
                                 To be the bridge that links every learner to their dream career by providing accessible, accredited, and industry-relevant educational programs.
                             </p>

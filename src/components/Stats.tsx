@@ -53,13 +53,13 @@ export default function Stats({ numbers = DEFAULT_CONTACT }: { numbers?: StatNum
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.1, duration: 0.6 }}
-                                className="card card-hover group p-5 text-center sm:p-7"
+                                className="card p-5 text-center sm:p-7"
                             >
-                                <span className="icon-tile mx-auto h-12 w-12 transition-transform duration-300 group-hover:-translate-y-1 group-hover:rotate-6">
+                                <span className="icon-tile mx-auto h-11 w-11">
                                     <stat.icon size={22} />
                                 </span>
-                                <p className="mt-4 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
-                                    <span className="text-shimmer"><CountUp value={stat.value} /></span>
+                                <p className="mt-4 text-4xl font-light tracking-tight text-primary sm:text-5xl">
+                                    <CountUp value={stat.value} />
                                 </p>
                                 <p className="mt-1 text-sm font-semibold text-ink">{stat.label}</p>
                                 <p className="mt-0.5 hidden text-xs text-slate-500 sm:block">{stat.desc}</p>

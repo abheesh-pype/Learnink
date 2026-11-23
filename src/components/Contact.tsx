@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Send, Loader2, Clock, MessageCircle, Users, BookOpen, ArrowRight, GraduationCap } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Loader2, Clock, MessageCircle, Users, BookOpen, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DEFAULT_CONTACT, telHref, type ContactInfo } from "@/lib/contact";
 import SectionHeader from "@/components/ui/SectionHeader";
@@ -107,8 +107,6 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
 
     return (
         <section id="contact" className="section overflow-hidden bg-primary-50">
-            <div className="glow-blob -left-40 top-20 h-96 w-96 bg-violet/15" aria-hidden="true" />
-            <div className="glow-blob -right-40 bottom-20 h-96 w-96 bg-glow/10 [animation-delay:-7s]" aria-hidden="true" />
             <div className="container-page relative">
                 {/* Header */}
                 <motion.div
@@ -119,7 +117,7 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
                     <SectionHeader
                         as="h1"
                         eyebrow="Get in Touch"
-                        title={<>Let&apos;s Start Your <span className="text-primary">Journey</span></>}
+                        title={<>Let&apos;s Start Your <span className="italic text-primary">Journey</span></>}
                         lead="Have questions about our programs? Our expert counselors are here to guide you every step of the way."
                     />
                 </motion.div>
@@ -139,7 +137,7 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
                             {...("external" in info && info.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                             className="card card-hover group flex items-start gap-4 p-6"
                         >
-                            <span className={`icon-tile h-12 w-12 shrink-0 transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${info.color}`}>
+                            <span className={`icon-tile h-12 w-12 shrink-0 transition-transform duration-300 ${info.color}`}>
                                 <info.icon size={22} />
                             </span>
                             <div className="min-w-0 flex-1">
@@ -170,10 +168,10 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
                             </span>
                             <div>
                                 <p className="text-xs font-semibold uppercase tracking-wider text-primary">Message Us</p>
-                                <h2 className="text-2xl font-bold text-ink">Send an Enquiry</h2>
+                                <h2 className="font-display text-3xl font-semibold text-ink">Send an Enquiry</h2>
                             </div>
                         </div>
-                        <p className="mt-3 text-sm text-slate-500">Fill out the form below and ours admissions team will get back to you.</p>
+                        <p className="mt-3 text-sm text-slate-500">Fill out the form below and our admissions team will get back to you.</p>
 
                         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
                             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -290,8 +288,7 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
                         className="flex flex-col gap-6 lg:col-span-5"
                     >
                         {/* Address Card */}
-                        <div className="relative overflow-hidden rounded-2xl bg-primary-darker p-6 text-white sm:p-8">
-                            <div className="glow-blob -right-16 -top-16 h-48 w-48 bg-violet/40" aria-hidden="true" />
+                        <div className="relative overflow-hidden rounded-lg bg-primary-darker p-6 text-white sm:p-8">
                             <div className="relative flex items-center gap-3">
                                 <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/10">
                                     <MapPin size={20} />
@@ -310,17 +307,16 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
                         </div>
 
                         {/* Admission Status */}
-                        <div className="bg-brand-gradient relative overflow-hidden rounded-2xl p-6 text-white shadow-xl shadow-violet/25 sm:p-8">
-                            <GraduationCap className="absolute -bottom-4 -right-4 text-white/10 animate-float-slow" size={120} aria-hidden="true" />
+                        <div className="bg-brand-gradient relative overflow-hidden rounded-lg p-6 text-white shadow-sm sm:p-8">
                             <div className="relative">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-lg font-semibold">Admissions</h2>
                                     <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider">
-                                        <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
+                                        <span className="h-1.5 w-1.5 rounded-full bg-white" />
                                         Live
                                     </span>
                                 </div>
-                                <p className="mt-4 text-2xl font-bold">{contact.admissionsTitle}</p>
+                                <p className="mt-4 font-display text-3xl font-semibold">{contact.admissionsTitle}</p>
                                 <p className="mt-1 text-sm text-white/80">
                                     {contact.admissionsText}
                                 </p>
@@ -332,18 +328,18 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
 
                         {/* Stats */}
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="card card-hover group p-5">
-                                <span className="icon-tile h-10 w-10 transition-transform duration-300 group-hover:rotate-6">
+                            <div className="card p-5">
+                                <span className="icon-tile h-10 w-10 transition-transform duration-300">
                                     <Users size={20} />
                                 </span>
-                                <p className="mt-3 text-2xl font-extrabold"><span className="text-shimmer"><CountUp value={contact.studentsCount} /></span></p>
+                                <p className="mt-3 text-3xl font-light tracking-tight text-primary"><CountUp value={contact.studentsCount} /></p>
                                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Happy Students</p>
                             </div>
-                            <div className="card card-hover group p-5">
-                                <span className="icon-tile h-10 w-10 transition-transform duration-300 group-hover:rotate-6">
+                            <div className="card p-5">
+                                <span className="icon-tile h-10 w-10 transition-transform duration-300">
                                     <BookOpen size={20} />
                                 </span>
-                                <p className="mt-3 text-2xl font-extrabold"><span className="text-shimmer"><CountUp value={contact.universitiesCount} /></span></p>
+                                <p className="mt-3 text-3xl font-light tracking-tight text-primary"><CountUp value={contact.universitiesCount} /></p>
                                 <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Universities</p>
                             </div>
                         </div>

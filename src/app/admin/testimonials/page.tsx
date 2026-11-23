@@ -102,7 +102,7 @@ export default function AdminTestimonials() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-1">
-                    <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl shadow-primary/5 sticky top-10">
+                    <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm sticky top-10">
                         <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100 text-slate-800">
                             <div className="icon-tile w-10 h-10">
                                 <Plus size={20} />
@@ -134,7 +134,7 @@ export default function AdminTestimonials() {
                                 <textarea value={content} onChange={(e) => setContent(e.target.value)} className="w-full px-4 py-3.5 rounded-xl bg-white border-2 border-slate-200 focus:border-violet focus:outline-none transition-all font-medium h-32" required />
                             </div>
                             {error && <p className="text-sm font-bold text-rose-600 pl-1">{error}</p>}
-                            <button type="submit" disabled={submitting || (!image.empty && !image.ready)} className="w-full bg-gradient-to-r from-primary to-violet text-white py-4 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all shadow-lg active:scale-95 disabled:opacity-50">
+                            <button type="submit" disabled={submitting || (!image.empty && !image.ready)} className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-xl font-bold hover:shadow-sm transition-all shadow-lg active:scale-95 disabled:opacity-50">
                                 {submitting ? <Loader2 className="animate-spin" /> : "Publish Testimonial"}
                             </button>
                         </form>
@@ -147,7 +147,7 @@ export default function AdminTestimonials() {
                     ) : (
                         <div className="space-y-4">
                             {testimonials.map((item) => (
-                                <div key={item._id} className="bg-white p-6 rounded-3xl border border-slate-200 flex items-start gap-6 group hover:border-violet/50 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/10 transition-all duration-300">
+                                <div key={item._id} className="bg-white p-6 rounded-lg border border-slate-200 flex items-start gap-6 group hover:border-violet/50 hover:shadow-sm transition-all duration-300">
                                     <TestimonialAvatar name={item.name} imageUrl={item.imageUrl} />
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-2">

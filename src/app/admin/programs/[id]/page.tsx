@@ -86,14 +86,14 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                 <button
                     onClick={handleSubmit}
                     disabled={saving}
-                    className="px-6 py-2.5 rounded-xl font-bold transition-all flex items-center gap-2 shadow-lg hover:shadow-violet/30 disabled:opacity-50 bg-gradient-to-r from-primary to-violet text-white hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30"
+                    className="px-6 py-2.5 rounded-xl font-bold transition-all flex items-center gap-2 shadow-lg disabled:opacity-50 bg-primary hover:bg-primary-dark text-white hover:shadow-sm"
                 >
                     {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                     Save Changes
                 </button>
             </div>
 
-            <div className="bg-white rounded-[2rem] border border-slate-200 shadow-xl shadow-primary/5 overflow-hidden">
+            <div className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
                 <div className="flex border-b border-slate-200 bg-slate-50 p-2 gap-2">
                     <button
                         onClick={() => setActiveTab("general")}
@@ -186,7 +186,7 @@ export default function EditProgram({ params }: { params: Promise<{ id: string }
                         </div>
                     ) : (
                         <div className="space-y-6 max-w-3xl">
-                            <div className="bg-sky-50 border border-sky-100 p-6 rounded-2xl flex items-start gap-4 text-sky-800">
+                            <div className="bg-sky-50 border border-sky-100 p-6 rounded-lg flex items-start gap-4 text-sky-800">
                                 <Globe className="shrink-0 mt-1" size={20} />
                                 <div>
                                     <h4 className="font-bold mb-1">Search Engine Optimization</h4>

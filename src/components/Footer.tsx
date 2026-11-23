@@ -48,13 +48,10 @@ export default function Footer() {
         { icon: Youtube, key: 'youtube', href: socialLinks.youtube },
     ].filter(s => s.href);
 
-    const linkClass = "inline-block text-white/70 transition-all duration-300 hover:translate-x-1 hover:text-white";
+    const linkClass = "inline-block text-white/70 underline-offset-4 transition-colors hover:text-white hover:underline";
 
     return (
         <footer className="relative mt-auto overflow-hidden bg-primary-darker text-white/70">
-            <div className="bg-brand-gradient absolute inset-x-0 top-0 h-1" aria-hidden="true" />
-            <div className="glow-blob -right-40 -top-40 h-96 w-96 bg-violet/25" aria-hidden="true" />
-            <div className="glow-blob -bottom-48 -left-40 h-96 w-96 bg-glow/10 [animation-delay:-6s]" aria-hidden="true" />
             <div className="container-page relative py-16 lg:py-20">
                 <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12">
                     <div className="space-y-5 lg:col-span-4">
@@ -81,7 +78,7 @@ export default function Footer() {
                                         href={social.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white transition-all duration-300 hover:-translate-y-1 hover:bg-gradient-to-br hover:from-violet hover:to-glow hover:shadow-lg hover:shadow-violet/40"
+                                        className="flex h-10 w-10 items-center justify-center rounded-md border border-white/20 text-white/80 transition-colors hover:bg-white hover:text-primary-darker"
                                         aria-label={`Follow us on ${social.key}`}
                                     >
                                         <social.icon size={18} />

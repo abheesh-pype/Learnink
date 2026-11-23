@@ -15,7 +15,7 @@ interface TestimonialAvatarProps {
  */
 export default function TestimonialAvatar({ name, imageUrl, className }: TestimonialAvatarProps) {
     const [failed, setFailed] = useState(false);
-    const box = cn("w-14 h-14 shrink-0 rounded-2xl shadow-md", className);
+    const box = cn("w-14 h-14 shrink-0 rounded-full", className);
 
     if (imageUrl && !failed) {
         return (
@@ -31,7 +31,7 @@ export default function TestimonialAvatar({ name, imageUrl, className }: Testimo
     }
 
     return (
-        <div className={cn(box, "bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center text-white font-bold text-xl uppercase")}>
+        <div className={cn(box, "bg-primary-100 flex items-center justify-center text-primary font-display font-semibold text-xl uppercase")}>
             {name.trim().charAt(0) || "?"}
         </div>
     );

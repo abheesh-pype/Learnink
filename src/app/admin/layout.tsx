@@ -64,8 +64,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="relative flex min-h-screen flex-col bg-primary-50 font-sans lg:flex-row">
             {/* Soft animated background for the content area */}
             <div className="pointer-events-none fixed inset-0 overflow-hidden" aria-hidden="true">
-                <div className="glow-blob -right-40 -top-40 h-[30rem] w-[30rem] bg-violet/10" />
-                <div className="glow-blob -bottom-40 left-1/3 h-[26rem] w-[26rem] bg-glow/10 [animation-delay:-7s]" />
             </div>
 
             {/* Mobile Header */}
@@ -87,16 +85,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
             {/* Sidebar */}
             <aside className={cn(
-                "fixed inset-y-0 left-0 z-40 flex w-72 flex-col overflow-hidden bg-primary-darker text-white shadow-2xl transition-transform duration-300 ease-in-out lg:sticky lg:top-0 lg:h-screen lg:translate-x-0",
+                "fixed inset-y-0 left-0 z-40 flex w-72 flex-col overflow-hidden bg-primary-darker text-white shadow-sm transition-transform duration-300 ease-in-out lg:sticky lg:top-0 lg:h-screen lg:translate-x-0",
                 isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
             )}>
                 {/* Sidebar glow */}
-                <div className="glow-blob -left-24 -top-24 h-72 w-72 bg-violet/40" aria-hidden="true" />
-                <div className="glow-blob -bottom-24 -right-24 h-72 w-72 bg-glow/20 [animation-delay:-6s]" aria-hidden="true" />
 
                 <div className="relative hidden border-b border-white/10 p-7 lg:block">
                     <Link href="/" className="group flex items-center gap-3">
-                        <span className="icon-tile h-11 w-11 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110">
+                        <span className="icon-tile h-11 w-11 transition-transform duration-300">
                             <GraduationCap className="h-6 w-6" />
                         </span>
                         <div className="flex flex-col">
@@ -122,18 +118,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                     className={cn(
                                         "group relative flex items-center gap-3 overflow-hidden rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300",
                                         isActive
-                                            ? "text-white shadow-lg shadow-violet/30"
+                                            ? "text-white shadow-lg"
                                             : "text-white/60 hover:translate-x-1 hover:bg-white/5 hover:text-white"
                                     )}
                                 >
                                     {isActive && (
                                         <motion.span
                                             layoutId="admin-active-nav"
-                                            className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary to-violet"
+                                            className="absolute inset-0 rounded-xl bg-white/10"
                                             transition={{ type: "spring", stiffness: 380, damping: 32 }}
                                         />
                                     )}
-                                    <item.icon size={20} className={cn("relative transition-transform duration-300", isActive ? "text-white" : "text-white/50 group-hover:scale-110 group-hover:text-white")} strokeWidth={isActive ? 2.5 : 2} />
+                                    <item.icon size={20} className={cn("relative transition-transform duration-300", isActive ? "text-white" : "text-white/50 group-hover:text-white")} strokeWidth={isActive ? 2.5 : 2} />
                                     <span className="relative">{item.name}</span>
                                 </Link>
                             );
@@ -143,7 +139,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                 <div className="relative border-t border-white/10 p-4">
                     <div className="mb-2 flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3 backdrop-blur">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet to-glow font-bold text-white">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 font-bold text-white">
                             {session.user?.name?.charAt(0) || "A"}
                         </div>
                         <div className="min-w-0 flex-1">
@@ -179,9 +175,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <Link
                         href="/"
                         target="_blank"
-                        className="group inline-flex items-center gap-2 rounded-xl border-2 border-primary-200 bg-white px-4 py-2 text-sm font-semibold text-primary transition-all hover:-translate-y-0.5 hover:border-violet hover:shadow-lg hover:shadow-violet/15"
+                        className="group inline-flex items-center gap-2 rounded-xl border-2 border-primary-200 bg-white px-4 py-2 text-sm font-semibold text-primary transition-all hover:border-violet hover:shadow-lg"
                     >
-                        View Website <ExternalLink size={15} className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                        View Website <ExternalLink size={15} className="transition-transform group-hover:translate-x-0.5" />
                     </Link>
                 </div>
 

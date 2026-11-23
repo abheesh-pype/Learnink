@@ -92,7 +92,7 @@ export default function AdminGallery() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-1">
-                    <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl shadow-primary/5 sticky top-10">
+                    <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm sticky top-10">
                         <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100 text-slate-800">
                             <div className="icon-tile w-10 h-10">
                                 <Plus size={20} />
@@ -128,7 +128,7 @@ export default function AdminGallery() {
                             <button
                                 type="submit"
                                 disabled={submitting || !image.ready}
-                                className="w-full bg-gradient-to-r from-primary to-violet text-white py-4 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all shadow-lg shadow-violet/25 disabled:opacity-50 flex items-center justify-center gap-2"
+                                className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-xl font-bold hover:shadow-sm transition-all shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
                             >
                                 {submitting ? <Loader2 className="animate-spin" /> : "Add to Gallery"}
                             </button>
@@ -142,7 +142,7 @@ export default function AdminGallery() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {photos.map((photo) => (
-                                <div key={photo._id} className="bg-white rounded-[2rem] border border-slate-200 overflow-hidden group shadow-sm hover:shadow-xl transition-all relative">
+                                <div key={photo._id} className="bg-white rounded-lg border border-slate-200 overflow-hidden group shadow-sm hover:shadow-sm transition-all relative">
                                     <div className="relative w-full h-48">
                                         {/* Plain <img>: images can come from any host (uploads, Google, Drive). */}
                                         {/* eslint-disable-next-line @next/next/no-img-element */}

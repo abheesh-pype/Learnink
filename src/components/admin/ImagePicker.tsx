@@ -58,7 +58,7 @@ export default function ImagePicker({ onChange, variant = "wide" }: ImagePickerP
     const linkUrl = linkInput.trim() ? normalizeImageUrl(linkInput) : null;
     const avatar = variant === "avatar";
     const previewBox = avatar
-        ? "relative w-28 h-28 rounded-2xl overflow-hidden border-2 border-slate-200 bg-slate-50"
+        ? "relative w-28 h-28 rounded-lg overflow-hidden border-2 border-slate-200 bg-slate-50"
         : "relative w-full h-48 rounded-xl overflow-hidden border-2 border-slate-200 bg-slate-50";
 
     // Report the current selection to the parent form.

@@ -58,7 +58,6 @@ export default function Gallery({ initialPhotos }: { initialPhotos?: Photo[] }) 
 
     return (
         <section className="section overflow-hidden bg-primary-50">
-            <div className="glow-blob -left-32 top-20 h-80 w-80 bg-violet/15" aria-hidden="true" />
             <div className="container-page relative">
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
@@ -72,11 +71,11 @@ export default function Gallery({ initialPhotos }: { initialPhotos?: Photo[] }) 
                     {photos.map((photo, index) => (
                         <motion.figure
                             key={photo._id}
-                            initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                            whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                            initial={{ opacity: 0, y: 16 }}
+                            whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-40px" }}
                             transition={{ delay: (index % 6) * 0.08, duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
-                            className={`group relative overflow-hidden rounded-3xl bg-primary-100 shadow-lg shadow-primary/10 ${
+                            className={`group relative overflow-hidden rounded-md bg-primary-100 ${
                                 index === 0 && photos.length >= 3 ? "sm:col-span-2 sm:row-span-2" : ""
                             }`}
                         >
@@ -85,13 +84,11 @@ export default function Gallery({ initialPhotos }: { initialPhotos?: Photo[] }) 
                                 src={photo.imageUrl}
                                 alt={photo.caption || "Gallery Photo"}
                                 referrerPolicy="no-referrer"
-                                className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+                                className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out"
                             />
-                            {/* Gradient tint on hover */}
-                            <div className="absolute inset-0 bg-gradient-to-tr from-primary/50 via-violet/20 to-glow/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
                             {photo.caption && (
                                 <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary-darker/90 via-primary-darker/40 to-transparent px-5 pb-5 pt-14">
-                                    <p className="translate-y-1 text-sm font-semibold text-white transition-transform duration-500 group-hover:translate-y-0">{photo.caption}</p>
+                                    <p className="text-sm font-medium text-white">{photo.caption}</p>
                                 </figcaption>
                             )}
                         </motion.figure>

@@ -47,7 +47,7 @@ export default function Partners({ limit, fullWidth = false, initialPartners }: 
     const header = (
         <SectionHeader
             eyebrow="Our Universities"
-            title={<>Our University <span className="text-primary">Partners</span></>}
+            title={<>Our University <span className="italic text-primary">Partners</span></>}
             lead="We proudly partner with top universities to provide world-class educational opportunities. Explore our trusted network of academic institutions dedicated to your success."
             align="center"
         />
@@ -61,7 +61,6 @@ export default function Partners({ limit, fullWidth = false, initialPartners }: 
 
     return (
         <section id="partners" className="section overflow-hidden bg-white">
-            <div className="absolute inset-0 bg-dots opacity-40 [mask-image:linear-gradient(180deg,transparent,black_30%,black_70%,transparent)]" aria-hidden="true" />
             <div className="container-page relative">
                 {fullWidth ? (
                     // Full page layout: heading on top, grid below
@@ -157,8 +156,8 @@ function PartnerCard({ partner, index, animate = true, focusable = true }: { par
     return (
         <Link href={`/partners/${partner.slug || partner._id}`} className="block h-full" tabIndex={focusable ? undefined : -1}>
             <motion.div
-                initial={animate ? { opacity: 0, y: 30, scale: 0.95 } : false}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                initial={animate ? { opacity: 0, y: 12 } : false}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.06, duration: 0.5 }}
                 className="card card-hover group flex h-full flex-col items-center justify-center gap-3 p-6 text-center"
@@ -169,13 +168,13 @@ function PartnerCard({ partner, index, animate = true, focusable = true }: { par
                         <img
                             src={partner.logo}
                             alt={partner.name}
-                            className="max-h-full max-w-full object-contain transition-transform duration-500 group-hover:scale-110"
+                            className="max-h-full max-w-full object-contain opacity-80 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0"
                         />
                     ) : (
                         <Building2 className="text-primary-200 transition-colors group-hover:text-primary" size={40} />
                     )}
                 </div>
-                <span className="text-sm font-semibold leading-snug text-slate-700 transition-colors group-hover:text-primary line-clamp-2">
+                <span className="text-sm font-medium leading-snug text-slate-600 transition-colors group-hover:text-ink line-clamp-2">
                     {partner.name}
                 </span>
             </motion.div>

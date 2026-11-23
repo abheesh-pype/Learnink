@@ -45,9 +45,6 @@ export default function AdminLogin() {
         <div className="grid min-h-screen grid-cols-1 bg-white lg:grid-cols-2">
             {/* Brand panel */}
             <div className="bg-brand-gradient relative hidden overflow-hidden p-12 text-white lg:flex lg:flex-col lg:justify-between">
-                <div className="glow-blob -left-20 -top-20 h-96 w-96 bg-glow/30" aria-hidden="true" />
-                <div className="glow-blob -bottom-32 -right-20 h-[28rem] w-[28rem] bg-white/10 [animation-delay:-6s]" aria-hidden="true" />
-                <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:22px_22px]" aria-hidden="true" />
 
                 <Link href="/" className="relative flex items-center gap-3">
                     <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 backdrop-blur">
@@ -94,7 +91,6 @@ export default function AdminLogin() {
 
             {/* Form panel */}
             <div className="relative flex items-center justify-center overflow-hidden p-6 sm:p-12">
-                <div className="glow-blob -right-32 top-10 h-80 w-80 bg-violet/15 lg:hidden" aria-hidden="true" />
                 <motion.div
                     initial={{ opacity: 0, y: 24 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -102,7 +98,7 @@ export default function AdminLogin() {
                     className="relative w-full max-w-md"
                 >
                     <div className="mb-10">
-                        <span className="icon-tile mb-6 h-14 w-14 animate-float">
+                        <span className="icon-tile mb-6 h-14 w-14">
                             <GraduationCap size={28} strokeWidth={1.75} />
                         </span>
                         <h1 className="text-3xl font-extrabold tracking-tight text-ink">Admin Portal</h1>

@@ -88,14 +88,11 @@ export default async function Home() {
       <Testimonials initialTestimonials={testimonials} />
 
       {/* Call to action */}
-      <section className="bg-white pb-16 lg:pb-24">
+      <section className="bg-primary">
         <div className="container-page">
-          <div className="bg-brand-gradient relative overflow-hidden rounded-[2rem] px-6 py-14 text-center shadow-2xl shadow-violet/30 sm:px-12 lg:py-20">
-            <div className="glow-blob -left-16 -top-16 h-64 w-64 bg-glow/30" aria-hidden="true" />
-            <div className="glow-blob -bottom-20 -right-10 h-72 w-72 bg-white/15 [animation-delay:-6s]" aria-hidden="true" />
-            <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:22px_22px]" aria-hidden="true" />
+          <div className="relative py-20 text-center lg:py-24">
             <div className="relative">
-              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-5xl">
+              <h2 className="font-display text-4xl font-medium text-white sm:text-5xl lg:text-6xl">
                 Ready to Start Your <span className="text-shimmer-light">Journey?</span>
               </h2>
               <p className="mx-auto mt-4 max-w-2xl text-lg text-white/80">
@@ -107,7 +104,7 @@ export default async function Home() {
                 </Link>
                 <Link
                   href="/programs"
-                  className="inline-flex items-center justify-center rounded-xl border-2 border-white/40 px-7 py-3.5 text-base font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10"
+                  className="inline-flex items-center justify-center rounded-md border border-white/50 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10"
                 >
                   Browse Programs
                 </Link>

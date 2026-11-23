@@ -66,18 +66,16 @@ export default async function ProgramPage({ params }: Props) {
 
                 {/* Page banner */}
                 <header className="bg-brand-gradient relative overflow-hidden">
-                    <div className="glow-blob -right-24 -top-24 h-80 w-80 bg-glow/25" aria-hidden="true" />
-                    <div className="absolute inset-0 opacity-15 [background-image:radial-gradient(rgba(255,255,255,0.6)_1px,transparent_1px)] [background-size:22px_22px]" aria-hidden="true" />
                     <div className="container-page relative py-14 lg:py-20">
                         <Link href="/programs" className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition-colors hover:text-white">
                             <ArrowLeft size={18} /> Back to Programs
                         </Link>
                         {program.category && (
-                            <span className="mt-6 block w-fit rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-primary-200">
+                            <span className="mt-8 block w-fit text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
                                 {program.category}
                             </span>
                         )}
-                        <h1 className="mt-4 max-w-4xl text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+                        <h1 className="mt-3 max-w-4xl font-display text-4xl font-medium leading-tight text-white sm:text-5xl lg:text-6xl">
                             {program.title}
                         </h1>
                     </div>
@@ -102,8 +100,8 @@ export default async function ProgramPage({ params }: Props) {
                         </article>
 
                         <aside className="lg:col-span-4">
-                            <div className="bg-brand-gradient sticky top-28 overflow-hidden rounded-2xl p-6 text-white shadow-xl shadow-violet/25 sm:p-8">
-                                <p className="text-lg font-semibold">Interested in this program?</p>
+                            <div className="bg-brand-gradient sticky top-28 overflow-hidden rounded-lg p-6 text-white shadow-sm sm:p-8">
+                                <p className="font-display text-2xl font-semibold">Interested in this program?</p>
                                 <p className="mt-2 text-sm text-white/80">Get in touch with our counselors today.</p>
                                 <Link href="/contact" className="btn-light mt-6 w-full">
                                     Enquire Now

@@ -121,7 +121,7 @@ export default function AdminPartners() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Add Partner Form */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl shadow-primary/5 sticky top-10">
+                    <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm sticky top-10">
                         <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100 text-slate-800">
                             <div className="icon-tile w-10 h-10">
                                 <Plus size={20} />
@@ -223,7 +223,7 @@ export default function AdminPartners() {
                             <button
                                 type="submit"
                                 disabled={submitting}
-                                className="w-full bg-gradient-to-r from-primary to-violet text-white py-4 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all shadow-lg shadow-violet/25 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 mt-4 border border-transparent"
+                                className="w-full bg-primary hover:bg-primary-dark text-white py-4 rounded-xl font-bold hover:shadow-sm transition-all shadow-lg active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2 mt-4 border border-transparent"
                             >
                                 {submitting ? <Loader2 className="animate-spin" /> : <><Plus size={20} /> Add University</>}
                             </button>
@@ -238,8 +238,8 @@ export default function AdminPartners() {
                             <Loader2 className="animate-spin text-primary" size={40} />
                         </div>
                     ) : partners.length === 0 ? (
-                        <div className="bg-white p-20 rounded-[2rem] border border-slate-200 text-center flex flex-col items-center shadow-sm">
-                            <div className="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center mb-6 text-slate-300">
+                        <div className="bg-white p-20 rounded-lg border border-slate-200 text-center flex flex-col items-center shadow-sm">
+                            <div className="w-24 h-24 bg-slate-50 rounded-lg flex items-center justify-center mb-6 text-slate-300">
                                 <Building2 size={48} />
                             </div>
                             <h3 className="text-xl font-bold text-slate-800 mb-2">No Universities Added</h3>
@@ -248,8 +248,8 @@ export default function AdminPartners() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {partners.map((partner) => (
-                                <div key={partner._id} className="bg-white p-6 rounded-[2rem] border border-slate-200 flex items-center gap-5 group hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all relative overflow-hidden">
-                                    <div className="w-24 h-24 rounded-2xl bg-white border border-slate-100 p-4 flex items-center justify-center shadow-inner">
+                                <div key={partner._id} className="bg-white p-6 rounded-lg border border-slate-200 flex items-center gap-5 group hover:border-primary/50 hover:shadow-sm transition-all relative overflow-hidden">
+                                    <div className="w-24 h-24 rounded-lg bg-white border border-slate-100 p-4 flex items-center justify-center shadow-inner">
                                         {/* eslint-disable-next-line @next/next/no-img-element */}
                                         <img src={partner.logo} alt={partner.name} className="w-full h-full object-contain mix-blend-multiply" />
                                     </div>

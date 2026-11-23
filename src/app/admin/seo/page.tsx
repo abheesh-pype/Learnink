@@ -194,7 +194,7 @@ export default function SEOSettings() {
     return (
         <div className="max-w-5xl mx-auto animate-[fadeIn_0.5s_ease-out_forwards] pb-20">
             <div className="flex items-center gap-4 mb-8">
-                <div className="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
+                <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
                     <Globe className="w-8 h-8 text-primary" />
                 </div>
                 <div>
@@ -208,7 +208,7 @@ export default function SEOSettings() {
                 <button
                     onClick={() => setActiveTab('global')}
                     className={`px-6 py-3 rounded-xl font-bold transition-all border ${activeTab === 'global'
-                        ? 'bg-primary text-white border-primary shadow-lg shadow-primary/25'
+                        ? 'bg-primary text-white border-primary shadow-lg'
                         : 'bg-white text-slate-600 border-slate-200 hover:border-primary/50 hover:bg-slate-50'
                         }`}
                 >
@@ -218,7 +218,7 @@ export default function SEOSettings() {
                 <button
                     onClick={() => setActiveTab('pages')}
                     className={`px-6 py-3 rounded-xl font-bold transition-all border ${activeTab === 'pages'
-                        ? 'bg-primary text-white border-primary shadow-lg shadow-primary/25'
+                        ? 'bg-primary text-white border-primary shadow-lg'
                         : 'bg-white text-slate-600 border-slate-200 hover:border-primary/50 hover:bg-slate-50'
                         }`}
                 >
@@ -228,7 +228,7 @@ export default function SEOSettings() {
                 <button
                     onClick={() => setActiveTab('images')}
                     className={`px-6 py-3 rounded-xl font-bold transition-all border ${activeTab === 'images'
-                        ? 'bg-primary text-white border-primary shadow-lg shadow-primary/25'
+                        ? 'bg-primary text-white border-primary shadow-lg'
                         : 'bg-white text-slate-600 border-slate-200 hover:border-primary/50 hover:bg-slate-50'
                         }`}
                 >
@@ -239,7 +239,7 @@ export default function SEOSettings() {
 
             {activeTab === 'images' ? (
                 <div className="space-y-8 animate-[fadeIn_0.5s_ease-out_forwards]">
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm mb-6">
+                    <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm mb-6">
                         <p className="text-slate-600">
                             Manage your site&apos;s key images. Upload new images to replace the defaults.
                         </p>
@@ -247,7 +247,7 @@ export default function SEOSettings() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         {/* Logo Upload */}
-                        <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl space-y-6">
+                        <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm space-y-6">
                             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                                 <h3 className="text-xl font-bold text-slate-800">Site Logo</h3>
                                 <span className="text-xs font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded">Recommended: PNG/SVG</span>
@@ -306,7 +306,7 @@ export default function SEOSettings() {
                         </div>
 
                         {/* Hero Background */}
-                        <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl space-y-6">
+                        <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm space-y-6">
                             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                                 <h3 className="text-xl font-bold text-slate-800">Hero Background</h3>
                             </div>
@@ -362,7 +362,7 @@ export default function SEOSettings() {
                         </div>
 
                         {/* About Image */}
-                        <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl space-y-6">
+                        <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm space-y-6">
                             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                                 <h3 className="text-xl font-bold text-slate-800">About Section Image</h3>
                             </div>
@@ -420,11 +420,11 @@ export default function SEOSettings() {
                     </div>
 
                     <div className="flex justify-end sticky bottom-6 z-20">
-                        <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl border border-slate-200 shadow-2xl">
+                        <div className="bg-white/80 backdrop-blur-md p-2 rounded-lg border border-slate-200 shadow-sm">
                             <button
                                 onClick={handleSubmit}
                                 disabled={saving}
-                                className="bg-gradient-to-r from-primary to-violet text-white px-8 py-4 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all flex items-center gap-2 shadow-lg shadow-violet/25 disabled:opacity-50"
+                                className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-xl font-bold hover:shadow-sm transition-all flex items-center gap-2 shadow-lg disabled:opacity-50"
                             >
                                 {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
                                 Save Image Settings
@@ -437,7 +437,7 @@ export default function SEOSettings() {
             {activeTab === 'global' ? (
                 <form onSubmit={handleSubmit} className="space-y-8">
                     {/* General Settings */}
-                    <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl space-y-6 relative overflow-hidden">
+                    <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm space-y-6 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-[50px] pointer-events-none" />
                         <h3 className="text-xl font-bold text-slate-800 border-b border-slate-100 pb-4">Default Metadata</h3>
 
@@ -477,7 +477,7 @@ export default function SEOSettings() {
                     </div>
 
                     {/* Search Engine Preview */}
-                    <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl space-y-4">
+                    <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm space-y-4">
                         <h3 className="text-xl font-bold text-slate-800 border-b border-slate-100 pb-4 flex items-center gap-2">
                             <Search size={20} className="text-primary" />
                             Search Result Preview
@@ -497,7 +497,7 @@ export default function SEOSettings() {
 
                     {/* Assets & Integrations */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl space-y-6">
+                        <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm space-y-6">
                             <h3 className="text-xl font-bold text-slate-800 border-b border-slate-100 pb-4">Assets</h3>
                             <div className="space-y-4">
                                 <div className="space-y-2">
@@ -524,7 +524,7 @@ export default function SEOSettings() {
                             </div>
                         </div>
 
-                        <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl space-y-6">
+                        <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm space-y-6">
                             <h3 className="text-xl font-bold text-slate-800 border-b border-slate-100 pb-4">Integrations</h3>
                             <div className="space-y-4">
                                 <div className="space-y-2">
@@ -553,7 +553,7 @@ export default function SEOSettings() {
                     </div>
 
                     {/* Twitter */}
-                    <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl space-y-6">
+                    <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm space-y-6">
                         <h3 className="text-xl font-bold text-slate-800 border-b border-slate-100 pb-4 flex items-center gap-2">
                             <Twitter size={20} className="text-sky-500" />
                             Twitter Card Settings
@@ -571,7 +571,7 @@ export default function SEOSettings() {
                     </div>
 
                     {/* Social Media */}
-                    <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl space-y-6">
+                    <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm space-y-6">
                         <h3 className="text-xl font-bold text-slate-800 border-b border-slate-100 pb-4">Social Media Links</h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {(['facebook', 'twitter', 'instagram', 'linkedin', 'youtube'] as const).map((social) => (
@@ -593,7 +593,7 @@ export default function SEOSettings() {
                     </div>
 
                     {/* Robots.txt */}
-                    <div className="bg-white p-8 rounded-[2rem] border border-slate-200 shadow-xl space-y-6">
+                    <div className="bg-white p-8 rounded-lg border border-slate-200 shadow-sm space-y-6">
                         <h3 className="text-xl font-bold text-slate-800 border-b border-slate-100 pb-4">Robots.txt Configuration</h3>
                         <div className="space-y-2">
                             <textarea
@@ -609,11 +609,11 @@ export default function SEOSettings() {
                     </div>
 
                     <div className="flex justify-end sticky bottom-6 z-20">
-                        <div className="bg-white/80 backdrop-blur-md p-2 rounded-2xl border border-slate-200 shadow-2xl">
+                        <div className="bg-white/80 backdrop-blur-md p-2 rounded-lg border border-slate-200 shadow-sm">
                             <button
                                 type="submit"
                                 disabled={saving}
-                                className="bg-gradient-to-r from-primary to-violet text-white px-8 py-4 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all flex items-center gap-2 shadow-lg shadow-violet/25 disabled:opacity-50"
+                                className="bg-primary hover:bg-primary-dark text-white px-8 py-4 rounded-xl font-bold hover:shadow-sm transition-all flex items-center gap-2 shadow-lg disabled:opacity-50"
                             >
                                 {saving ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
                                 Save Global Settings
@@ -623,14 +623,14 @@ export default function SEOSettings() {
                 </form>
             ) : (
                 <div className="space-y-4">
-                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div className="bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
                         <p className="text-slate-600">
                             Configure SEO settings for individual pages. Leave fields empty to use global defaults.
                         </p>
                     </div>
 
                     {PAGES.map((page) => (
-                        <div key={page.key} className="bg-white rounded-[2rem] border border-slate-200 shadow-xl overflow-hidden">
+                        <div key={page.key} className="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
                             <button
                                 onClick={() => setExpandedPage(expandedPage === page.key ? null : page.key)}
                                 className="w-full p-6 flex items-center justify-between hover:bg-slate-50 transition-colors"
@@ -711,7 +711,7 @@ export default function SEOSettings() {
                                     <button
                                         onClick={() => handlePageSEOSave(page.key)}
                                         disabled={savingPage === page.key}
-                                        className="bg-gradient-to-r from-primary to-violet text-white px-6 py-3 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all flex items-center gap-2 shadow-lg shadow-violet/25 disabled:opacity-50"
+                                        className="bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-xl font-bold hover:shadow-sm transition-all flex items-center gap-2 shadow-lg disabled:opacity-50"
                                     >
                                         {savingPage === page.key ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                                         Save {page.label} SEO

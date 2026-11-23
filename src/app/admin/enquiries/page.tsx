@@ -79,7 +79,7 @@ export default function AdminEnquiries() {
             </div>
 
             {/* Search Bar */}
-            <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-lg shadow-primary/5 flex items-center gap-4">
+            <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-lg flex items-center gap-4">
                 <Search className="text-slate-400 ml-2" size={20} />
                 <input
                     type="text"
@@ -97,9 +97,9 @@ export default function AdminEnquiries() {
             ) : (
                 <div className="grid gap-4">
                     {filteredEnquiries.map((enquiry) => (
-                        <div key={enquiry._id} className="bg-white p-6 rounded-2xl border border-slate-200 hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300 md:flex items-center justify-between group">
+                        <div key={enquiry._id} className="bg-white p-6 rounded-lg border border-slate-200 hover:border-primary/50 hover:shadow-sm transition-all duration-300 md:flex items-center justify-between group">
                             <div className="flex items-center gap-6">
-                                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary-dark flex items-center justify-center font-bold text-2xl group-hover:scale-110 transition-transform duration-300 border border-primary/10">
+                                <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 text-primary-dark flex items-center justify-center font-bold text-2xl transition-transform duration-300 border border-primary/10">
                                     {enquiry.name.charAt(0)}
                                 </div>
 
@@ -148,7 +148,7 @@ export default function AdminEnquiries() {
                     ))}
 
                     {filteredEnquiries.length === 0 && !loading && (
-                        <div className="bg-white p-20 rounded-[2rem] border border-slate-200 text-center shadow-sm">
+                        <div className="bg-white p-20 rounded-lg border border-slate-200 text-center shadow-sm">
                             <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
                                 <MessageSquare size={40} />
                             </div>
@@ -164,7 +164,7 @@ export default function AdminEnquiries() {
             {/* Detail Modal */}
             {selectedEnquiry && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setSelectedEnquiry(null)}>
-                    <div className="bg-white rounded-[2rem] p-8 max-w-lg w-full shadow-2xl" onClick={(e) => e.stopPropagation()}>
+                    <div className="bg-white rounded-lg p-8 max-w-lg w-full shadow-sm" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-2xl font-black text-slate-800">Enquiry Details</h3>
                             <button onClick={() => setSelectedEnquiry(null)} className="p-2 hover:bg-slate-100 rounded-xl transition-colors">

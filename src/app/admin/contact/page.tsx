@@ -151,7 +151,7 @@ export default function AdminContact() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {SECTIONS.map(({ title, description, icon: Icon, fields }) => (
-                    <section key={title} className="bg-white p-6 lg:p-8 rounded-[2rem] border border-slate-200 shadow-sm space-y-5">
+                    <section key={title} className="bg-white p-6 lg:p-8 rounded-lg border border-slate-200 shadow-sm space-y-5">
                         <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
                             <div className="icon-tile w-10 h-10">
                                 <Icon size={20} />
@@ -206,7 +206,7 @@ export default function AdminContact() {
 
             {/* Sticky save bar */}
             <div className="fixed bottom-6 left-1/2 -translate-x-1/2 lg:left-[calc(50%+9rem)] z-20 w-[calc(100%-2rem)] max-w-xl">
-                <div className="bg-white/90 backdrop-blur-md p-3 rounded-2xl border border-slate-200 shadow-2xl flex items-center gap-3">
+                <div className="bg-white/90 backdrop-blur-md p-3 rounded-lg border border-slate-200 shadow-sm flex items-center gap-3">
                     <div className="flex-1 min-w-0 text-sm font-bold pl-2" aria-live="polite">
                         {error ? (
                             <span className="text-rose-600">{error}</span>
@@ -221,7 +221,7 @@ export default function AdminContact() {
                     <button
                         type="submit"
                         disabled={saving}
-                        className="shrink-0 bg-gradient-to-r from-primary to-violet text-white px-6 py-3 rounded-xl font-bold hover:-translate-y-0.5 hover:shadow-xl hover:shadow-violet/30 transition-all flex items-center gap-2 shadow-lg shadow-violet/25 disabled:opacity-50"
+                        className="shrink-0 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-xl font-bold hover:shadow-sm transition-all flex items-center gap-2 shadow-lg disabled:opacity-50"
                     >
                         {saving ? <Loader2 className="animate-spin" size={18} /> : <Save size={18} />}
                         Save
