@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { MessageSquare, Mail, Phone, Calendar, Trash2, Eye, Search, Loader2, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import QuickEnquiriesList from "@/components/admin/QuickEnquiriesList";
 
 interface Enquiry {
     _id: string;
@@ -19,6 +21,8 @@ export default function AdminEnquiries() {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedEnquiry, setSelectedEnquiry] = useState<Enquiry | null>(null);
+    // "quick" = homepage hero form + 10-second popup; "contact" = the Contact page form.
+    const [tab, setTab] = useState<"quick" | "contact">("quick");
 
     useEffect(() => {
         fetchEnquiries();
@@ -71,12 +75,35 @@ export default function AdminEnquiries() {
                     <h1 className="text-3xl font-extrabold tracking-tight text-ink mb-2">Student Enquiries</h1>
                     <p className="text-slate-600 font-medium">Track and respond to student messages.</p>
                 </div>
-                <div className="flex items-center gap-3">
-                    <span className="px-4 py-2 bg-primary/10 text-primary rounded-xl font-bold text-sm">
-                        {enquiries.length} Total
-                    </span>
-                </div>
             </div>
+
+            {/* Tabs */}
+            <div className="flex gap-1 rounded-lg border border-slate-200 bg-white p-1" role="tablist" aria-label="Enquiry source">
+                {([
+                    { id: "quick", label: "Quick Enquiries", hint: "Hero form & popup" },
+                    { id: "contact", label: "Contact Page", hint: `${enquiries.length} total` },
+                ] as const).map((t) => (
+                    <button
+                        key={t.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={tab === t.id}
+                        onClick={() => setTab(t.id)}
+                        className={cn(
+                            "flex-1 rounded-md px-4 py-2.5 text-left text-sm font-bold transition-colors sm:flex-none sm:text-center",
+                            tab === t.id ? "bg-primary text-white" : "text-slate-600 hover:bg-slate-50"
+                        )}
+                    >
+                        {t.label}
+                        <span className={cn("ml-2 text-xs font-medium", tab === t.id ? "text-white/70" : "text-slate-400")}>{t.hint}</span>
+                    </button>
+                ))}
+            </div>
+
+            {tab === "quick" && <QuickEnquiriesList />}
+
+            {tab === "contact" && (
+            <>
 
             {/* Search Bar */}
             <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-lg flex items-center gap-4">
@@ -159,6 +186,9 @@ export default function AdminEnquiries() {
                         </div>
                     )}
                 </div>
+            )}
+
+            </>
             )}
 
             {/* Detail Modal */}

@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
+import GalleryMedia from "@/components/GalleryMedia";
 
 export interface Photo {
     _id: string;
-    imageUrl: string;
+    imageUrl: string; // photo or video URL
+    mediaType?: "image" | "video";
     caption?: string;
 }
 
@@ -57,7 +59,7 @@ export default function Gallery({ initialPhotos }: { initialPhotos?: Photo[] }) 
     }
 
     return (
-        <section className="section overflow-hidden bg-primary-50">
+        <section id="gallery" className="section scroll-mt-24 overflow-hidden bg-primary-50">
             <div className="container-page relative">
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
@@ -79,15 +81,20 @@ export default function Gallery({ initialPhotos }: { initialPhotos?: Photo[] }) 
                                 index === 0 && photos.length >= 3 ? "sm:col-span-2 sm:row-span-2" : ""
                             }`}
                         >
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                                src={photo.imageUrl}
-                                alt={photo.caption || "Gallery Photo"}
-                                referrerPolicy="no-referrer"
-                                className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out"
+                            <GalleryMedia
+                                url={photo.imageUrl}
+                                mediaType={photo.mediaType}
+                                alt={photo.caption || (photo.mediaType === "video" ? "Gallery video" : "Gallery photo")}
                             />
                             {photo.caption && (
-                                <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary-darker/90 via-primary-darker/40 to-transparent px-5 pb-5 pt-14">
+                                // Photos: caption over the bottom. Videos: caption at the top so it doesn't cover the player controls.
+                                <figcaption
+                                    className={
+                                        photo.mediaType === "video"
+                                            ? "pointer-events-none absolute inset-x-0 top-0 bg-gradient-to-b from-primary-darker/80 to-transparent px-5 pb-10 pt-4"
+                                            : "absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary-darker/90 via-primary-darker/40 to-transparent px-5 pb-5 pt-14"
+                                    }
+                                >
                                     <p className="text-sm font-medium text-white">{photo.caption}</p>
                                 </figcaption>
                             )}

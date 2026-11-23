@@ -1,12 +1,18 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Plus, Trash2, Loader2 } from "lucide-react";
+import { Plus, Trash2, Loader2, ImageIcon, Film } from "lucide-react";
 import ImagePicker, { EMPTY_IMAGE, resolvePickedImage, type PickedImage } from "@/components/admin/ImagePicker";
+import VideoPicker from "@/components/admin/VideoPicker";
+import GalleryMedia from "@/components/GalleryMedia";
+import { cn } from "@/lib/utils";
+
+type MediaType = "image" | "video";
 
 interface Photo {
     _id: string;
     imageUrl: string;
+    mediaType?: MediaType;
     caption?: string;
     order: number;
 }
@@ -17,8 +23,9 @@ export default function AdminGallery() {
     const [submitting, setSubmitting] = useState(false);
 
     // Form State
-    const [image, setImage] = useState<PickedImage>(EMPTY_IMAGE);
-    const [pickerKey, setPickerKey] = useState(0); // bump to reset the image picker
+    const [mediaType, setMediaType] = useState<MediaType>("image");
+    const [image, setImage] = useState<PickedImage>(EMPTY_IMAGE); // the picked photo or video
+    const [pickerKey, setPickerKey] = useState(0); // bump to reset the picker
     const [error, setError] = useState("");
     const [caption, setCaption] = useState("");
     const [order, setOrder] = useState("0");
@@ -44,7 +51,7 @@ export default function AdminGallery() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!image.ready) {
-            setError("Please upload an image or paste a link that loads in the preview.");
+            setError(`Please upload ${mediaType === "video" ? "a video" : "an image"} or paste a link that loads in the preview.`);
             return;
         }
         setSubmitting(true);
@@ -55,10 +62,10 @@ export default function AdminGallery() {
             const res = await fetch("/api/admin/gallery", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ imageUrl, caption, order: parseInt(order) || 0 }),
+                body: JSON.stringify({ imageUrl, mediaType, caption, order: parseInt(order) || 0 }),
             });
             const saved = await res.json();
-            if (!res.ok) throw new Error(saved.error || "Failed to add photo.");
+            if (!res.ok) throw new Error(saved.error || `Failed to add ${mediaType === "video" ? "video" : "photo"}.`);
 
             setPickerKey((k) => k + 1);
             setImage(EMPTY_IMAGE);
@@ -87,7 +94,7 @@ export default function AdminGallery() {
         <div className="animate-[fade-in_0.5s_ease-out_forwards] space-y-8 pb-20">
             <div>
                 <h1 className="text-3xl font-extrabold tracking-tight text-ink mb-2">Photo Gallery</h1>
-                <p className="text-slate-600 font-medium">Add photos of your campus, events, and milestones.</p>
+                <p className="text-slate-600 font-medium">Add photos and videos of your campus, events, and milestones.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -97,13 +104,51 @@ export default function AdminGallery() {
                             <div className="icon-tile w-10 h-10">
                                 <Plus size={20} />
                             </div>
-                            <h3 className="text-xl font-bold">Add Photo</h3>
+                            <h3 className="text-xl font-bold">Add {mediaType === "video" ? "Video" : "Photo"}</h3>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-6">
+                            {/* Photo or video */}
                             <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Image</label>
-                                <ImagePicker key={pickerKey} onChange={setImage} />
+                                <span className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Type</span>
+                                <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Media type">
+                                    {([
+                                        { id: "image", label: "Photo", icon: ImageIcon },
+                                        { id: "video", label: "Video", icon: Film },
+                                    ] as const).map(({ id, label, icon: Icon }) => (
+                                        <button
+                                            key={id}
+                                            type="button"
+                                            role="radio"
+                                            aria-checked={mediaType === id}
+                                            onClick={() => {
+                                                if (mediaType === id) return;
+                                                setMediaType(id);
+                                                setImage(EMPTY_IMAGE);
+                                                setError("");
+                                                setPickerKey((k) => k + 1);
+                                            }}
+                                            className={cn(
+                                                "flex items-center justify-center gap-2 rounded-md border-2 py-2.5 text-sm font-bold transition-colors",
+                                                mediaType === id
+                                                    ? "border-primary bg-primary text-white"
+                                                    : "border-slate-200 bg-white text-slate-600 hover:border-slate-300"
+                                            )}
+                                        >
+                                            <Icon size={16} /> {label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">
+                                    {mediaType === "video" ? "Video" : "Image"}
+                                </label>
+                                {mediaType === "video" ? (
+                                    <VideoPicker key={pickerKey} onChange={setImage} />
+                                ) : (
+                                    <ImagePicker key={pickerKey} onChange={setImage} />
+                                )}
                             </div>
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-1">Caption</label>
@@ -144,14 +189,17 @@ export default function AdminGallery() {
                             {photos.map((photo) => (
                                 <div key={photo._id} className="bg-white rounded-lg border border-slate-200 overflow-hidden group shadow-sm hover:shadow-sm transition-all relative">
                                     <div className="relative w-full h-48">
-                                        {/* Plain <img>: images can come from any host (uploads, Google, Drive). */}
-                                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                                        <img
-                                            src={photo.imageUrl}
-                                            alt={photo.caption || "Gallery Image"}
-                                            referrerPolicy="no-referrer"
-                                            className="absolute inset-0 w-full h-full object-cover"
+                                        <GalleryMedia
+                                            url={photo.imageUrl}
+                                            mediaType={photo.mediaType}
+                                            alt={photo.caption || "Gallery item"}
+                                            className="absolute inset-0"
                                         />
+                                        {photo.mediaType === "video" && (
+                                            <span className="pointer-events-none absolute left-2 top-2 inline-flex items-center gap-1 rounded bg-black/70 px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-white">
+                                                <Film size={12} /> Video
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="p-4 flex items-center justify-between">
                                         <p className="font-bold text-slate-800 truncate">{photo.caption || "No Caption"}</p>

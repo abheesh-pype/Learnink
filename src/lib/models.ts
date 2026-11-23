@@ -258,6 +258,17 @@ export const Enquiry = new Model('enquiries', {
     status: 'text', // 'new' | 'contacted' | 'resolved'
 });
 
+// Quick enquiries from the homepage hero form and the 10-second popup.
+export const HeroEnquiry = new Model('hero_enquiries', {
+    name: 'text',
+    email: 'text',
+    phone: 'text',
+    course: 'text',
+    session: 'text',
+    source: 'text', // 'hero' | 'popup'
+    status: 'text', // 'new' | 'contacted' | 'resolved'
+});
+
 export const Subscriber = new Model('subscribers', {
     email: 'text',
     status: 'text', // 'active' | 'unsubscribed'
@@ -274,7 +285,8 @@ export const PageSEO = new Model('page_seos', {
 });
 
 export const GalleryPhoto = new Model('gallery_photos', {
-    imageUrl: 'text',
+    imageUrl: 'text', // image or video URL (column name kept for existing data)
+    mediaType: 'text', // 'image' | 'video'
     caption: 'text',
     order: 'int',
 });

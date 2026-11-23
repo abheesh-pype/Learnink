@@ -66,15 +66,15 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes heroDrift {
-    from { transform: scale(1); }
-    to { transform: scale(1.08) translate(-1.5%, -1%); }
+@keyframes heroSettle {
+    from { transform: scale(1.08); }
+    to { transform: scale(1); }
 }
 
 /* Set the delay per element with style={{ animationDelay: "..." }} */
 .hero-up { animation: heroUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
-/* Slow endless drift of the background photo; the hero pause button stops it */
-.hero-drift { animation: heroDrift 30s ease-in-out infinite alternate; }
+/* Background photo: one slow zoom-out on load, then still (no endless motion) */
+.hero-settle { animation: heroSettle 12s ease-out both; }
 
 /* ---------- Layout ---------- */
 

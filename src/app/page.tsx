@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { withPageUrl } from "@/lib/site";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import EnquiryPopup from "@/components/EnquiryPopup";
 import Stats from "@/components/Stats";
 import { getContactInfo } from "@/lib/contactSettings";
 import Programs from "@/components/Programs";
@@ -62,6 +63,8 @@ export default async function Home() {
     <main className="min-h-screen bg-white flex flex-col">
       <Navbar />
       <Hero />
+      {/* Enquiry form popup, 10 seconds after the page loads */}
+      <EnquiryPopup />
       <Stats numbers={contact} />
 
       {/* Featured Programs Section */}

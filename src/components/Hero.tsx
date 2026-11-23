@@ -1,34 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import { preload } from "react-dom";
-import { ArrowRight, Pause, Play } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 import { useSiteConfig } from "@/components/SiteConfigProvider";
+import QuickEnquiryForm from "@/components/QuickEnquiryForm";
 
 // Entrance animations are plain CSS (.hero-* in globals.css) so they start the moment the page paints.
 const delay = (seconds: number) => ({ animationDelay: `${seconds}s` });
 
 /**
  * Full-screen homepage hero: the image uploaded in Admin → SEO Settings → Hero Background fills the screen
- * (behind the floating navbar), with a large serif title at the bottom left.
+ * (behind the floating navbar). Title on the left, quick enquiry form on the right.
  */
 export default function Hero() {
     const { heroBg } = useSiteConfig();
-    const [paused, setPaused] = useState(false);
 
     // Puts <link rel="preload"> in the page <head> so the browser downloads the image first.
     if (heroBg) preload(heroBg, { as: "image", fetchPriority: "high" });
 
     return (
-        <section className="relative isolate flex h-[100svh] min-h-[600px] max-h-[1100px] items-end overflow-hidden bg-primary-darker">
-            {/* Background image with a slow, endless drift (can be paused) */}
+        <section className="relative isolate flex min-h-[100svh] overflow-hidden bg-primary-darker">
+            {/* Background image: one slow zoom-out when the page loads, then still */}
             {heroBg && (
-                <div
-                    className={cn("hero-drift absolute inset-0 -z-20", paused && "[animation-play-state:paused]")}
-                    aria-hidden="true"
-                >
+                <div className="hero-settle absolute inset-0 -z-20" aria-hidden="true">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                         src={heroBg}
@@ -41,13 +36,14 @@ export default function Hero() {
             )}
 
             {/* Shading: darker at the bottom-left so the title is readable on any photo */}
-            <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary-darker/90 via-primary-darker/30 to-primary-darker/10" aria-hidden="true" />
+            <div className="absolute inset-0 -z-10 bg-gradient-to-t from-primary-darker/90 via-primary-darker/35 to-primary-darker/15" aria-hidden="true" />
             <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary-darker/60 via-transparent to-transparent" aria-hidden="true" />
             <div className="absolute inset-x-0 top-0 -z-10 h-40 bg-gradient-to-b from-black/30 to-transparent" aria-hidden="true" />
 
-            <div className="container-page flex w-full items-end justify-between gap-8 pb-12 sm:pb-16 lg:pb-20">
-                <div className="max-w-3xl">
-                    <h1 className="hero-up font-display text-5xl font-medium leading-[1.05] text-white sm:text-6xl lg:text-[5.25rem]" style={delay(0.1)}>
+            <div className="container-page grid w-full grid-cols-1 content-end gap-10 lg:content-stretch pb-12 pt-28 sm:pb-16 lg:grid-cols-[1fr_400px] lg:gap-16 lg:pb-20 lg:pt-24">
+                {/* Left: title */}
+                <div className="max-w-3xl self-end">
+                    <h1 className="hero-up font-display text-5xl font-medium leading-[1.05] text-white sm:text-6xl lg:text-[5rem]" style={delay(0.1)}>
                         Rebuild Your Career
                     </h1>
                     <p className="hero-up mt-5 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg" style={delay(0.25)}>
@@ -60,25 +56,17 @@ export default function Hero() {
                         </Link>
                         <Link
                             href="/about"
-                            className="inline-flex items-center justify-center rounded-xl border border-white/40 px-6 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                            className="inline-flex items-center justify-center rounded-md border border-white/40 px-6 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
                         >
                             About Learnink
                         </Link>
                     </div>
                 </div>
 
-                {heroBg && (
-                    <button
-                        type="button"
-                        onClick={() => setPaused((p) => !p)}
-                        className="hero-up mb-1 hidden h-14 w-14 shrink-0 items-center justify-center rounded-full border-2 border-white/70 text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:flex"
-                        style={delay(0.5)}
-                        aria-label={paused ? "Play background motion" : "Pause background motion"}
-                        aria-pressed={paused}
-                    >
-                        {paused ? <Play size={22} className="ml-0.5" /> : <Pause size={22} />}
-                    </button>
-                )}
+                {/* Right: quick enquiry form (saved to the hero_enquiries table, shown in Admin → Enquiries) */}
+                <div className="hero-up rounded-lg bg-white p-6 shadow-2xl shadow-black/30 sm:p-7 lg:self-center" style={delay(0.35)}>
+                    <QuickEnquiryForm source="hero" />
+                </div>
             </div>
         </section>
     );

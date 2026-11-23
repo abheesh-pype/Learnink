@@ -149,3 +149,22 @@ CREATE TABLE IF NOT EXISTS contact_settings (
 -- Upgrades for databases created before these columns existed.
 ALTER TABLE contact_settings ADD COLUMN IF NOT EXISTS courses_count text;
 ALTER TABLE contact_settings ADD COLUMN IF NOT EXISTS years_count text;
+
+-- Quick enquiries from the homepage hero form and the 10-second popup.
+CREATE TABLE IF NOT EXISTS hero_enquiries (
+    id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    name       text NOT NULL,
+    email      text NOT NULL,
+    phone      text NOT NULL,
+    course     text NOT NULL,
+    session    text NOT NULL,
+    source     text NOT NULL DEFAULT 'hero' CHECK (source IN ('hero', 'popup')),
+    status     text NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'contacted', 'resolved')),
+    created_at timestamptz NOT NULL DEFAULT now(),
+    updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS hero_enquiries_created_at_idx ON hero_enquiries (created_at DESC);
+
+-- Gallery items can be photos or videos.
+ALTER TABLE gallery_photos ADD COLUMN IF NOT EXISTS media_type text NOT NULL DEFAULT 'image';

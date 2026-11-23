@@ -3,6 +3,7 @@ import dbConnect from "@/lib/db";
 import { GalleryPhoto } from "@/lib/models";
 import { getServerSession } from "next-auth";
 import { isUploadedImagePath, normalizeImageUrl } from "@/lib/imageUrl";
+import { isUploadedVideoPath, normalizeVideoUrl } from "@/lib/videoUrl";
 import { refreshPublicPages } from "@/lib/revalidate";
 
 export async function GET() {
@@ -23,17 +24,28 @@ export async function POST(req: Request) {
         await dbConnect();
         const body = await req.json();
 
-        // Either a file uploaded via /api/upload, or an http(s) image link (Drive links are converted).
+        const mediaType = body.mediaType === "video" ? "video" : "image";
         const raw = typeof body.imageUrl === "string" ? body.imageUrl.trim() : "";
-        const imageUrl = isUploadedImagePath(raw) ? raw : normalizeImageUrl(raw);
+
+        // Either a file uploaded via /api/upload, or a link (Drive / YouTube links are converted).
+        const imageUrl =
+            mediaType === "video"
+                ? isUploadedVideoPath(raw) ? raw : normalizeVideoUrl(raw)
+                : isUploadedImagePath(raw) ? raw : normalizeImageUrl(raw);
         if (!imageUrl) {
             return NextResponse.json(
-                { error: "Upload an image or paste a valid image link (https://…)." },
+                {
+                    error: mediaType === "video"
+                        ? "Upload a video or paste a valid YouTube, Google Drive or video link (https://…)."
+                        : "Upload an image or paste a valid image link (https://…).",
+                },
                 { status: 400 }
             );
         }
 
-        const photo = await GalleryPhoto.create({ ...body, imageUrl });
+        const caption = typeof body.caption === "string" ? body.caption.trim().slice(0, 300) : "";
+        const order = Number.isFinite(Number(body.order)) ? Math.trunc(Number(body.order)) : 0;
+        const photo = await GalleryPhoto.create({ imageUrl, mediaType, caption, order });
         refreshPublicPages();
         return NextResponse.json(photo);
     } catch {
