@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import GalleryCollage from "@/components/GalleryCollage";
+import SubHeading from "@/components/ui/SubHeading";
 import { countLabel, type GallerySection } from "@/components/Gallery";
 
 interface GalleryBrowserProps {
@@ -41,27 +42,20 @@ export default function GalleryBrowser({ sections, initialSectionId }: GalleryBr
     return (
         <div>
             {/* Filters */}
-            <div className="flex flex-wrap justify-center gap-2" role="tablist" aria-label="Filter gallery by heading">
+            <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter gallery by heading">
                 <FilterButton active={selected === null} onClick={() => choose(null)} label="All" count={totalItems} />
                 {sections.map((s) => (
                     <FilterButton key={s._id} active={selected === s._id} onClick={() => choose(s._id)} label={s.title} count={s.items.length} />
                 ))}
             </div>
 
-            <div className="mt-10 space-y-16 lg:mt-12 lg:space-y-20">
+            <div className="section-head-gap space-y-10 lg:space-y-12">
                 {visible.map((section) => (
                     <section key={section._id} aria-labelledby={`gallery-${section._id}`}>
-                        <div className="flex flex-col gap-2 border-b border-primary-200 pb-4 sm:flex-row sm:items-end sm:justify-between">
-                            <div>
-                                <h2 id={`gallery-${section._id}`} className="font-display text-3xl font-semibold text-ink sm:text-4xl">
-                                    {section.title}
-                                </h2>
-                                {section.description && (
-                                    <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-slate-600">{section.description}</p>
-                                )}
-                            </div>
-                            <p className="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">{countLabel(section.items)}</p>
-                        </div>
+                        <SubHeading as="h2" id={`gallery-${section._id}`} meta={countLabel(section.items)}>
+                            {section.title}
+                        </SubHeading>
+                        {section.description && <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-slate-600">{section.description}</p>}
                         {/* Every photo and video of the heading (no row limit) */}
                         <GalleryCollage key={section._id} section={section} />
                     </section>

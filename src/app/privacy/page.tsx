@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { withPageUrl } from "@/lib/site";
+import PageHeader from "@/components/ui/PageHeader";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { PageSEO, SiteConfig } from "@/lib/models";
@@ -36,16 +37,12 @@ async function buildMetadata(): Promise<Metadata> {
 export default async function PrivacyPage() {
     const { email } = await getContactInfo(); // edited in Admin → Contact
     return (
-        <main className="min-h-screen pt-20 flex flex-col bg-white">
+        <main className="flex min-h-screen flex-col bg-white">
             <Navbar />
-            <header className="bg-brand-gradient relative overflow-hidden">
-                <div className="container-page relative py-14 lg:py-20">
-                    <h1 className="font-display text-4xl font-medium text-white sm:text-5xl lg:text-6xl">Privacy Policy</h1>
-                </div>
-            </header>
-            <div className="flex-1 w-full bg-primary-50 px-4 py-12 sm:px-6 lg:py-16">
-
-                <div className="card prose prose-lg mx-auto max-w-4xl px-6 py-10 text-slate-600 sm:px-10">
+            <PageHeader breadcrumbs={[{ label: "Privacy Policy" }]} title="Privacy Policy" />
+            <div className="section w-full flex-1">
+                <div className="container-page">
+                <div className="prose prose-lg max-w-3xl text-slate-600">
                     <p className="text-lg font-medium mb-6">
                         Last updated: {new Date().toLocaleDateString('en-IN', { month: 'long', day: 'numeric', year: 'numeric' })}
                     </p>
@@ -92,6 +89,7 @@ export default async function PrivacyPage() {
                         </p>
                     </section>
                 </div>
+            </div>
             </div>
             <Footer />
         </main>

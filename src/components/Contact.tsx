@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, Send, Loader2, Clock, MessageCircle, Users, BookOpen, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DEFAULT_CONTACT, telHref, type ContactInfo } from "@/lib/contact";
-import SectionHeader from "@/components/ui/SectionHeader";
 import CountUp from "@/components/ui/CountUp";
 
 interface ProgramOption {
@@ -138,29 +137,16 @@ export default function Contact({ info: contact = DEFAULT_CONTACT }: { info?: Co
     const labelClass = "text-sm font-semibold text-ink";
 
     return (
-        <section id="contact" className="section overflow-hidden bg-primary-50">
-            <div className="container-page relative">
-                {/* Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                >
-                    <SectionHeader
-                        as="h1"
-                        eyebrow="Get in Touch"
-                        title={<>Let&apos;s Start Your <span className="italic text-primary">Journey</span></>}
-                        lead="Have questions about our programs? Our expert counselors are here to guide you every step of the way."
-                    />
-                </motion.div>
-
+        // The page heading lives in the Contact page header (PageHeader).
+        <section id="contact" className="section bg-white">
+            <div className="container-page">
                 {/* Primary Contact Cards */}
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.1 }}
-                    className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3 lg:mt-16"
+                    className="grid grid-cols-1 gap-5 md:grid-cols-3"
                 >
                     {contactInfo.map((info, index) => (
                         <a

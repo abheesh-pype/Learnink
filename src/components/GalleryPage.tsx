@@ -1,34 +1,27 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import GalleryBrowser from "@/components/GalleryBrowser";
-import SectionHeader from "@/components/ui/SectionHeader";
+import PageHeader from "@/components/ui/PageHeader";
 import { getGallerySections } from "@/lib/publicData";
 
-/**
- * Shared by /gallery (All) and /gallery/<sectionId> (that heading pre-selected).
- * Same structure as the Programs / Universities / Contact pages: light section, centred label + serif title + intro.
- */
+/** Shared by /gallery (All) and /gallery/<sectionId> (that collection pre-selected). */
 export default async function GalleryPage({ sectionId }: { sectionId: string | null }) {
     const sections = await getGallerySections();
 
     return (
-        <main className="flex min-h-screen flex-col bg-white pt-20">
+        <main className="flex min-h-screen flex-col bg-white">
             <Navbar />
-            <div className="w-full flex-1">
-                <section className="section overflow-hidden bg-primary-50">
-                    <div className="container-page relative">
-                        <SectionHeader
-                            as="h1"
-                            eyebrow="Visual Journey"
-                            title={<>Our <span className="italic text-primary">Gallery</span></>}
-                            lead="Photos and videos from our campus, events and celebrations. Choose a heading to see its collection."
-                        />
-                        <div className="mt-12 lg:mt-16">
-                            <GalleryBrowser sections={sections} initialSectionId={sectionId} />
-                        </div>
-                    </div>
-                </section>
-            </div>
+            <PageHeader
+                breadcrumbs={[{ label: "Gallery" }]}
+                eyebrow="Visual Journey"
+                title={<>Our <span className="italic text-primary">Gallery</span></>}
+                lead="Photos and videos from our campus, events and celebrations. Choose a collection to see it on its own."
+            />
+            <section className="section w-full flex-1">
+                <div className="container-page">
+                    <GalleryBrowser sections={sections} initialSectionId={sectionId} />
+                </div>
+            </section>
             <Footer />
         </main>
     );

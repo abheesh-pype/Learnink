@@ -1,8 +1,8 @@
 import { Program } from "@/lib/models";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import PageHeader from "@/components/ui/PageHeader";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { CourseSchema } from "@/components/JsonLd";
@@ -61,29 +61,17 @@ export default async function ProgramPage({ params }: Props) {
                 url={`${siteUrl}/programs/${slug}`}
                 category={program.category}
             />
-            <main className="min-h-screen pt-20 flex flex-col bg-white">
+            <main className="flex min-h-screen flex-col bg-white">
                 <Navbar />
+                <PageHeader
+                    breadcrumbs={[{ label: "Programs", href: "/programs" }, { label: program.title }]}
+                    eyebrow={program.category || undefined}
+                    title={program.title}
+                />
 
-                {/* Page banner */}
-                <header className="bg-brand-gradient relative overflow-hidden">
-                    <div className="container-page relative py-14 lg:py-20">
-                        <Link href="/programs" className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition-colors hover:text-white">
-                            <ArrowLeft size={18} /> Back to Programs
-                        </Link>
-                        {program.category && (
-                            <span className="mt-8 block w-fit text-xs font-semibold uppercase tracking-[0.18em] text-white/70">
-                                {program.category}
-                            </span>
-                        )}
-                        <h1 className="mt-3 max-w-4xl font-display text-4xl font-medium leading-tight text-white sm:text-5xl lg:text-6xl">
-                            {program.title}
-                        </h1>
-                    </div>
-                </header>
-
-                <div className="flex-1 bg-primary-50">
-                    <div className="container-page grid grid-cols-1 gap-8 py-12 lg:grid-cols-12 lg:py-16">
-                        <article className="card p-6 sm:p-10 lg:col-span-8">
+                <div className="section flex-1">
+                    <div className="container-page grid grid-cols-1 gap-10 lg:grid-cols-12">
+                        <article className="lg:col-span-8">
                             <div className="prose prose-lg max-w-none text-slate-600">
                                 <p className="mb-8 text-lg font-medium leading-relaxed text-slate-700">
                                     {program.description}

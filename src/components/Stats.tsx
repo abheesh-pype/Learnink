@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Users, BookOpen, Globe, Award } from "lucide-react";
 import { DEFAULT_CONTACT, type ContactInfo } from "@/lib/contact";
 import CountUp from "@/components/ui/CountUp";
@@ -40,32 +39,35 @@ export default function Stats({ numbers = DEFAULT_CONTACT }: { numbers?: StatNum
         },
     ];
 
+    // One strip attached under the hero: four figures separated by thin rules.
     return (
-        <section className="relative bg-white py-12 lg:py-16">
+        <section className="border-b border-slate-200 bg-white" aria-label="Learnink in numbers">
             <div className="container-page">
-                <div>
-                    {/* Separate cards (same style as the Programs cards), no frame, placed below the hero */}
-                    <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-                        {stats.map((stat, index) => (
-                            <motion.div
-                                key={stat.id}
-                                initial={{ opacity: 0, y: 20 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: index * 0.1, duration: 0.6 }}
-                                className="card p-5 text-center sm:p-7"
-                            >
-                                <span className="icon-tile mx-auto h-11 w-11">
-                                    <stat.icon size={22} />
-                                </span>
-                                <p className="mt-4 text-4xl font-light tracking-tight text-primary sm:text-5xl">
+                <div className="grid grid-cols-2 lg:grid-cols-4">
+                    {stats.map((stat, index) => (
+                        <div
+                            key={stat.id}
+                            className={[
+                                "flex items-center gap-4 py-7 sm:py-8",
+                                // rules between items: vertical on desktop, a 2×2 grid on smaller screens
+                                index % 2 === 1 ? "border-l border-slate-200 pl-5 sm:pl-8" : "pr-5",
+                                index >= 2 ? "border-t border-slate-200 lg:border-t-0" : "",
+                                index === 2 ? "lg:border-l lg:pl-8" : "",
+                                index > 0 ? "lg:pl-8" : "",
+                            ].join(" ")}
+                        >
+                            <span className="icon-tile hidden h-11 w-11 shrink-0 sm:flex">
+                                <stat.icon size={20} />
+                            </span>
+                            <div>
+                                <p className="text-3xl font-light tracking-tight text-primary sm:text-4xl">
                                     <CountUp value={stat.value} />
                                 </p>
-                                <p className="mt-1 text-sm font-semibold text-ink">{stat.label}</p>
-                                <p className="mt-0.5 hidden text-xs text-slate-500 sm:block">{stat.desc}</p>
-                            </motion.div>
-                        ))}
-                    </div>
+                                <p className="mt-0.5 text-sm font-semibold text-ink">{stat.label}</p>
+                                <p className="hidden text-xs text-slate-500 md:block">{stat.desc}</p>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>

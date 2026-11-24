@@ -1,8 +1,9 @@
 import { Partner } from "@/lib/models";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ExternalLink, GraduationCap, CheckCircle2 } from "lucide-react";
+import { ExternalLink, GraduationCap, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
+import PageHeader from "@/components/ui/PageHeader";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import dbConnect from "@/lib/db";
@@ -43,39 +44,33 @@ export default async function PartnerDetailPage({ params }: Props) {
     if (!partner) notFound();
 
     return (
-        <main className="min-h-screen pt-20 flex flex-col bg-white">
+        <main className="flex min-h-screen flex-col bg-white">
             <Navbar />
-
-            {/* Page banner */}
-            <header className="bg-brand-gradient relative overflow-hidden">
-                <div className="container-page relative py-14 lg:py-20">
-                    <Link href="/partners" className="inline-flex items-center gap-2 text-sm font-medium text-white/70 transition-colors hover:text-white">
-                        <ArrowLeft size={18} /> Back to Partners
-                    </Link>
-                    <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
-                        <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-lg bg-white p-3 shadow-lg">
+            <PageHeader
+                breadcrumbs={[{ label: "Universities", href: "/partners" }, { label: partner.name }]}
+                eyebrow="University Partner"
+                title={partner.name}
+            >
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-slate-600">
+                    {partner.logo && (
+                        <span className="flex h-14 w-14 items-center justify-center rounded-md border border-slate-200 bg-white p-2">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src={partner.logo} alt={partner.name} className="h-full w-full object-contain" />
-                        </div>
-                        <div>
-                            <h1 className="font-display text-4xl font-medium leading-tight text-white sm:text-5xl">{partner.name}</h1>
-                            <div className="mt-3 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/75">
-                                <span className="inline-flex items-center gap-2">
-                                    <CheckCircle2 size={16} className="text-primary-200" />
-                                    Verified Partner
-                                </span>
-                                <span className="inline-flex items-center gap-2">
-                                    <GraduationCap size={16} className="text-primary-200" />
-                                    {partner.programs?.length || 0} Programs Offered
-                                </span>
-                            </div>
-                        </div>
-                    </div>
+                        </span>
+                    )}
+                    <span className="inline-flex items-center gap-2">
+                        <CheckCircle2 size={16} className="text-primary" />
+                        Verified Partner
+                    </span>
+                    <span className="inline-flex items-center gap-2">
+                        <GraduationCap size={16} className="text-primary" />
+                        {partner.programs?.length || 0} Programs Offered
+                    </span>
                 </div>
-            </header>
+            </PageHeader>
 
-            <div className="flex-1 bg-primary-50">
-                <div className="container-page grid grid-cols-1 gap-8 py-12 lg:grid-cols-12 lg:py-16">
+            <div className="section flex-1">
+                <div className="container-page grid grid-cols-1 gap-10 lg:grid-cols-12">
                     {/* Main Content: Description & Programs */}
                     <div className="space-y-8 lg:col-span-8">
                         {/* University Description */}

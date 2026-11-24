@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MessageCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import PageHeader from "@/components/ui/PageHeader";
 import Footer from "@/components/Footer";
 import ShareButtons from "@/components/ShareButtons";
 import BlogEnquiryForm from "@/components/BlogEnquiryForm";
@@ -41,13 +42,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     const whatsappNumber = contact.phone.replace(/\D/g, "");
 
     return (
-        <main className="flex min-h-screen flex-col bg-white pt-20">
+        <main className="flex min-h-screen flex-col bg-white">
             <Navbar />
-            <article className="w-full flex-1">
-                <div className="container-page pb-16 pt-10 lg:pb-24 lg:pt-14">
-                    {/* Title + by-line */}
-                    <h1 className="font-display text-4xl font-bold leading-tight text-ink sm:text-5xl lg:text-[3.4rem]">{post.title}</h1>
-                    <p className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
+            {/* Title + by-line in the shared page header */}
+            <PageHeader breadcrumbs={[{ label: "Blog", href: "/blogs" }, { label: post.title }]} title={post.title}>
+                    <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate-500">
                         <span>
                             by <span className="font-semibold text-primary">Learnink</span>
                         </span>
@@ -59,8 +58,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                             </span>
                         )}
                     </p>
-
-                    <div className="mt-8 grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_340px]">
+            </PageHeader>
+            <article className="section w-full flex-1">
+                <div className="container-page">
+                    <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_340px]">
                         {/* Main column */}
                         <div className="min-w-0">
                             {post.coverImage && (

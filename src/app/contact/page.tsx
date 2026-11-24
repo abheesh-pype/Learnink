@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import PageHeader from "@/components/ui/PageHeader";
 import { withPageUrl } from "@/lib/site";
 import Contact from "@/components/Contact";
 import Navbar from "@/components/Navbar";
@@ -41,9 +42,15 @@ export default async function ContactPage() {
     const info = await getContactInfo();
 
     return (
-        <main className="min-h-screen pt-20 flex flex-col bg-white">
+        <main className="flex min-h-screen flex-col bg-white">
             <Navbar />
-            <div className="flex-1 w-full">
+            <PageHeader
+                breadcrumbs={[{ label: "Contact" }]}
+                eyebrow="Get in Touch"
+                title={<>Let&apos;s Start Your <span className="italic text-primary">Journey</span></>}
+                lead="Have questions about our programs? Our counsellors are here to guide you every step of the way."
+            />
+            <div className="w-full flex-1">
                 <Contact info={info} />
             </div>
             <Footer />

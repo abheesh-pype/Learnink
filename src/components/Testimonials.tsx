@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
 import TestimonialAvatar from "@/components/TestimonialAvatar";
@@ -79,43 +78,40 @@ export default function Testimonials({ initialTestimonials }: { initialTestimoni
     return (
         <section id="testimonials" className="section scroll-mt-24 overflow-hidden bg-white">
             <div className="container-page">
-                <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="flex flex-col items-center gap-6 md:flex-row md:items-end md:justify-between"
-                >
-                    <SectionHeader eyebrow="Success Stories" title="What Our Students Say" align="left" className="text-center md:text-left" />
-                    {/* Arrows (hidden when everything fits on screen) */}
-                    {!(edges.start && edges.end) && (
-                        <div className="flex shrink-0 gap-2">
-                            <button
-                                type="button"
-                                onClick={() => scrollByCard(-1)}
-                                disabled={edges.start}
-                                className="flex h-11 w-11 items-center justify-center rounded-md border border-slate-300 text-ink transition-colors hover:border-primary hover:bg-primary hover:text-white disabled:pointer-events-none disabled:opacity-30"
-                                aria-label="Previous testimonials"
-                            >
-                                <ChevronLeft size={20} />
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => scrollByCard(1)}
-                                disabled={edges.end}
-                                className="flex h-11 w-11 items-center justify-center rounded-md border border-slate-300 text-ink transition-colors hover:border-primary hover:bg-primary hover:text-white disabled:pointer-events-none disabled:opacity-30"
-                                aria-label="Next testimonials"
-                            >
-                                <ChevronRight size={20} />
-                            </button>
-                        </div>
-                    )}
-                </motion.div>
+                <SectionHeader
+                    eyebrow="Success Stories"
+                    title="What Our Students Say"
+                    action={
+                        !(edges.start && edges.end) && (
+                            <div className="flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => scrollByCard(-1)}
+                                    disabled={edges.start}
+                                    className="flex h-11 w-11 items-center justify-center rounded-md border border-slate-300 text-ink transition-colors hover:border-primary hover:bg-primary hover:text-white disabled:pointer-events-none disabled:opacity-30"
+                                    aria-label="Previous testimonials"
+                                >
+                                    <ChevronLeft size={20} />
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => scrollByCard(1)}
+                                    disabled={edges.end}
+                                    className="flex h-11 w-11 items-center justify-center rounded-md border border-slate-300 text-ink transition-colors hover:border-primary hover:bg-primary hover:text-white disabled:pointer-events-none disabled:opacity-30"
+                                    aria-label="Next testimonials"
+                                >
+                                    <ChevronRight size={20} />
+                                </button>
+                            </div>
+                        )
+                    }
+                />
 
                 {/* One row, scrolls to the right */}
                 <div
                     ref={rowRef}
                     onScroll={updateEdges}
-                    className="-mx-4 mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-4 pb-4 [scrollbar-width:thin] sm:-mx-6 sm:px-6 lg:-mx-8 lg:mt-14 lg:px-8"
+                    className="section-head-gap -mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-4 pb-4 [scrollbar-width:thin] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
                     tabIndex={0}
                     aria-label="Student testimonials, scroll sideways for more"
                 >

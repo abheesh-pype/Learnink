@@ -82,8 +82,17 @@ body {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
 }
 
+/*
+ * Spacing system (used on every page):
+ *   .section          vertical rhythm of a page section
+ *   .section-head-gap space between a section heading and its content
+ */
 .section {
-    @apply relative py-20 sm:py-24 lg:py-28;
+    @apply relative py-14 sm:py-16 lg:py-20;
+}
+
+.section-head-gap {
+    @apply mt-8 lg:mt-10;
 }
 
 /* ---------- Solid surfaces (formerly gradients) ---------- */
@@ -128,11 +137,11 @@ body {
 }
 
 .section-title {
-    @apply mt-4 font-display text-4xl font-medium leading-[1.1] text-ink sm:text-5xl lg:text-[3.25rem];
+    @apply mt-3 font-display text-3xl font-semibold leading-[1.15] text-ink sm:text-4xl lg:text-[2.6rem];
 }
 
 .section-lead {
-    @apply mt-5 text-base leading-relaxed text-slate-600 sm:text-lg;
+    @apply mt-3 text-base leading-relaxed text-slate-600;
 }
 
 /* ---------- Buttons ---------- */

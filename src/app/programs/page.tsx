@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import PageHeader from "@/components/ui/PageHeader";
+import { getPrograms } from "@/lib/publicData";
 import { withPageUrl } from "@/lib/site";
 import Programs from "@/components/Programs";
 import Navbar from "@/components/Navbar";
@@ -35,13 +37,23 @@ async function buildMetadata(): Promise<Metadata> {
     }
 }
 
-export default function ProgramsPage() {
+export default async function ProgramsPage() {
+    const programs = await getPrograms();
+
     return (
-        <main className="min-h-screen pt-20 flex flex-col bg-white">
+        <main className="flex min-h-screen flex-col bg-white">
             <Navbar />
-            <div className="flex-1 w-full">
-                <Programs />
-            </div>
+            <PageHeader
+                breadcrumbs={[{ label: "Programs" }]}
+                eyebrow="Our Programs"
+                title={<>Designed for Your <span className="italic text-primary">Success</span></>}
+                lead="Flexible programs from leading universities, tailored to your career goals and academic needs."
+            />
+            <section className="section w-full flex-1">
+                <div className="container-page">
+                    <Programs embedded initialPrograms={programs} />
+                </div>
+            </section>
             <Footer />
         </main>
     );

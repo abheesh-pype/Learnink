@@ -29,9 +29,11 @@ interface ProgramsProps {
     limit?: number;
     /** Programs loaded on the server. When given, the section renders immediately without fetching. */
     initialPrograms?: Program[];
+    /** Only the cards, no section / heading (the Programs page has its own page header). */
+    embedded?: boolean;
 }
 
-export default function Programs({ limit, initialPrograms }: ProgramsProps) {
+export default function Programs({ limit, initialPrograms, embedded = false }: ProgramsProps) {
     const [programs, setPrograms] = useState<Program[]>(() =>
         initialPrograms ? (limit ? initialPrograms.slice(0, limit) : initialPrograms) : []
     );
@@ -55,23 +57,8 @@ export default function Programs({ limit, initialPrograms }: ProgramsProps) {
         fetchPrograms();
     }, [limit, initialPrograms]);
 
-    return (
-        <section id="programs" className="section overflow-hidden bg-primary-50">
-            <div className="container-page relative">
-                <motion.div
-                    initial={{ opacity: 0, y: 16 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                >
-                    <SectionHeader
-                        eyebrow="Our Programs"
-                        title={<>Designed for Your <span className="italic text-primary">Success</span></>}
-                        lead="Choose from our wide range of flexible educational programs tailored to meet your career goals and academic needs."
-                    />
-                </motion.div>
-
-                <div className="mt-12 lg:mt-16">
+    const content = (
+                <div>
                     {loading ? (
                         <div className="flex justify-center p-20">
                             <Loader2 className="animate-spin text-primary w-10 h-10" />
@@ -125,6 +112,26 @@ export default function Programs({ limit, initialPrograms }: ProgramsProps) {
                         </div>
                     )}
                 </div>
+    );
+
+    if (embedded) return content;
+
+    return (
+        <section id="programs" className="section bg-primary-50">
+            <div className="container-page">
+                <SectionHeader
+                    eyebrow="Our Programs"
+                    title={<>Designed for Your <span className="italic text-primary">Success</span></>}
+                    lead="Flexible programs from leading universities, tailored to your career goals."
+                    action={
+                        limit ? (
+                            <Link href="/programs" className="btn-outline group">
+                                View all programs <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+                            </Link>
+                        ) : undefined
+                    }
+                />
+                <div className="section-head-gap">{content}</div>
             </div>
         </section>
     );

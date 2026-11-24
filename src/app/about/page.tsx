@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import PageHeader from "@/components/ui/PageHeader";
 import { withPageUrl } from "@/lib/site";
 import About from "@/components/About";
 import { getContactInfo } from "@/lib/contactSettings";
@@ -40,9 +41,15 @@ export default async function AboutPage() {
     const { yearsCount } = await getContactInfo(); // Admin → Contact → Numbers
 
     return (
-        <main className="min-h-screen pt-20 flex flex-col bg-white">
+        <main className="flex min-h-screen flex-col bg-white">
             <Navbar />
-            <div className="flex-1 w-full">
+            <PageHeader
+                breadcrumbs={[{ label: "About" }]}
+                eyebrow="About Us"
+                title={<>Linking Learning, Skills <span className="italic text-primary">&amp; Careers</span></>}
+                lead="Who we are, what we do and the vision behind Learnink Education."
+            />
+            <div className="w-full flex-1">
                 <About yearsCount={yearsCount} />
             </div>
             <Footer />

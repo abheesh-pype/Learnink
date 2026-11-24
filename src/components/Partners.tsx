@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { Building2 } from "lucide-react";
+import { ArrowRight, Building2 } from "lucide-react";
 import Link from "next/link";
 import SectionHeader from "@/components/ui/SectionHeader";
 
@@ -44,74 +44,55 @@ export default function Partners({ limit, fullWidth = false, initialPartners }: 
         fetchPrograms();
     }, [limit, initialPartners]);
 
-    const header = (
-        <SectionHeader
-            eyebrow="Our Universities"
-            title={<>Our University <span className="italic text-primary">Partners</span></>}
-            lead="We proudly partner with top universities to provide world-class educational opportunities. Explore our trusted network of academic institutions dedicated to your success."
-            align="center"
-        />
-    );
-
     const spinner = (
         <div className="flex justify-center p-20">
             <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
         </div>
     );
 
+    // Universities page (fullWidth): only the grid of cards; the page has its own page header.
+    if (fullWidth) {
+        if (loading) return spinner;
+        if (partners.length === 0) {
+            return (
+                <div className="card px-8 py-16 text-center">
+                    <h3 className="text-lg font-semibold text-ink">University Partners Coming Soon</h3>
+                    <p className="mt-2 text-slate-500">Check back soon to see our academic collaborations.</p>
+                </div>
+            );
+        }
+        return (
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+                {partners.map((partner, index) => (
+                    <PartnerCard key={partner._id} partner={partner} index={index} />
+                ))}
+            </div>
+        );
+    }
+
+    // Homepage: heading with "View all" on the right, then a scrolling logo strip.
     return (
         <section id="partners" className="section overflow-hidden bg-white">
-            <div className="container-page relative">
-                {fullWidth ? (
-                    // Full page layout: heading on top, grid below
-                    <div>
-                        <motion.div
-                            initial={{ opacity: 0, y: 16 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            {header}
-                        </motion.div>
-
-                        <div className="mt-12 lg:mt-16">
-                            {loading ? spinner : partners.length === 0 ? (
-                                <div className="card px-8 py-16 text-center">
-                                    <h3 className="text-lg font-semibold text-ink">University Partners Coming Soon</h3>
-                                    <p className="mt-2 text-slate-500">Check back soon to see our academic collaborations.</p>
-                                </div>
-                            ) : (
-                                <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
-                                    {partners.map((partner, index) => (
-                                        <PartnerCard key={partner._id} partner={partner} index={index} />
-                                    ))}
-                                </div>
-                            )}
+            <div className="container-page">
+                <SectionHeader
+                    eyebrow="Our Universities"
+                    title={<>Our University <span className="italic text-primary">Partners</span></>}
+                    lead="Trusted universities offering accredited programs through Learnink."
+                    action={
+                        <Link href="/partners" className="btn-outline group">
+                            View all universities <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+                        </Link>
+                    }
+                />
+                <div className="section-head-gap">
+                    {loading ? spinner : partners.length === 0 ? (
+                        <div className="card px-8 py-14 text-center">
+                            <h3 className="text-base font-semibold text-slate-500">Partner List Pending</h3>
                         </div>
-                    </div>
-                ) : (
-                    // Homepage layout: heading on top, endlessly scrolling logo strip below
-                    <div>
-                        <motion.div
-                            initial={{ opacity: 0, y: 16 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            {header}
-                        </motion.div>
-
-                        <div className="mt-12 lg:mt-16">
-                            {loading ? spinner : partners.length === 0 ? (
-                                <div className="card mx-auto max-w-xl px-8 py-14 text-center">
-                                    <h3 className="text-base font-semibold text-slate-500">Partner List Pending</h3>
-                                </div>
-                            ) : (
-                                <PartnerMarquee partners={partners} />
-                            )}
-                        </div>
-                    </div>
-                )}
+                    ) : (
+                        <PartnerMarquee partners={partners} />
+                    )}
+                </div>
             </div>
         </section>
     );
@@ -122,7 +103,7 @@ function PartnerMarquee({ partners }: { partners: Partner[] }) {
     // Too few to scroll nicely: show them as a centred row instead of repeating the same logo.
     if (partners.length < 4) {
         return (
-            <div className="flex flex-wrap justify-center gap-5">
+            <div className="flex flex-wrap gap-5">
                 {partners.map((partner, index) => (
                     <div key={partner._id} className="w-48 sm:w-56">
                         <PartnerCard partner={partner} index={index} />

@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import SectionHeader from "@/components/ui/SectionHeader";
-import GalleryCollage from "@/components/GalleryCollage";
+import GalleryMedia from "@/components/GalleryMedia";
 
 export interface GalleryItem {
     _id: string;
@@ -22,8 +21,8 @@ export interface GallerySection {
 }
 
 /**
- * Homepage gallery: each heading with ONE row of its photos / videos and an "Explore More" button that opens
- * the Gallery page filtered to that heading. Grouped by heading (Admin → Photo Gallery → sections), in the admin's order.
+ * Homepage gallery: every photo / video from all collections in ONE row that scrolls sideways.
+ * Collections (headings) are only shown on the Gallery page.
  * `initialSections`: loaded on the server, so it renders immediately without fetching.
  */
 export default function Gallery({ initialSections }: { initialSections?: GallerySection[] }) {
@@ -39,6 +38,26 @@ export default function Gallery({ initialSections }: { initialSections?: Gallery
             .finally(() => setLoading(false));
     }, [initialSections]);
 
+    const items = sections.flatMap((s) => s.items.map((item) => ({ ...item, sectionTitle: s.title })));
+
+    // Arrow buttons scroll the row by most of its visible width.
+    const rowRef = useRef<HTMLDivElement>(null);
+    const [edges, setEdges] = useState({ start: true, end: true });
+    const updateEdges = useCallback(() => {
+        const el = rowRef.current;
+        if (!el) return;
+        setEdges({ start: el.scrollLeft <= 4, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4 });
+    }, []);
+    useEffect(() => {
+        updateEdges();
+        window.addEventListener("resize", updateEdges);
+        return () => window.removeEventListener("resize", updateEdges);
+    }, [updateEdges, items.length]);
+    const scrollRow = (direction: -1 | 1) => {
+        const el = rowRef.current;
+        if (el) el.scrollBy({ left: direction * el.clientWidth * 0.8, behavior: "smooth" });
+    };
+
     if (loading) {
         return (
             <section className="section flex justify-center bg-primary-50">
@@ -47,7 +66,7 @@ export default function Gallery({ initialSections }: { initialSections?: Gallery
         );
     }
 
-    if (sections.length === 0) {
+    if (items.length === 0) {
         return (
             <section className="section bg-primary-50">
                 <div className="container-page">
@@ -61,42 +80,76 @@ export default function Gallery({ initialSections }: { initialSections?: Gallery
         );
     }
 
+    const arrowClass =
+        "flex h-11 w-11 items-center justify-center rounded-md border border-slate-300 text-ink transition-colors hover:border-primary hover:bg-primary hover:text-white disabled:pointer-events-none disabled:opacity-30";
+
     return (
         <section id="gallery" className="section scroll-mt-24 overflow-hidden bg-primary-50">
-            <div className="container-page relative">
-                <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-                    <SectionHeader eyebrow="Visual Journey" title="Our Campus & Events" />
-                </motion.div>
-
-                <div className="mt-12 space-y-16 lg:mt-16 lg:space-y-20">
-                    {sections.map((section) => (
-                        <div key={section._id}>
-                            {/* Section heading, e.g. "Annual Day 2026" */}
-                            <div className="flex flex-col gap-2 border-b border-primary-200 pb-4 sm:flex-row sm:items-end sm:justify-between">
-                                <div>
-                                    <h3 className="font-display text-3xl font-semibold text-ink sm:text-4xl">{section.title}</h3>
-                                    {section.description && (
-                                        <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-slate-600">{section.description}</p>
-                                    )}
-                                </div>
-                                <p className="shrink-0 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">
-                                    {countLabel(section.items)}
-                                </p>
-                            </div>
-
-                            <GalleryCollage section={section} maxRows={1} />
-
-                            <div className="mt-6">
-                                <Link href={`/gallery/${section._id}`} className="btn-outline group">
-                                    Explore More
-                                    <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
-                                </Link>
-                            </div>
+            <div className="container-page">
+                <SectionHeader
+                    eyebrow="Visual Journey"
+                    title="Our Campus & Events"
+                    action={
+                        <div className="flex items-center gap-2">
+                            {!(edges.start && edges.end) && (
+                                <>
+                                    <button type="button" onClick={() => scrollRow(-1)} disabled={edges.start} className={arrowClass} aria-label="Scroll gallery left">
+                                        <ChevronLeft size={20} />
+                                    </button>
+                                    <button type="button" onClick={() => scrollRow(1)} disabled={edges.end} className={arrowClass} aria-label="Scroll gallery right">
+                                        <ChevronRight size={20} />
+                                    </button>
+                                </>
+                            )}
+                            <Link href="/gallery" className="btn-outline group ml-2">
+                                View full gallery <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+                            </Link>
                         </div>
+                    }
+                />
+
+                {/* One row, scrolls to the right. Each item keeps its own shape at a fixed height. */}
+                <div
+                    ref={rowRef}
+                    onScroll={updateEdges}
+                    className="section-head-gap -mx-4 flex snap-x gap-4 overflow-x-auto scroll-smooth px-4 pb-4 [scrollbar-width:thin] sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
+                    aria-label="Gallery, scroll sideways for more"
+                >
+                    {items.map((item) => (
+                        <GalleryTile key={item._id} item={item} onSized={updateEdges} />
                     ))}
                 </div>
             </div>
         </section>
+    );
+}
+
+/** A fixed-height tile whose width follows the photo / video shape (kept between tall-portrait and wide-landscape). */
+function GalleryTile({ item, onSized }: { item: GalleryItem & { sectionTitle: string }; onSized: () => void }) {
+    const [ratio, setRatio] = useState(4 / 3);
+    const alt = item.caption || item.sectionTitle;
+
+    return (
+        <figure
+            className="relative h-60 shrink-0 snap-start overflow-hidden rounded-md bg-slate-200 sm:h-72"
+            style={{ aspectRatio: String(ratio) }}
+        >
+            <GalleryMedia
+                url={item.imageUrl}
+                mediaType={item.mediaType}
+                alt={alt}
+                onSize={(w, h) => {
+                    if (!w || !h) return;
+                    setRatio(Math.min(Math.max(w / h, 0.6), 2));
+                    requestAnimationFrame(onSized);
+                }}
+            />
+            {item.caption && item.mediaType !== "video" && (
+                <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-3 pb-2.5 pt-8 text-sm text-white">
+                    {item.caption}
+                </figcaption>
+            )}
+        </figure>
     );
 }
 

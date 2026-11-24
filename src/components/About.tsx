@@ -68,7 +68,7 @@ export default function About({ yearsCount = DEFAULT_CONTACT.yearsCount }: { yea
                         viewport={{ once: true }}
                         transition={{ duration: 0.7, delay: 0.1 }}
                     >
-                        <span className="eyebrow">About Us</span>
+                        <span className="eyebrow">Who We Are</span>
                         <h2 className="section-title">
                             Learnink Education <span className="italic text-primary">Pvt Ltd</span>
                         </h2>

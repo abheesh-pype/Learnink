@@ -1,4 +1,6 @@
 import Navbar from "@/components/Navbar";
+import PageHeader from "@/components/ui/PageHeader";
+import { getPartners } from "@/lib/publicData";
 import Partners from "@/components/Partners";
 import Footer from "@/components/Footer";
 import { Metadata } from "next";
@@ -34,13 +36,23 @@ async function buildMetadata(): Promise<Metadata> {
     }
 }
 
-export default function PartnersPage() {
+export default async function PartnersPage() {
+    const partners = await getPartners();
+
     return (
-        <main className="min-h-screen pt-20 flex flex-col bg-white">
+        <main className="flex min-h-screen flex-col bg-white">
             <Navbar />
-            <div className="flex-1 w-full">
-                <Partners fullWidth={true} />
-            </div>
+            <PageHeader
+                breadcrumbs={[{ label: "Universities" }]}
+                eyebrow="Our Universities"
+                title={<>University <span className="italic text-primary">Partners</span></>}
+                lead="Trusted universities offering accredited programs through Learnink. Choose one to see its programs."
+            />
+            <section className="section w-full flex-1">
+                <div className="container-page">
+                    <Partners fullWidth initialPartners={partners} />
+                </div>
+            </section>
             <Footer />
         </main>
     );
