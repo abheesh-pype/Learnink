@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { Program } from '@/lib/models';
+import { BlogPost, Program } from '@/lib/models';
 import dbConnect from '@/lib/db';
 import { SITE_URL } from '@/lib/site';
 
@@ -16,6 +16,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         { route: '/about', priority: 0.7, changeFrequency: 'weekly' as const },
         { route: '/partners', priority: 0.7, changeFrequency: 'weekly' as const },
         { route: '/gallery', priority: 0.6, changeFrequency: 'weekly' as const },
+        { route: '/blogs', priority: 0.7, changeFrequency: 'weekly' as const },
         { route: '/contact', priority: 0.8, changeFrequency: 'weekly' as const },
         { route: '/privacy', priority: 0.3, changeFrequency: 'monthly' as const },
         { route: '/terms', priority: 0.3, changeFrequency: 'monthly' as const },
@@ -39,7 +40,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
                 priority: 0.8,
             }));
 
-        return [...staticRoutes, ...programRoutes];
+        // Published blog posts
+        const posts = await BlogPost.find({ published: true }).select('slug updatedAt').lean();
+        const blogRoutes = posts.map((post) => ({
+            url: `${baseUrl}/blogs/${post.slug}`,
+            lastModified: new Date(post.updatedAt),
+            changeFrequency: 'monthly' as const,
+            priority: 0.6,
+        }));
+
+        return [...staticRoutes, ...programRoutes, ...blogRoutes];
     } catch (error) {
         console.error("Failed to generate sitemap", error);
         return staticRoutes;

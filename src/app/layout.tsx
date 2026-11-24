@@ -14,7 +14,7 @@ const plusJakarta = Plus_Jakarta_Sans({
 // Serif font for large display headings (homepage hero, menu). Use with the `font-display` class.
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["500", "600", "700"],
   variable: "--font-cormorant",
   display: "swap",
 });

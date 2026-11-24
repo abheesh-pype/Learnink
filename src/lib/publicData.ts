@@ -6,6 +6,7 @@ import { cache } from "react";
 import dbConnect from "@/lib/db";
 import { Partner, Program, SiteConfig, Testimonial } from "@/lib/models";
 import { loadGallerySections } from "@/lib/gallery";
+import { loadBlog, loadBlogPost, type BlogData } from "@/lib/blog";
 import type { Program as ProgramItem } from "@/components/Programs";
 import type { Partner as PartnerItem } from "@/components/Partners";
 import type { GallerySection as GallerySectionItem } from "@/components/Gallery";
@@ -52,3 +53,11 @@ export const getGallerySections = cache(() =>
 export const getTestimonials = cache(() =>
     safe<TestimonialItem[]>("testimonials", async () => toPlain(await Testimonial.find({}).sort({ order: 1, createdAt: -1 })), [])
 );
+
+// Blog: featured row + headings with their posts (published only).
+export const getBlog = cache(() =>
+    safe<BlogData>("blog", () => loadBlog(), { popular: [], sections: [], unsorted: [], all: [] })
+);
+
+// One published blog post by its web address.
+export const getBlogPost = cache((slug: string) => safe("blog post", () => loadBlogPost(slug), null));

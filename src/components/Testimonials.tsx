@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { Quote, Star } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronLeft, ChevronRight, Quote, Star } from "lucide-react";
 import TestimonialAvatar from "@/components/TestimonialAvatar";
 import SectionHeader from "@/components/ui/SectionHeader";
 import GoogleReviewTag from "@/components/GoogleReviewTag";
@@ -41,6 +41,26 @@ export default function Testimonials({ initialTestimonials }: { initialTestimoni
         fetchTestimonials();
     }, [initialTestimonials]);
 
+    // One row that scrolls sideways; the arrow buttons move by one card.
+    const rowRef = useRef<HTMLDivElement>(null);
+    const [edges, setEdges] = useState({ start: true, end: true });
+    const updateEdges = useCallback(() => {
+        const el = rowRef.current;
+        if (!el) return;
+        setEdges({ start: el.scrollLeft <= 4, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4 });
+    }, []);
+    useEffect(() => {
+        updateEdges();
+        window.addEventListener("resize", updateEdges);
+        return () => window.removeEventListener("resize", updateEdges);
+    }, [updateEdges, testimonials.length]);
+    const scrollByCard = (direction: -1 | 1) => {
+        const el = rowRef.current;
+        const card = el?.querySelector("figure");
+        if (!el || !card) return;
+        el.scrollBy({ left: direction * (card.getBoundingClientRect().width + 24), behavior: "smooth" });
+    };
+
     if (loading) return null;
     if (testimonials.length === 0) {
         return (
@@ -57,25 +77,52 @@ export default function Testimonials({ initialTestimonials }: { initialTestimoni
     }
 
     return (
-        <section className="section bg-white">
+        <section id="testimonials" className="section scroll-mt-24 overflow-hidden bg-white">
             <div className="container-page">
                 <motion.div
                     initial={{ opacity: 0, y: 16 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
+                    className="flex flex-col items-center gap-6 md:flex-row md:items-end md:justify-between"
                 >
-                    <SectionHeader eyebrow="Success Stories" title="What Our Students Say" />
+                    <SectionHeader eyebrow="Success Stories" title="What Our Students Say" align="left" className="text-center md:text-left" />
+                    {/* Arrows (hidden when everything fits on screen) */}
+                    {!(edges.start && edges.end) && (
+                        <div className="flex shrink-0 gap-2">
+                            <button
+                                type="button"
+                                onClick={() => scrollByCard(-1)}
+                                disabled={edges.start}
+                                className="flex h-11 w-11 items-center justify-center rounded-md border border-slate-300 text-ink transition-colors hover:border-primary hover:bg-primary hover:text-white disabled:pointer-events-none disabled:opacity-30"
+                                aria-label="Previous testimonials"
+                            >
+                                <ChevronLeft size={20} />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => scrollByCard(1)}
+                                disabled={edges.end}
+                                className="flex h-11 w-11 items-center justify-center rounded-md border border-slate-300 text-ink transition-colors hover:border-primary hover:bg-primary hover:text-white disabled:pointer-events-none disabled:opacity-30"
+                                aria-label="Next testimonials"
+                            >
+                                <ChevronRight size={20} />
+                            </button>
+                        </div>
+                    )}
                 </motion.div>
 
-                <div className="mt-16 grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-2 lg:mt-20 lg:grid-cols-3">
-                    {testimonials.map((item, index) => (
-                        <motion.figure
+                {/* One row, scrolls to the right */}
+                <div
+                    ref={rowRef}
+                    onScroll={updateEdges}
+                    className="-mx-4 mt-12 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-4 pb-4 [scrollbar-width:thin] sm:-mx-6 sm:px-6 lg:-mx-8 lg:mt-14 lg:px-8"
+                    tabIndex={0}
+                    aria-label="Student testimonials, scroll sideways for more"
+                >
+                    {testimonials.map((item) => (
+                        <figure
                             key={item._id}
-                            initial={{ opacity: 0, y: 16 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-60px" }}
-                            transition={{ delay: index * 0.12, duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
-                            className="card flex flex-col p-7 sm:p-8"
+                            className="card flex w-[85%] shrink-0 snap-start flex-col p-7 sm:w-[360px] sm:p-8"
                         >
 
                             <div className="flex items-center justify-between gap-3">
@@ -99,7 +146,7 @@ export default function Testimonials({ initialTestimonials }: { initialTestimoni
                                     {item.role && <p className="mt-0.5 text-sm text-slate-500">{item.role}</p>}
                                 </div>
                             </figcaption>
-                        </motion.figure>
+                        </figure>
                     ))}
                 </div>
             </div>

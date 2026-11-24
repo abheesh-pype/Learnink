@@ -170,7 +170,10 @@ export default function AdminTestimonials() {
                                             placeholder="https://maps.app.goo.gl/..."
                                             className="w-full rounded-md border-2 border-slate-200 bg-white px-4 py-3 text-sm font-semibold focus:border-primary focus:outline-none"
                                         />
-                                        <p className="pl-1 text-xs text-slate-500">In Google Maps, open the review → Share → Copy link. Visitors can click the tag to read it on Google.</p>
+                                        <p className="pl-1 text-xs text-slate-500">
+                                            In Google Maps, open the review → Share → Copy link. Visitors can click the tag to read it on Google.
+                                            Short links (maps.app.goo.gl) are changed to the full Google Maps address when possible; you can also paste the full address from the browser bar.
+                                        </p>
                                     </div>
                                 )}
                             </div>

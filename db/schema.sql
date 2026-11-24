@@ -190,3 +190,32 @@ ALTER TABLE contact_settings ADD COLUMN IF NOT EXISTS extras jsonb NOT NULL DEFA
 -- Testimonials copied from Google reviews: tagged on the website, optionally linking to the original review.
 ALTER TABLE testimonials ADD COLUMN IF NOT EXISTS source text NOT NULL DEFAULT 'website';
 ALTER TABLE testimonials ADD COLUMN IF NOT EXISTS source_url text;
+
+-- Blog: headings (e.g. "What's in the Class") group posts on the /blogs page.
+CREATE TABLE IF NOT EXISTS blog_sections (
+    id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    title       text NOT NULL,
+    "order"     integer NOT NULL DEFAULT 0,
+    created_at  timestamptz NOT NULL DEFAULT now(),
+    updated_at  timestamptz NOT NULL DEFAULT now()
+);
+
+-- Blog posts. Deleting a heading keeps its posts (they move to "More Articles").
+CREATE TABLE IF NOT EXISTS blog_posts (
+    id            uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    title         text NOT NULL,
+    slug          text NOT NULL UNIQUE,
+    excerpt       text,
+    content       text NOT NULL DEFAULT '',
+    cover_image   text,
+    tag           text,
+    section_id    uuid REFERENCES blog_sections(id) ON DELETE SET NULL,
+    featured      boolean NOT NULL DEFAULT false,
+    published     boolean NOT NULL DEFAULT true,
+    published_at  date NOT NULL DEFAULT CURRENT_DATE,
+    created_at    timestamptz NOT NULL DEFAULT now(),
+    updated_at    timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS blog_posts_section_idx ON blog_posts (section_id);
+CREATE INDEX IF NOT EXISTS blog_posts_published_at_idx ON blog_posts (published_at DESC);

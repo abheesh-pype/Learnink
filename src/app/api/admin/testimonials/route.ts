@@ -4,6 +4,7 @@ import { Testimonial } from "@/lib/models";
 import { getServerSession } from "next-auth";
 import { isUploadedImagePath, normalizeImageUrl } from "@/lib/imageUrl";
 import { refreshPublicPages } from "@/lib/revalidate";
+import { expandGoogleShortLink } from "@/lib/googleLink";
 
 export async function GET() {
     try {
@@ -44,10 +45,11 @@ export async function POST(req: Request) {
 
         // Copied from a Google review: tagged on the website, with an optional link to the original review.
         const source = body.source === "google" ? "google" : "website";
-        const sourceUrl = source === "google" ? text(body.sourceUrl, 1000) : "";
+        let sourceUrl = source === "google" ? text(body.sourceUrl, 1000) : "";
         if (sourceUrl && !/^https:\/\/\S+$/i.test(sourceUrl)) {
             return NextResponse.json({ error: "The Google review link must start with https://" }, { status: 400 });
         }
+        if (sourceUrl) sourceUrl = await expandGoogleShortLink(sourceUrl);
 
         const testimonial = await Testimonial.create({
             name,

@@ -14,6 +14,7 @@ const QuickLinks = [
     { name: "Programs", href: "/programs" },
     { name: "Universities", href: "/partners" },
     { name: "Gallery", href: "/gallery" },
+    { name: "Blogs", href: "/blogs" },
     { name: "Contact", href: "/contact" },
 ];
 
@@ -23,6 +24,7 @@ const MenuLinks = [
     { name: "Programs", href: "/programs" },
     { name: "Universities", href: "/partners" },
     { name: "Gallery", href: "/gallery" },
+    { name: "Blogs", href: "/blogs" },
     { name: "Contact", href: "/contact" },
 ];
 

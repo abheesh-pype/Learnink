@@ -340,6 +340,26 @@ export const ContactSettings = new Model('contact_settings', {
     extras: 'json', // { phones, emails, locations, offices }: additional entries
 });
 
+// Blog headings (e.g. "What's in the Class"); posts point at them via blog_posts.section_id.
+export const BlogSection = new Model('blog_sections', {
+    title: 'text',
+    order: 'int',
+});
+
+// Blog posts (Admin → Blogs, shown on /blogs and /blogs/<slug>).
+export const BlogPost = new Model('blog_posts', {
+    title: 'text',
+    slug: 'text',
+    excerpt: 'text',
+    content: 'text', // plain text: blank line = new paragraph, "## " = subheading, "- " = bullet
+    coverImage: 'text',
+    tag: 'text', // small label on the card, e.g. "UNIVERSITY"
+    sectionId: 'text', // blog_sections.id (uuid) or null
+    featured: 'bool', // shown in the large top row
+    published: 'bool', // false = draft (hidden on the website)
+    publishedAt: 'text', // date (YYYY-MM-DD)
+});
+
 // Admin auth users
 export const User = new Model('users', {
     username: 'text',
